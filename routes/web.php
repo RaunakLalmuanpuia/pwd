@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\JobDetailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
+        Route::get('/index', [JobDetailsController::class, 'index'])->name('job.index');
+        Route::get('/create', [JobDetailsController::class, 'create'])->name('job.create');
+        Route::post('', [JobDetailsController::class, 'store'])->name('job.store');
+        Route::get('{model}', [JobDetailsController::class, 'edit'])->name('job.edit');
+    });
 });
 
 require __DIR__.'/auth.php';

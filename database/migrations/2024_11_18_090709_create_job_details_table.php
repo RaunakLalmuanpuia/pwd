@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('application_fee');
             $table->text('description')->nullable();
             $table->boolean('active')->default(true)->nullable();
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+//            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->timestamps();
         });
     }

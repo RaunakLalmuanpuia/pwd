@@ -23,34 +23,13 @@ class DashboardController extends Controller
             'user' => $user,
         ]);
     }
-
     public function admin(Request $request)
     {
         return inertia('Dashboard/Admin');
     }
-
     public function citizen(Request $request)
     {
-        return inertia('Dashboard/Applicant');
-    }
-
-    public function aspio(Request $request)
-    {
-        return inertia('Dashboard/Aspio');
-    }
-
-    public function spio(Request $request)
-    {
-        return inertia('Dashboard/Spio');
-    }
-
-    public function daa(Request $request)
-    {
-        return inertia('Dashboard/Daa');
-    }
-    public function cic(Request $request)
-    {
-        return inertia('Dashboard/Cic');
+        return inertia('Dashboard/Citizen');
     }
 
 }

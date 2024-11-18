@@ -26,8 +26,8 @@ return new class extends Migration
             $table->string('nationality')->nullable();
             $table->string('qualification');
             $table->boolean('proficiency_test');
-            $table->boolean('disability')->nullable();
-            $table->string('attachment')->nullable();
+            $table->boolean('disability')->default(false);
+            $table->string('disability_attachment')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
