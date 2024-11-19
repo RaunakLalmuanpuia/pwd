@@ -21,13 +21,16 @@ return new class extends Migration
             $table->string('sex');
             $table->date('date_of_birth');
             $table->string('community');
-            $table->string('religion' );
+            $table->string('community_attachment')->nullable();
+            $table->string('religion');
             $table->string('marital_status');
             $table->string('nationality')->nullable();
             $table->string('qualification');
-            $table->boolean('proficiency_test');
+            $table->boolean('mizo_proficiency');
             $table->boolean('disability')->default(false);
             $table->string('disability_attachment')->nullable();
+            $table->string('passport_photo');
+            $table->string('signature_photo');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -11,8 +11,7 @@ class ApplicantController extends Controller
         return inertia("Applicant/Bio");
     }
 
-    public function store_rti(Request $request){
-
+    public function store_bio(Request $request){
         dd($request);
     }
 }

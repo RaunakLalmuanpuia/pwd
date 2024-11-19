@@ -39,7 +39,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
 //Dashboard Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'applicant'], function () {
     Route::get('bio',[ApplicantController::class,'bio'])->name('applicant.bio');
-    Route::post('storeRti',[ApplicantController::class,'store_rti'])->name('citizen.submit.rti');
+    Route::post('',[ApplicantController::class,'store_bio'])->name('applicant.bio_store');
 });
 
 
