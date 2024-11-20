@@ -1,6 +1,6 @@
 <template>
     <q-page>
-        <h1>Bio</h1>
+        <h3>Bio</h3>
         <q-form @submit="submit" @reset="onReset" class="q-gutter-md">
             <q-input
                 filled
@@ -135,6 +135,7 @@
 
                 ]"
             />
+
             <q-select
                 filled
                 v-model="form.qualification"
@@ -144,42 +145,107 @@
                 :options="['Non Graduate', 'Graduate', 'Post Graduate', 'Doctorate']"
             />
 
-
-
-            <div class="q-pa-md">
-                <label>Knowledge Of Mizo Language</label>
-                <q-radio
-                    v-model="form.proficiency_test"
-                    :val="true"
-                    label="Yes"
-                />
-                <q-radio
-                    v-model="form.proficiency_test"
-                    :val="false"
-                    label="No"
-                />
-            </div>
-            <div class="q-pa-md">
-                <label>Person With Disability</label>
-                <q-radio v-model="form.disability" :val="true" label="Yes" />
-                <q-radio v-model="form.disability" :val="false" label="No" />
-            </div>
-
-            <div v-if="form.disability" class="q-pa-md">
-                <q-file
-                    v-model="form.disability_attachment"
-                    label="Disability Proof"
+            <div v-if="form.qualification === 'Graduate' || form.qualification === 'Post Graduate' || form.qualification === 'Doctorate'">
+                <q-input
                     filled
-                    counter
-                    accept=".jpg, .jpeg, .png"
-                    :counter-label="counterLabelFn"
-                    style="max-width: 300px"
-                    hint="Max file size: 2 MB / only .jpeg, .png, .jpg"
-                >
-                    <template v-slot:prepend>
-                        <q-icon name="attach_file" />
-                    </template>
-                </q-file>
+                    v-model="form.graduateDegree"
+                    label="Graduate Degree"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your graduate degree']"
+                />
+                <q-input
+                    filled
+                    v-model="form.graduateStream"
+                    label="Graduate Stream"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your graduate stream']"
+                />
+            </div>
+
+            <!-- Post Graduate Degree and Stream -->
+            <div v-if="form.qualification === 'Post Graduate' || form.qualification === 'Doctorate'">
+                <q-input
+                    filled
+                    v-model="form.postGraduateDegree"
+                    label="Post Graduate Degree"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your post graduate degree']"
+                />
+                <q-input
+                    filled
+                    v-model="form.postGraduateStream"
+                    label="Post Graduate Stream"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your post graduate stream']"
+                />
+            </div>
+
+            <!-- Doctorate Degree and Stream -->
+            <div v-if="form.qualification === 'Doctorate'">
+                <q-input
+                    filled
+                    v-model="form.doctorateDegree"
+                    label="Doctorate Degree"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your doctorate degree']"
+                />
+                <q-input
+                    filled
+                    v-model="form.doctorateStream"
+                    label="Doctorate Stream"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your doctorate stream']"
+                />
+            </div>
+
+            <div class="q-pa-md">
+
+
+                <q-select
+                    filled
+                    v-model="form.proficiency_test"
+                    label="Knowledge Of Mizo Language"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Nationality']"
+                    :options="[
+                    { label: 'Yes', value: '1' },
+                    { label: 'No', value: '0' },
+
+                ]"
+                />
+
+
+            </div>
+            <div class="q-pa-md">
+
+                <q-select
+                    filled
+                    v-model="form.disability"
+                    label="Person With Disability"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Nationality']"
+                    :options="[
+                    { label: 'Yes', value: '1' },
+                    { label: 'No', value: '0' }
+                  ]"
+                />
+            </div>
+<!--    {{form.disability}}-->
+            <div v-if="form.disability.value === '1'" class="q-pa-md">
+                <q-select
+                    filled
+                    v-model="form.disability_type"
+                    label="Disability Type"
+                    lazy-rules
+                    :rules="[(val) => (val !== null && val !== '') || 'Please Select your disability type']"
+                    :options="[
+                      'Hearing',
+                      'Locomotor',
+                      'Vision',
+                      'Autism, Intellectual & Learning Disability, Mental Illness',
+                      'Multiple Disability (Amongst Above)'
+                    ]"
+                />
             </div>
 
             <div class="q-pa-md">
@@ -215,6 +281,8 @@
                     </template>
                 </q-file>
             </div>
+            <!-- Display Signature Photo if exists -->
+
 
             <div class="q-pa-md">
                 <q-toggle
@@ -242,38 +310,50 @@
 
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, computed, watch } from "vue";
 
 defineOptions({
     layout: ApplicantLayout,
 });
 
+const props = defineProps({
+    existingData: Object,
+});
+
 const third = ref(false);
 const files = ref(null);
+
+const page = usePage();
 
 function counterLabelFn({ totalSize, filesNumber, maxFiles }) {
     return `${filesNumber} files of ${maxFiles} | ${totalSize}`;
 }
 
 const form = useForm({
-    name: "",
-    phone: "",
-    email: "",
-    parents_name: "",
-    sex: "",
-    date_of_birth: "",
-    community: null,
-    religion: "",
-    marital_status: "",
-    nationality: "",
-    qualification: "",
-    proficiency_test: false,
-    disability: false,
-    community_attachment: null,
-    disability_attachment: null,
-    passport_attachment: "",
-    signature_attachment: "",
+    name: page.props.auth.user?.name || "",
+    phone: page.props.auth.user?.phone || "",
+    email: page.props.auth.user?.email || "",
+    parents_name: props.existingData?.parents_name || "",
+    sex: props.existingData?.sex || "",
+    date_of_birth: props.existingData?.date_of_birth || "",
+    community: props.existingData?.community ? { label: props.existingData.community, value: props.existingData.community } : null,
+    religion: props.existingData?.religion ? { label: props.existingData.religion, value: props.existingData.religion } : null,
+    marital_status: props.existingData?.marital_status || "",
+    nationality: props.existingData?.nationality ? { label: props.existingData.nationality, value: props.existingData.nationality } : null,
+    qualification: props.existingData?.qualification || "",
+    graduateDegree: props.existingData?.graduateDegree || "",
+    graduateStream: props.existingData?.graduateStream || "",
+    postGraduateDegree: props.existingData?.postGraduateDegree || "",
+    postGraduateStream: props.existingData?.postGraduateStream || "",
+    doctorateDegree: props.existingData?.doctorateDegree || "",
+    doctorateStream: props.existingData?.doctorateStream || "",
+    proficiency_test: props.existingData?.mizo_proficiency || "",
+    disability: props.existingData?.disability || "",
+    disability_type: props.existingData?.disability_type || "",
+    community_attachment: null, // Files cannot be pre-filled
+    passport_attachment: null,
+    signature_attachment: null,
 });
 
 // Show file field only if community is selected and not 'General'
@@ -285,8 +365,6 @@ const shouldShowFileField = computed(() => {
 const submit = () => {
     form.proficiency_test = !!form.proficiency_test; // Ensure boolean
     form.disability = !!form.disability; // Ensure boolean
-
-
 
     form.post(route('applicant.bio_store'), {
         onSuccess: () => {
