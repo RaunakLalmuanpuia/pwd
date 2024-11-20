@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JobDetail;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -29,7 +30,10 @@ class DashboardController extends Controller
     }
     public function citizen(Request $request)
     {
-        return inertia('Dashboard/Citizen');
+        $jobDetail = JobDetail::select(['id','post_name', 'no_of_post', 'application_deadline'])->get();
+        return inertia('Dashboard/Citizen',[
+            'jobDetail' => $jobDetail,
+        ]);
     }
 
 }

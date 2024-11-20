@@ -295,7 +295,14 @@
             </div>
 
             <div>
-                <q-btn @click="submit" label="Submit" type="submit" color="primary" />
+<!--                <q-btn @click="submit" label="Submit" type="submit" color="primary" />-->
+
+                <q-btn
+                    @click="submit"
+                    :label="submitButtonLabel"
+                    type="submit"
+                    color="primary"
+                />
                 <q-btn
                     label="Reset"
                     type="reset"
@@ -309,6 +316,7 @@
 </template>
 
 <script setup>
+
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref, computed, watch } from "vue";
@@ -322,7 +330,6 @@ const props = defineProps({
 });
 
 const third = ref(false);
-const files = ref(null);
 
 const page = usePage();
 
@@ -361,18 +368,42 @@ const shouldShowFileField = computed(() => {
     return form.community?.value && form.community.value !== 'General';
 });
 
+const submitButtonLabel = computed(() => {
+    return props.existingData ? "Update" : "Submit";
+});
+
+// const submit = () => {
+//     form.proficiency_test = !!form.proficiency_test; // Ensure boolean
+//     form.disability = !!form.disability; // Ensure boolean
+//
+//     form.post(route('applicant.bio_store'), {
+//         onSuccess: () => {
+//             alert("Applicant created successfully!");
+//         },
+//         onError: (err) => {
+//             err.value = err;
+//         },
+//     });
+// };
 
 const submit = () => {
     form.proficiency_test = !!form.proficiency_test; // Ensure boolean
     form.disability = !!form.disability; // Ensure boolean
 
-    form.post(route('applicant.bio_store'), {
+    const routeName = props.existingData
+        ? 'applicant.bio_update' // Update route
+        : 'applicant.bio_store'; // Create route
+
+    form.post(route(routeName, props.existingData?.id), {
         onSuccess: () => {
-            alert("Applicant created successfully!");
+            alert(props.existingData
+                ? "Applicant updated successfully!"
+                : "Applicant created successfully!");
         },
         onError: (err) => {
-            err.value = err;
+            console.error(err);
         },
     });
 };
+
 </script>

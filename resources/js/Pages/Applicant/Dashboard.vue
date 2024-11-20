@@ -1,5 +1,5 @@
 <template>
-    <h2> Jobs</h2>
+    <h2>Dashboard</h2>
 </template>
 <script setup>
 
@@ -7,7 +7,7 @@
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 
 defineOptions({
-    layout:MainLayout
+    layout:ApplicantLayout
 })
 
 </script>

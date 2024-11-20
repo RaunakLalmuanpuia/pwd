@@ -36,8 +36,30 @@
                             >
                                 Dashboard
                             </NavLink>
+
+
                         </q-item-section>
                     </q-item>
+
+                    <q-item clickable v-ripple>
+                        <q-item-section avatar>
+                            <q-icon name="inbox" />
+                        </q-item-section>
+
+                        <q-item-section>
+
+                            <!--                            Dashboard-->
+                            <NavLink
+                                :href="route('admin.applications.index')"
+                                :active="route().current('admin.applications.index')"
+                            >
+                                Applications
+                            </NavLink>
+
+
+                        </q-item-section>
+                    </q-item>
+
 
                     <q-item active clickable v-ripple>
                         <q-item-section avatar>

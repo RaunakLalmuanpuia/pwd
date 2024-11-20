@@ -264,7 +264,7 @@
                         </q-item-section>
 
                         <q-item-section>
-                            <q-btn @click="$inertia.get(route('applicant.bio'))">Address</q-btn>
+                            <q-btn @click="$inertia.get(route('applicant.address'))">Address</q-btn>
                         </q-item-section>
                     </q-item>
 
@@ -275,8 +275,7 @@
                         </q-item-section>
 
                         <q-item-section>
-                            <q-btn @click="$inertia.get(route('applicant.bio'))">Applications</q-btn>
-
+                            <q-btn @click="$inertia.get(route('applications.index'))">Applications</q-btn>
                         </q-item-section>
                     </q-item>
 
