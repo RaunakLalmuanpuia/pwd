@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Applicants;
 use App\Models\ApplicationDocument;
 use App\Models\Applications;
 use App\Models\JobDetail;
@@ -23,9 +24,12 @@ class ApplicationController extends Controller
     public function show(JobDetail $jobDetail)
     {
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
         return inertia('Applications/JobApplication', [
             'jobDetail' => $jobDetail,
             'mandatoryDocuments' => $mandatoryDocuments,
+            'applicant' => $applicant
         ]);
     }
 

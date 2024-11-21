@@ -225,6 +225,7 @@ class ApplicantController extends Controller
     public function store_bio(Request $request)
     {
 
+//        dd($request);
         $validatedData = $this->validateBio($request);
 
         DB::beginTransaction();
@@ -323,7 +324,7 @@ class ApplicantController extends Controller
             'postGraduateStream' => 'nullable|string|max:255',
             'doctorateDegree' => 'nullable|string|max:255',
             'doctorateStream' => 'nullable|string|max:255',
-            'proficiency_test' => 'required|boolean',
+            'mizo_proficiency' => 'required|boolean',
             'disability' => 'required|boolean',
             'disability_type' => 'nullable|string|max:255',
             'community_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
@@ -396,12 +397,7 @@ class ApplicantController extends Controller
         $validatedData['user_id'] = Auth::id();
 
         // Create the address
-        $address = Address::create($validatedData);
-
-//        return response()->json([
-//            'message' => 'Address saved successfully!',
-//            'data' => $address,
-//        ], 201); // 201 Created
+        Address::create($validatedData);
 
         return to_route('applicant.address')->with('message', 'Address saved successfully!');
     }

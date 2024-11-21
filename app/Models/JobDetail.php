@@ -16,6 +16,7 @@ class JobDetail extends Model
         'salary',
         'age_limit',
         'qualification',
+        'description',
         'application_deadline',
         'application_fee',
     ];

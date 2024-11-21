@@ -1,7 +1,8 @@
 <template>
-    <q-page>
-        <h3>Bio</h3>
+    <q-page class="q-pa-md">
+        <h3 class="text-h5 q-mb-md py-4">Personal Details</h3>
         <q-form @submit="submit" @reset="onReset" class="q-gutter-md">
+
             <q-input
                 filled
                 v-model.trim="form.name"
@@ -198,12 +199,12 @@
                 />
             </div>
 
-            <div class="q-pa-md">
+
 
 
                 <q-select
                     filled
-                    v-model="form.proficiency_test"
+                    v-model="form.mizo_proficiency"
                     label="Knowledge Of Mizo Language"
                     lazy-rules
                     :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Nationality']"
@@ -215,8 +216,8 @@
                 />
 
 
-            </div>
-            <div class="q-pa-md">
+
+
 
                 <q-select
                     filled
@@ -229,9 +230,9 @@
                     { label: 'No', value: '0' }
                   ]"
                 />
-            </div>
+
 <!--    {{form.disability}}-->
-            <div v-if="form.disability.value === '1'" class="q-pa-md">
+            <div v-if="form.disability.value === '1'">
                 <q-select
                     filled
                     v-model="form.disability_type"
@@ -248,7 +249,6 @@
                 />
             </div>
 
-            <div class="q-pa-md">
                 <q-file
                     v-model="form.passport_attachment"
                     label="Passport Photo"
@@ -263,9 +263,9 @@
                         <q-icon name="attach_file" />
                     </template>
                 </q-file>
-            </div>
 
-            <div class="q-pa-md">
+
+
                 <q-file
                     v-model="form.signature_attachment"
                     label="Signature"
@@ -280,7 +280,7 @@
                         <q-icon name="attach_file" />
                     </template>
                 </q-file>
-            </div>
+
             <!-- Display Signature Photo if exists -->
 
 
@@ -355,7 +355,7 @@ const form = useForm({
     postGraduateStream: props.existingData?.postGraduateStream || "",
     doctorateDegree: props.existingData?.doctorateDegree || "",
     doctorateStream: props.existingData?.doctorateStream || "",
-    proficiency_test: props.existingData?.mizo_proficiency || "",
+    mizo_proficiency: props.existingData?.mizo_proficiency || "",
     disability: props.existingData?.disability || "",
     disability_type: props.existingData?.disability_type || "",
     community_attachment: null, // Files cannot be pre-filled
@@ -387,7 +387,7 @@ const submitButtonLabel = computed(() => {
 // };
 
 const submit = () => {
-    form.proficiency_test = !!form.proficiency_test; // Ensure boolean
+    form.mizo_proficiency = !!form.mizo_proficiency; // Ensure boolean
     form.disability = !!form.disability; // Ensure boolean
 
     const routeName = props.existingData

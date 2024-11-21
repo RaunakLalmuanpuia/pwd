@@ -45,6 +45,7 @@ class JobDetailsController extends Controller
             'salary' => 'required|string|max:255',
             'age_limit' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
+            'description' => 'string|max:255',
             'application_deadline' => 'required|date',
             'application_fee' => 'required|string|max:255',
             'documents' => 'array',

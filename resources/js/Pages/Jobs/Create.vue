@@ -6,70 +6,22 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Posts</h2>
         </template>
 
-        <div class="py-12">
+        <div class="py-12 bg-gray-50">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">Posts</div>
+                <div class="bg-white shadow sm:rounded-lg">
 
-
-<!--                    <div class="mb-4">-->
-<!--                        <label for="job-title" class="block text-sm font-medium">Job Title</label>-->
-<!--                        <input-->
-<!--                            type="text"-->
-<!--                            id="job-title"-->
-<!--                            name="job-title"-->
-<!--                            placeholder="Enter job title"-->
-<!--                            class="w-full mt-1 p-2 border border-input rounded-md focus:outline-none focus:ring focus:ring-primary"-->
-<!--                            required-->
-<!--                        />-->
-<!--                    </div>-->
-<!--                    <div class="mb-4">-->
-<!--                        <label for="job-description" class="block text-sm font-medium">Job Description</label>-->
-<!--                        <textarea-->
-<!--                            id="job-description"-->
-<!--                            name="job-description"-->
-<!--                            placeholder="Enter job description"-->
-<!--                            class="w-full mt-1 p-2 border border-input rounded-md focus:outline-none focus:ring focus:ring-primary"-->
-<!--                            rows="4"-->
-<!--                            required-->
-<!--                        ></textarea>-->
-<!--                    </div>-->
-<!--                    <div class="mb-4">-->
-<!--                        <label for="job-type" class="block text-sm font-medium">Job Type</label>-->
-<!--                        <select id="job-type" name="job-type" class="w-full mt-1 p-2 border border-input rounded-md focus:outline-none focus:ring focus:ring-primary" required>-->
-<!--                            <option value="" disabled selected>Select job type</option>-->
-<!--                            <option value="full-time">Full Time</option>-->
-<!--                            <option value="part-time">Part Time</option>-->
-<!--                            <option value="contract">Contract</option>-->
-<!--                        </select>-->
-<!--                    </div>-->
-<!--                    <div class="mb-4">-->
-<!--                        <label for="job-location" class="block text-sm font-medium">Job Location</label>-->
-<!--                        <input-->
-<!--                            type="text"-->
-<!--                            id="job-location"-->
-<!--                            name="job-location"-->
-<!--                            placeholder="Enter job location"-->
-<!--                            class="w-full mt-1 p-2 border border-input rounded-md focus:outline-none focus:ring focus:ring-primary"-->
-<!--                            required-->
-<!--                        />-->
-<!--                    </div>-->
-<!--                    <div class="mb-4">-->
-<!--                        <label for="job-deadline" class="block text-sm font-medium">Application Deadline</label>-->
-<!--                        <input type="date" id="job-deadline" name="job-deadline" class="w-full mt-1 p-2 border border-input rounded-md focus:outline-none focus:ring focus:ring-primary" required />-->
-<!--                    </div>-->
-<!--                    <div class="flex justify-end">-->
-<!--                        <button type="submit" class="bg-primary text-primary-foreground px-4 py-2 rounded-md hover:bg-primary/80 focus:outline-none focus:ring focus:ring-primary">Post Job</button>-->
-<!--                    </div>-->
+                    <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-6">Job Details</h3>
 
                     <form @submit.prevent="submitForm">
+
                         <div class="mb-3">
-                            <label for="post_name" class="form-label">Post Name</label>
+                            <label for="post_name" class="block text-sm font-medium text-gray-700">Post Name</label>
                             <input
                                 type="text"
                                 id="post_name"
                                 v-model="form.post_name"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.post_name }"
                                 required
                             />
@@ -78,31 +30,15 @@
                             </div>
                         </div>
 
-<!--                        <div class="mb-3">-->
-<!--                            <label for="department_id" class="form-label">Department</label>-->
-<!--                            <select-->
-<!--                                id="department_id"-->
-<!--                                v-model="form.department_id"-->
-<!--                                class="form-select"-->
-<!--                                :class="{ 'is-invalid': errors.department_id }"-->
-<!--                                required-->
-<!--                            >-->
-<!--                                <option v-for="department in departments" :key="department.id" :value="department.id">-->
-<!--                                    {{ department.name }}-->
-<!--                                </option>-->
-<!--                            </select>-->
-<!--                            <div v-if="errors.department_id" class="invalid-feedback">-->
-<!--                                {{ errors.department_id }}-->
-<!--                            </div>-->
-<!--                        </div>-->
+
 
                         <div class="mb-3">
-                            <label for="no_of_post" class="form-label">Number of Posts</label>
+                            <label for="no_of_post" class="block text-sm font-medium text-gray-700">Number of Posts</label>
                             <input
                                 type="text"
                                 id="no_of_post"
                                 v-model="form.no_of_post"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.no_of_post }"
                                 required
                             />
@@ -112,12 +48,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="salary" class="form-label">Salary</label>
+                            <label for="salary" class="block text-sm font-medium text-gray-700">Salary</label>
                             <input
                                 type="text"
                                 id="salary"
                                 v-model="form.salary"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.salary }"
                                 required
                             />
@@ -127,12 +63,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="age_limit" class="form-label">Age Limit</label>
+                            <label for="age_limit" class="block text-sm font-medium text-gray-700">Age Limit</label>
                             <input
                                 type="text"
                                 id="age_limit"
                                 v-model="form.age_limit"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.age_limit }"
                                 required
                             />
@@ -142,12 +78,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="qualification" class="form-label">Qualification</label>
+                            <label for="qualification" class="block text-sm font-medium text-gray-700">Qualification</label>
                             <input
                                 type="text"
                                 id="qualification"
                                 v-model="form.qualification"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.qualification }"
                                 required
                             />
@@ -157,12 +93,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="application_deadline" class="form-label">Application Deadline</label>
+                            <label for="application_deadline" class="block text-sm font-medium text-gray-700">Application Deadline</label>
                             <input
                                 type="date"
                                 id="application_deadline"
                                 v-model="form.application_deadline"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.application_deadline }"
                                 required
                             />
@@ -172,12 +108,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="application_fee" class="form-label">Application Fee</label>
+                            <label for="application_fee" class="block text-sm font-medium text-gray-700">Application Fee</label>
                             <input
                                 type="text"
                                 id="application_fee"
                                 v-model="form.application_fee"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.application_fee }"
                                 required
                             />
@@ -187,11 +123,11 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
+                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea
                                 id="description"
                                 v-model="form.description"
-                                class="form-control"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.description }"
                             ></textarea>
                             <div v-if="errors.description" class="invalid-feedback">
@@ -200,55 +136,57 @@
                         </div>
 
                         <div>
-                            <h4>Required Documents</h4>
+                            <h4 class="text-sm font-medium text-gray-700 mb-3">Required Documents</h4>
                             <div
                                 v-for="(document, index) in form.documents"
                                 :key="index"
-                                class="document-item mb-3"
+                                class="flex space-x-4 items-center mb-3"
                             >
-                                <div class="d-flex align-items-center">
+
                                     <input
                                         type="text"
                                         v-model="document.name"
                                         placeholder="Document Name"
-                                        class="form-control me-2"
+                                        class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         required
                                     />
                                     <input
                                         type="text"
                                         v-model="document.description"
                                         placeholder="Document Description"
-                                        class="form-control me-2"
+                                        class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         required
                                     />
-                                    <select v-model="document.is_mandatory" class="form-select me-2">
+                                    <select v-model="document.is_mandatory"  class="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                         <option value="1">Mandatory</option>
                                         <option value="0">Optional</option>
                                     </select>
                                     <button
                                         type="button"
-                                        class="btn btn-danger"
+                                        class="text-red-600 hover:text-red-800"
                                         @click="removeDocument(index)"
                                     >
                                         Remove
                                     </button>
-                                </div>
+
                             </div>
                             <button
                                 type="button"
-                                class="btn btn-primary mt-2"
+                                class="text-indigo-600 hover:text-indigo-800"
                                 @click="addDocument"
                             >
                                 Add Document
                             </button>
                         </div>
 
-                        <button type="submit" class="btn btn-success mt-3">
+                        <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                             Create Job Posting
                         </button>
                     </form>
-
+                    </div>
                 </div>
+
+
             </div>
         </div>
     </AdminLayout>

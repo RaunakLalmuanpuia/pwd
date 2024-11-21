@@ -1,3 +1,189 @@
+
+
+<template>
+<!--    <div>-->
+<!--        <h1>Apply for {{ jobDetail.post_name }}</h1>-->
+<!--        <form @submit.prevent="submitApplication">-->
+<!--            <div v-for="document in mandatoryDocuments" :key="document.id">-->
+<!--                <label :for="'document-' + document.id">-->
+<!--                    {{ document.document_name }}-->
+<!--                </label>-->
+<!--                <input-->
+<!--                    type="file"-->
+<!--                    :id="'document-' + document.id"-->
+<!--                    :name="'documents[' + document.id + ']'"-->
+<!--                    @change="(e) => form.documents[document.id] = e.target.files[0]"-->
+<!--                />-->
+<!--                <span v-if="form.errors[`documents.${document.id}`]">-->
+<!--                    {{ form.errors[`documents.${document.id}`] }}-->
+<!--                </span>-->
+<!--            </div>-->
+
+<!--            <button type="submit" :disabled="form.processing">Submit Application</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--{{applicant}}-->
+    <div class="p-4 bg-background rounded-lg shadow-md">
+        <h2 class="text-lg font-bold">Name of Post</h2>
+        <p class="text-base">{{ jobDetail.post_name }}</p>
+        <h2 class="text-lg font-bold mt-4">Number of Post</h2>
+        <p class="text-base">{{ jobDetail.no_of_post }}</p>
+
+        <h2 class="text-lg font-bold mt-4">Application Last Date</h2>
+        <p class="text-base">{{ jobDetail.application_deadline }}</p>
+
+        <h2 class="text-lg font-bold mt-4">Application Fee</h2>
+        <p class="text-base">{{ jobDetail.application_fee }}</p>
+
+        <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
+        <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>
+    </div>
+
+    <button
+        @click="toggleDiv"
+        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+    >
+        {{ isVisible ? "Hide Profile" : "Show Profile" }}
+    </button>
+
+    <div v-if="isVisible" class="flex flex-col md:flex-row p-4 bg-background rounded-lg shadow-md">
+        <div class="w-full md:w-1/2 p-4 border-r border-border">
+            <div class="flex items-center mb-4">
+                <img src="https://placehold.co/100x100" alt="Passport Size Photo" class="rounded-full mr-4" />
+                <div>
+                    <h3 class="text-md font-bold">{{ applicant.user.name }}</h3>
+                    <p class="text-muted-foreground">Name (As HSLC Cert. / Service Book)</p>
+                </div>
+            </div>
+            <p><strong>Sex:</strong> {{ applicant.sex }}</p>
+            <p><strong>Mobile No:</strong> {{ applicant.user.phone }}</p>
+            <p><strong>Parent's Name:</strong> {{ applicant.parents_name }}</p>
+            <p><strong>Date of Birth:</strong> {{ applicant.date_of_birth }}</p>
+            <p><strong>Community:</strong> {{ applicant.community }}</p>
+            <p><strong>Religion:</strong> {{ applicant.religion }}</p>
+            <p><strong>Nationality:</strong> {{ applicant.nationality }}</p>
+            <p><strong>Qualification:</strong>{{applicant.qualification}}, {{applicant.graduateDegree}}</p>
+            <p><strong>Working knowledge of Mizo Language:</strong> {{applicant.mizo_proficiency}}</p>
+            <p><strong>Person with Disability:</strong> {{applicant.disability}}</p>
+            <p><strong>Person with Disability Detail:</strong>{{applicant.disability_type}}</p>
+        </div>
+
+        <div class="w-full md:w-1/2 p-4">
+            <h2 class="text-lg font-semibold">Permanent Address</h2>
+            <p><strong>House No:</strong>{{applicant.user.address.permanent_house_no }}</p>
+            <p><strong>Street:</strong> {{applicant.user.address.permanent_street }}</p>
+            <p><strong>Locality (Veng):</strong> {{applicant.user.address.permanent_locality }}</p>
+            <p><strong>Landmark:</strong> {{applicant.user.address.permanent_landmark }}</p>
+            <p><strong>Town / City:</strong> {{applicant.user.address.permanent_city }}</p>
+            <p><strong>District:</strong> {{applicant.user.address.permanent_district }}</p>
+            <p><strong>State / UT:</strong> {{applicant.user.address.permanent_state }}</p>
+            <p><strong>PIN:</strong> {{applicant.user.address.permanent_pin_code }}</p>
+            <h2 class="text-lg font-semibold mt-4">Communication Address</h2>
+            <p><strong>House No:</strong> {{applicant.user.address.communication_house_no }}</p>
+            <p><strong>Street:</strong> {{applicant.user.address.communication_street }}</p>
+            <p><strong>Locality (Veng):</strong> {{applicant.user.address.communication_locality }}</p>
+            <p><strong>Landmark:</strong> {{applicant.user.address.communication_landmark }}</p>
+            <p><strong>Town / City:</strong> {{applicant.user.address.communication_city }}</p>
+            <p><strong>District:</strong> {{applicant.user.address.communication_district }}</p>
+            <p><strong>State / UT:</strong>{{applicant.user.address.communication_state }}</p>
+            <p><strong>PIN:</strong> {{applicant.user.address.communication_pin_code }}</p>
+        </div>
+    </div>
+
+
+    <div class="p-4 bg-background rounded-lg shadow-md">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="mb-4">
+                <label for="exam-center" class="block text-sm font-medium text-foreground">Exam Center *</label>
+                <select id="exam-center" class="mt-1 block w-full border border-border rounded-md p-2 focus:ring focus:ring-ring">
+                    <option value="">Select Exam Center</option>
+                    <option value="center1">Center 1</option>
+                    <option value="center2">Center 2</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="computer-proficiency" class="block text-sm font-medium text-foreground">Computer Proficiency *</label>
+                <select id="computer-proficiency" class="mt-1 block w-full border border-border rounded-md p-2 focus:ring focus:ring-ring">
+                    <option value="">Select Proficiency</option>
+                    <option value="basic">Basic</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+                <p class="mt-1 text-xs text-muted-foreground">As Notified by the Government</p>
+            </div>
+        </div>
+
+
+        <div v-for="document in mandatoryDocuments" :key="document.id" class="mb-4">
+            <label class="block text-sm font-medium text-foreground">Upload Proof of Prescribed Essential Qualification : {{ document.document_name }}</label>
+            <div class="mt-1 flex items-center border border-border rounded-md p-2 bg-card">
+                <input  type="file"
+                        :id="'document-' + document.id"
+                        :name="'documents[' + document.id + ']'"
+                        @change="(e) => form.documents[document.id] = e.target.files[0]" id="file-upload" class="flex-grow border-none focus:ring-0" />
+                <span class="ml-2 text-blue-600">+</span>
+            </div>
+            <p class="mt-1 text-xs text-muted-foreground">0.0B / 0.00%</p>
+            <span v-if="form.errors[`documents.${document.id}`]">
+                {{ form.errors[`documents.${document.id}`] }}
+            </span>
+        </div>
+
+<!--        <fieldset class="mb-4">-->
+<!--            <legend class="block text-sm font-medium text-foreground">If Reservation / Relaxation claimed, indicate which:</legend>-->
+<!--            <p class="text-xs text-muted-foreground">(Candidate may select more than one Claim)</p>-->
+<!--            <div class="grid grid-cols-2 gap-4 mt-2">-->
+<!--                <label class="inline-flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
+<!--                    <span class="ml-2">Scheduled Tribe</span>-->
+<!--                </label>-->
+<!--                <label class="inline-flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
+<!--                    <span class="ml-2">Scheduled Caste</span>-->
+<!--                </label>-->
+<!--                <label class="inline-flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
+<!--                    <span class="ml-2">Other Backward Class</span>-->
+<!--                </label>-->
+<!--                <label class="inline-flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
+<!--                    <span class="ml-2">Disabled Person</span>-->
+<!--                </label>-->
+<!--                <label class="inline-flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
+<!--                    <span class="ml-2">Government Servant</span>-->
+<!--                </label>-->
+<!--                <label class="inline-flex items-center">-->
+<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
+<!--                    <span class="ml-2">Ex-Servicemen</span>-->
+<!--                </label>-->
+<!--            </div>-->
+<!--        </fieldset>-->
+    </div>
+
+
+    <div class="mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-6 flex flex-col items-center">
+        <h2 class="text-red-500 text-2xl font-bold text-center tracking-widest">D E C L A R A T I O N</h2>
+        <p class="text-red-500 mt-4">
+            I hereby declare that all the statements made in this application are true and complete to the best of my knowledge and belief. I understand that action can be taken against me by the Commission,
+            if I am declared by them to be guilty of any type of misconduct mentioned herein.
+        </p>
+        <div class="mt-6 flex justify-between w-full">
+            <div>
+                <span class="text-red-500 font-semibold">Date :</span>
+                <span class="text-red-500">21st November, 2024</span>
+            </div>
+            <div class="flex items-center flex-col">
+                <img aria-hidden="true" alt="Signature of the Candidate" src="https://openui.fly.dev/openui/200x100.svg?text=Signature" class="border border-zinc-300 rounded" />
+                <p class="text-red-500 text-center mt-2">Signature of the Candidate</p>
+            </div>
+        </div>
+        <button @click="submitApplication" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-4 p-2 rounded-lg w-full">SAVE</button>
+    </div>
+
+
+</template>
+
+
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 import { ref } from 'vue';
@@ -6,7 +192,13 @@ import { useForm } from '@inertiajs/vue3';
 defineOptions({
     layout:ApplicantLayout
 })
-const props = defineProps(['jobDetail', 'mandatoryDocuments']);
+const props = defineProps(['jobDetail', 'mandatoryDocuments', 'applicant']);
+
+const isVisible = ref(false); // Tracks visibility of the div
+
+const toggleDiv = () => {
+    isVisible.value = !isVisible.value; // Toggle the value of isVisible
+};
 
 const form = useForm({
     documents: {},
@@ -20,27 +212,3 @@ const submitApplication = () => {
     });
 };
 </script>
-
-<template>
-    <div>
-        <h1>Apply for {{ jobDetail.post_name }}</h1>
-        <form @submit.prevent="submitApplication">
-            <div v-for="document in mandatoryDocuments" :key="document.id">
-                <label :for="'document-' + document.id">
-                    {{ document.document_name }}
-                </label>
-                <input
-                    type="file"
-                    :id="'document-' + document.id"
-                    :name="'documents[' + document.id + ']'"
-                    @change="(e) => form.documents[document.id] = e.target.files[0]"
-                />
-                <span v-if="form.errors[`documents.${document.id}`]">
-                    {{ form.errors[`documents.${document.id}`] }}
-                </span>
-            </div>
-
-            <button type="submit" :disabled="form.processing">Submit Application</button>
-        </form>
-    </div>
-</template>

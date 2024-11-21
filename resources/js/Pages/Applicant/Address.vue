@@ -1,116 +1,163 @@
 <template>
-    <h3>Address</h3>
-    <div class="p-4">
-        <q-form @submit="handleSubmit">
-            <div class="q-mb-lg">
-                <h3 class="text-primary">Permanent Address</h3>
-                <q-input
-                    v-model="form.permanent_house_no"
-                    outlined
-                    label="House No"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input v-model="form.permanent_street" outlined label="Street" />
-                <q-input
-                    v-model="form.permanent_locality"
-                    outlined
-                    label="Locality"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input v-model="form.permanent_landmark" outlined label="Landmark" />
-                <q-input
-                    v-model="form.permanent_city"
-                    outlined
-                    label="City"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.permanent_district"
-                    outlined
-                    label="District"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.permanent_state"
-                    outlined
-                    label="State"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.permanent_pin_code"
-                    outlined
-                    label="Pin Code"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-            </div>
+    <q-page>
+        <div class="q-pa-md">
+            <h3 class="text-h5 text-primary">Address</h3>
+            <q-form @submit.prevent="submit" class="q-gutter-md">
+                <!-- Permanent Address Section -->
+                <div class="q-mb-lg">
+                    <h4 class="text-subtitle1 text-accent">Permanent Address</h4>
+                    <q-input
+                        v-model="form.permanent_house_no"
+                        outlined
+                        label="House No"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_street"
+                        outlined
+                        label="Street"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_locality"
+                        outlined
+                        label="Locality"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_landmark"
+                        outlined
+                        label="Landmark"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_city"
+                        outlined
+                        label="City"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_district"
+                        outlined
+                        label="District"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_state"
+                        outlined
+                        label="State"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.permanent_pin_code"
+                        outlined
+                        label="Pin Code"
+                        lazy-rules
+                        type="number"
+                        maxlength="6"
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                </div>
 
-            <div class="q-mb-md">
-<!--                <q-checkbox-->
-<!--                    v-model="sameAsPermanent"-->
-<!--                    label="Same as Permanent Address"-->
-<!--                    @change="copyPermanentToCommunication"-->
-<!--                />-->
-                <q-checkbox
-                    v-model="sameAsPermanent"
-                    label="Same as Permanent Address"
-                    class="q-mt-md"
-                />
-            </div>
+                <!-- Checkbox for Copying Address -->
+                <div class="q-mb-lg">
+                    <q-checkbox
+                        v-model="sameAsPermanent"
+                        label="Same as Permanent Address"
+                        class="q-mt-md"
+                    />
+                </div>
 
-            <div class="q-mb-lg">
-                <h3 class="text-primary">Communication Address</h3>
-                <q-input
-                    v-model="form.communication_house_no"
-                    outlined
-                    label="House No"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input v-model="form.communication_street" outlined label="Street" />
-                <q-input
-                    v-model="form.communication_locality"
-                    outlined
-                    label="Locality"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.communication_landmark"
-                    outlined
-                    label="Landmark"
-                />
-                <q-input
-                    v-model="form.communication_city"
-                    outlined
-                    label="City"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.communication_district"
-                    outlined
-                    label="District"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.communication_state"
-                    outlined
-                    label="State"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-                <q-input
-                    v-model="form.communication_pin_code"
-                    outlined
-                    label="Pin Code"
-                    :rules="[val => !!val || 'This field is required']"
-                />
-            </div>
+                <!-- Communication Address Section -->
+                <div class="q-mb-lg">
+                    <h4 class="text-subtitle1 text-accent">Communication Address</h4>
+                    <q-input
+                        v-model="form.communication_house_no"
+                        outlined
+                        label="House No"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_street"
+                        outlined
+                        label="Street"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_locality"
+                        outlined
+                        label="Locality"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_landmark"
+                        outlined
+                        label="Landmark"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_city"
+                        outlined
+                        label="City"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_district"
+                        outlined
+                        label="District"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_state"
+                        outlined
+                        label="State"
+                        lazy-rules
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                    <q-input
+                        v-model="form.communication_pin_code"
+                        outlined
+                        label="Pin Code"
+                        lazy-rules
+                        type="number"
+                        maxlength="6"
+                        :rules="[val => !!val || 'This field is required']"
+                        class="q-mb-md"
+                    />
+                </div>
 
-            <q-btn
-                class="q-mt-lg"
-                color="primary"
-                :label="submitButtonLabel"
-                @click="submit"
-            />
-        </q-form>
-    </div>
+                <!-- Submit Button -->
+                <div class="q-mt-lg">
+                    <q-btn
+                        class="q-mt-lg"
+                        color="primary"
+                        :label="submitButtonLabel"
+                        @click="submit"
+                    />
+                </div>
+            </q-form>
+        </div>
+    </q-page>
 </template>
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
