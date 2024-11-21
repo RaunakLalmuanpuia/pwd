@@ -66,7 +66,7 @@ class ApplicationController extends Controller
     public function adminIndex()
     {
         // Get all job details with their applications
-        $jobDetails = JobDetail::with('applications.applicant')->get();
+        $jobDetails = JobDetail::with('applications.applicant.user')->get();
 //        dd($jobDetails);
         return inertia('Applications/AdminApplication', [
             'jobDetails' => $jobDetails,
