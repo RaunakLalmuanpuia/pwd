@@ -11,6 +11,7 @@ defineOptions({
 <template>
     <div>
         <h1>Your Applications</h1>
+<!--        {{applications}}-->
         <table class="table-auto border-collapse border border-gray-300 w-full">
             <thead>
             <tr>

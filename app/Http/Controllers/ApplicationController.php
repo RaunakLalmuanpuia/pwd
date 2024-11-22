@@ -12,8 +12,11 @@ class ApplicationController extends Controller
 {
     public function index()
     {
+        $applicant = Applicants::where('user_id', auth()->id())->first();
+//        dd($applicant);
+
         $applications = Applications::with('jobDetils') // Load related job details
-        ->where('applicant_id', auth()->id())
+        ->where('applicant_id', $applicant->id)
             ->get();
 //        dd($applications);
         return inertia('Applicant/Applications', [
@@ -33,21 +36,65 @@ class ApplicationController extends Controller
         ]);
     }
 
+//    public function apply(Request $request, JobDetail $jobDetail)
+//    {
+//        $request->validate([
+//            'documents.*' => 'file',
+//        ]);
+//        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+//        // Save application
+//        $application = Applications::create([
+//            'applicant_id' => $applicant->id,
+//            'job_details_id' => $jobDetail->id,
+//            'status' => 'Pending',
+//        ]);
+//
+//        if ($request->hasFile('documents') && is_array($request->file('documents'))) {
+//            foreach ($request->file('documents') as $key => $document) {
+//                // Check if the document is a valid file before storing
+//                if ($document->isValid()) {
+//                    $path = $document->store('documents');
+//
+//                    ApplicationDocument::create([
+//                        'application_id' => $application->id,
+//                        'document_id' => $key,
+//                        'document_path' => $path,
+//                    ]);
+//                }
+//            }
+//        }
+//        return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
+//    }
     public function apply(Request $request, JobDetail $jobDetail)
     {
         $request->validate([
-            'documents.*' => 'required|file',
+            'documents.*' => 'file',
         ]);
-        // Save application
+
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        if (!$applicant) {
+            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
+        }
+
+        // Check if the applicant has already applied for this job
+        $existingApplication = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->exists();
+
+        if ($existingApplication) {
+            return redirect()->route('dashboard.citizen')->with('error', 'You have already applied for this job.');
+        }
+
+        // Save the new application
         $application = Applications::create([
-            'applicant_id' => auth()->id(),
+            'applicant_id' => $applicant->id,
             'job_details_id' => $jobDetail->id,
             'status' => 'Pending',
         ]);
 
         if ($request->hasFile('documents') && is_array($request->file('documents'))) {
             foreach ($request->file('documents') as $key => $document) {
-                // Check if the document is a valid file before storing
                 if ($document->isValid()) {
                     $path = $document->store('documents');
 
@@ -59,8 +106,10 @@ class ApplicationController extends Controller
                 }
             }
         }
+
         return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
     }
+
 
     // Admin view to list all applications based on job details
     public function adminIndex()

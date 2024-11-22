@@ -1,27 +1,7 @@
 
 
 <template>
-<!--    <div>-->
-<!--        <h1>Apply for {{ jobDetail.post_name }}</h1>-->
-<!--        <form @submit.prevent="submitApplication">-->
-<!--            <div v-for="document in mandatoryDocuments" :key="document.id">-->
-<!--                <label :for="'document-' + document.id">-->
-<!--                    {{ document.document_name }}-->
-<!--                </label>-->
-<!--                <input-->
-<!--                    type="file"-->
-<!--                    :id="'document-' + document.id"-->
-<!--                    :name="'documents[' + document.id + ']'"-->
-<!--                    @change="(e) => form.documents[document.id] = e.target.files[0]"-->
-<!--                />-->
-<!--                <span v-if="form.errors[`documents.${document.id}`]">-->
-<!--                    {{ form.errors[`documents.${document.id}`] }}-->
-<!--                </span>-->
-<!--            </div>-->
 
-<!--            <button type="submit" :disabled="form.processing">Submit Application</button>-->
-<!--        </form>-->
-<!--    </div>-->
 <!--{{applicant}}-->
     <div class="p-4 bg-background rounded-lg shadow-md">
         <h2 class="text-lg font-bold">Name of Post</h2>
@@ -128,36 +108,7 @@
             </span>
         </div>
 
-<!--        <fieldset class="mb-4">-->
-<!--            <legend class="block text-sm font-medium text-foreground">If Reservation / Relaxation claimed, indicate which:</legend>-->
-<!--            <p class="text-xs text-muted-foreground">(Candidate may select more than one Claim)</p>-->
-<!--            <div class="grid grid-cols-2 gap-4 mt-2">-->
-<!--                <label class="inline-flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
-<!--                    <span class="ml-2">Scheduled Tribe</span>-->
-<!--                </label>-->
-<!--                <label class="inline-flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
-<!--                    <span class="ml-2">Scheduled Caste</span>-->
-<!--                </label>-->
-<!--                <label class="inline-flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
-<!--                    <span class="ml-2">Other Backward Class</span>-->
-<!--                </label>-->
-<!--                <label class="inline-flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
-<!--                    <span class="ml-2">Disabled Person</span>-->
-<!--                </label>-->
-<!--                <label class="inline-flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
-<!--                    <span class="ml-2">Government Servant</span>-->
-<!--                </label>-->
-<!--                <label class="inline-flex items-center">-->
-<!--                    <input type="checkbox" class="form-checkbox text-primary" />-->
-<!--                    <span class="ml-2">Ex-Servicemen</span>-->
-<!--                </label>-->
-<!--            </div>-->
-<!--        </fieldset>-->
+
     </div>
 
 
