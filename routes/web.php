@@ -65,21 +65,25 @@ Route::middleware('auth')->group(function () {
 
     // JobDetail Controller
     Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
-        Route::get('/index', [JobDetailsController::class, 'index'])->name('job.index');
-        Route::get('/create', [JobDetailsController::class, 'create'])->name('job.create');
-        Route::post('', [JobDetailsController::class, 'store'])->name('job.store');
-        Route::get('{model}', [JobDetailsController::class, 'edit'])->name('job.edit');
+        Route::get('/index', [JobDetailsController::class, 'index'])->middleware('role:Admin')->name('job.index');
+        Route::get('/create', [JobDetailsController::class, 'create'])->middleware('role:Admin')->name('job.create');
+        Route::post('', [JobDetailsController::class, 'store'])->middleware('role:Admin')->name('job.store');
+        Route::get('{model}', [JobDetailsController::class, 'edit'])->middleware('role:Admin')->name('job.edit');
+        Route::put('{model}', [JobDetailsController::class, 'update'])->middleware('role:Admin')->name('job.update');
+        Route::delete('{model}', [JobDetailsController::class, 'destroy'])->middleware('role:Admin')->name('job.destroy');
     });
 
 
     // Application Controller
     Route::group(['middleware' => 'auth', 'prefix' => 'application'], function () {
+
+        // Citizen View and apply application
         Route::get('{jobDetail}/show', [ApplicationController::class, 'show'])->name('application.show');
         Route::post('{jobDetail}/apply', [ApplicationController::class, 'apply'])->name('application.apply');
 
+        // Citizen Application Index
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
-
-
+        //Admin Application Index
         Route::get('/admin/applications', [ApplicationController::class, 'adminIndex'])->name('admin.applications.index');
 
         // Admin route to change the status of an application (approve or reject)

@@ -25,8 +25,8 @@
                                 :class="{ 'is-invalid': errors.post_name }"
                                 required
                             />
-                            <div v-if="errors.post_name" class="invalid-feedback">
-                                {{ errors.post_name }}
+                            <div v-if="form.errors.post_name" class="input-error">
+                                {{ form.errors.post_name }}
                             </div>
                         </div>
 
@@ -42,7 +42,7 @@
                                 :class="{ 'is-invalid': errors.no_of_post }"
                                 required
                             />
-                            <div v-if="errors.no_of_post" class="invalid-feedback">
+                            <div v-if="errors.no_of_post" class="input-error">
                                 {{ errors.no_of_post }}
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                 :class="{ 'is-invalid': errors.salary }"
                                 required
                             />
-                            <div v-if="errors.salary" class="invalid-feedback">
+                            <div v-if="errors.salary" class="input-error">
                                 {{ errors.salary }}
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                                 :class="{ 'is-invalid': errors.age_limit }"
                                 required
                             />
-                            <div v-if="errors.age_limit" class="invalid-feedback">
+                            <div v-if="errors.age_limit" class="input-error">
                                 {{ errors.age_limit }}
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                 :class="{ 'is-invalid': errors.qualification }"
                                 required
                             />
-                            <div v-if="errors.qualification" class="invalid-feedback">
+                            <div v-if="errors.qualification" class="input-error">
                                 {{ errors.qualification }}
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                                 :class="{ 'is-invalid': errors.application_deadline }"
                                 required
                             />
-                            <div v-if="errors.application_deadline" class="invalid-feedback">
+                            <div v-if="errors.application_deadline" class="input-error">
                                 {{ errors.application_deadline }}
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                                 :class="{ 'is-invalid': errors.application_fee }"
                                 required
                             />
-                            <div v-if="errors.application_fee" class="invalid-feedback">
+                            <div v-if="errors.application_fee" class="input-error">
                                 {{ errors.application_fee }}
                             </div>
                         </div>
@@ -130,7 +130,7 @@
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 :class="{ 'is-invalid': errors.description }"
                             ></textarea>
-                            <div v-if="errors.description" class="invalid-feedback">
+                            <div v-if="errors.description" class="input-error">
                                 {{ errors.description }}
                             </div>
                         </div>

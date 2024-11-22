@@ -106,6 +106,9 @@
         </q-drawer>
 
         <q-page-container>
+            <div v-if="flashSuccess" class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2">
+                {{ flashSuccess }}
+            </div>
             <slot />
         </q-page-container>
 
@@ -131,8 +134,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import NavLink from "@/Components/NavLink.vue";
+
+import { Link, usePage } from '@inertiajs/vue3'
+
+const page = usePage()
+const flashSuccess = computed(
+    () => page.props.flash.success,
+)
 
 const leftDrawerOpen = ref(false)
 

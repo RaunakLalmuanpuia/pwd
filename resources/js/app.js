@@ -2,7 +2,7 @@ import './bootstrap';
 import '../css/app.css';
 
 
-// import { Dialog, Loading, Notify, LocalStorage } from "quasar";
+import { Dialog, Loading, Notify, LocalStorage } from "quasar";
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -26,7 +26,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(Quasar, {
-                plugins: {},
+                plugins: {Notify, Dialog, Loading, LocalStorage},
             })
             .use(ZiggyVue)
             .mount(el);
