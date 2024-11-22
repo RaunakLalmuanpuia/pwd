@@ -23,6 +23,6 @@ class ApplicationDocument extends Model
 
     public function jobDocument()
     {
-        return $this->belongsTo(Documents::class);
+        return $this->belongsTo(Documents::class, 'document_id');
     }
 }

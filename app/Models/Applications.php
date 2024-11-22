@@ -29,7 +29,7 @@ class Applications extends Model
 
     public function applicationDocuments()
     {
-        return $this->hasMany(ApplicationDocument::class);
+        return $this->hasMany(ApplicationDocument::class, 'application_id');
     }
 
 

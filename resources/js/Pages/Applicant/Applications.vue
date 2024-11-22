@@ -25,7 +25,13 @@ defineOptions({
                     {{ application.job_detils?.post_name || 'N/A' }}
                 </td>
                 <td class="border border-gray-300 px-4 py-2">
-                    {{ application.status || 'Pending' }}
+                        <span>
+                            {{ application.status || 'Pending' }}
+                            <!-- Show application_id if status is approved -->
+                            <template v-if="application.status === 'approved'">
+                                (ID: {{ application.application_id || 'N/A' }})
+                            </template>
+                        </span>
                 </td>
                 <td class="border border-gray-300 px-4 py-2">
                     {{ new Date(application.created_at).toLocaleDateString() }}

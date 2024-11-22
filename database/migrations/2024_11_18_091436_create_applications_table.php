@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('applicant_id');
             $table->unsignedBigInteger('job_details_id');
+            $table->string('application_id')->nullable();
             $table->string('status')->nullable();
             $table->foreign('applicant_id')->references('id')->on('applicants')->onDelete('cascade');
             $table->foreign('job_details_id')->references('id')->on('job_details')->onDelete('cascade');

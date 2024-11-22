@@ -66,7 +66,7 @@ class ApplicationController extends Controller
     public function adminIndex()
     {
         // Get all job details with their applications
-        $jobDetails = JobDetail::with('applications.applicant.user')->get();
+        $jobDetails = JobDetail::with(['applications.applicant.user','documents', 'applications.applicationDocuments.jobDocument'])->get();
 //        dd($jobDetails);
         return inertia('Applications/AdminApplication', [
             'jobDetails' => $jobDetails,
@@ -74,17 +74,38 @@ class ApplicationController extends Controller
     }
 
     // Admin method to approve or reject an application
-    public function changeStatus(Request $request, Application $application)
+    public function changeStatus(Request $request, Applications $application)
     {
+//        dd($application);
         $request->validate([
             'status' => 'required|in:approved,rejected',
         ]);
 
         // Update application status
         $application->status = $request->status;
+
+
+        // If the status is approved, generate a unique application_id
+        if ($request->status === 'approved') {
+            $application->application_id = $this->generateUniqueApplicationId();
+        }
+
         $application->save();
 
         return redirect()->route('admin.applications.index')->with('success', 'Application status updated.');
     }
+    /**
+     * Generate a unique application ID
+     *
+     * @return string
+     */
+    private function generateUniqueApplicationId()
+    {
+        do {
+            // Generate a random unique string (you can customize the format)
+            $uniqueId = 'APP-' . strtoupper(uniqid());
+        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
 
+        return $uniqueId;
+    }
 }
