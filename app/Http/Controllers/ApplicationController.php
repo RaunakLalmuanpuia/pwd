@@ -67,6 +67,8 @@ class ApplicationController extends Controller
 //    }
     public function apply(Request $request, JobDetail $jobDetail)
     {
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
+
         $request->validate([
             'documents.*' => 'file',
         ]);
@@ -74,7 +76,8 @@ class ApplicationController extends Controller
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         if (!$applicant) {
-            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
+            return redirect()->back()->with('error', 'Please Update your Bio and Address.');
+//            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
         }
 
         // Check if the applicant has already applied for this job
@@ -83,7 +86,16 @@ class ApplicationController extends Controller
             ->exists();
 
         if ($existingApplication) {
-            return redirect()->route('dashboard.citizen')->with('error', 'You have already applied for this job.');
+//            dd(true);
+            return redirect()->back()->with('error', 'You have already applied for this job.');
+//            return redirect()->route('dashboard.citizen')->with('error', 'You have already applied for this job.');
+        }
+
+        $uploadedDocuments = $request->file('documents') ? array_keys($request->file('documents')) : [];
+        $missingDocuments = array_diff($mandatoryDocuments, $uploadedDocuments);
+
+        if (!empty($missingDocuments)) {
+            return redirect()->back()->with('error', 'Please upload all mandatory documents before applying.');
         }
 
         // Save the new application

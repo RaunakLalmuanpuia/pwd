@@ -39,7 +39,8 @@ class HandleInertiaRequests extends Middleware
             'flash_notification' => session()->get('flash-notification'),
 
             'flash' => [
-                'success' => $request->session()->get('success')
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
             ],
 
 //            'ziggy' => fn () => [

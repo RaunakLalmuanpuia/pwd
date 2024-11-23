@@ -40,5 +40,4 @@ class JobDetail extends Model
     {
         return $this->hasMany(Documents::class);
     }
-
 }

@@ -3,6 +3,7 @@
 <template>
 
 <!--{{applicant}}-->
+
     <div class="p-4 bg-background rounded-lg shadow-md">
         <h2 class="text-lg font-bold">Name of Post</h2>
         <p class="text-base">{{ jobDetail.post_name }}</p>
@@ -19,33 +20,37 @@
         <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>
     </div>
 
-    <button
-        @click="toggleDiv"
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-    >
-        {{ isVisible ? "Hide Profile" : "Show Profile" }}
-    </button>
+    <div class="p-4">
+        <button
+            @click="toggleDiv"
+            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+            {{ isVisible ? "Hide Profile" : "Show Profile" }}
+        </button>
+
+    </div>
+
 
     <div v-if="isVisible" class="flex flex-col md:flex-row p-4 bg-background rounded-lg shadow-md">
         <div class="w-full md:w-1/2 p-4 border-r border-border">
             <div class="flex items-center mb-4">
                 <img src="https://placehold.co/100x100" alt="Passport Size Photo" class="rounded-full mr-4" />
                 <div>
-                    <h3 class="text-md font-bold">{{ applicant.user.name }}</h3>
+                    <h3 class="text-md font-bold">{{ applicant?.user.name }}</h3>
                     <p class="text-muted-foreground">Name (As HSLC Cert. / Service Book)</p>
                 </div>
             </div>
-            <p><strong>Sex:</strong> {{ applicant.sex }}</p>
-            <p><strong>Mobile No:</strong> {{ applicant.user.phone }}</p>
-            <p><strong>Parent's Name:</strong> {{ applicant.parents_name }}</p>
-            <p><strong>Date of Birth:</strong> {{ applicant.date_of_birth }}</p>
-            <p><strong>Community:</strong> {{ applicant.community }}</p>
-            <p><strong>Religion:</strong> {{ applicant.religion }}</p>
-            <p><strong>Nationality:</strong> {{ applicant.nationality }}</p>
-            <p><strong>Qualification:</strong>{{applicant.qualification}}, {{applicant.graduateDegree}}</p>
-            <p><strong>Working knowledge of Mizo Language:</strong> {{applicant.mizo_proficiency}}</p>
-            <p><strong>Person with Disability:</strong> {{applicant.disability}}</p>
-            <p><strong>Person with Disability Detail:</strong>{{applicant.disability_type}}</p>
+            <p><strong>Sex:</strong> {{ applicant?.sex }}</p>
+            <p><strong>Mobile No:</strong> {{ applicant?.user.phone }}</p>
+            <p><strong>Parent's Name:</strong> {{ applicant?.parents_name }}</p>
+            <p><strong>Date of Birth:</strong> {{ applicant?.date_of_birth }}</p>
+            <p><strong>Community:</strong> {{ applicant?.community }}</p>
+            <p><strong>Religion:</strong> {{ applicant?.religion }}</p>
+            <p><strong>Nationality:</strong> {{ applicant?.nationality }}</p>
+            <p><strong>Qualification:</strong>{{applicant?.qualification}}, {{applicant?.graduateDegree}}</p>
+            <p><strong>Working knowledge of Mizo Language:</strong> {{applicant?.mizo_proficiency}}</p>
+            <p><strong>Person with Disability:</strong> {{applicant?.disability}}</p>
+            <p><strong>Person with Disability Detail:</strong>{{applicant?.disability_type}}</p>
         </div>
 
         <div class="w-full md:w-1/2 p-4">
@@ -70,42 +75,31 @@
         </div>
     </div>
 
-
     <div class="p-4 bg-background rounded-lg shadow-md">
-        <div class="grid grid-cols-2 gap-4">
-            <div class="mb-4">
-                <label for="exam-center" class="block text-sm font-medium text-foreground">Exam Center *</label>
-                <select id="exam-center" class="mt-1 block w-full border border-border rounded-md p-2 focus:ring focus:ring-ring">
-                    <option value="">Select Exam Center</option>
-                    <option value="center1">Center 1</option>
-                    <option value="center2">Center 2</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label for="computer-proficiency" class="block text-sm font-medium text-foreground">Computer Proficiency *</label>
-                <select id="computer-proficiency" class="mt-1 block w-full border border-border rounded-md p-2 focus:ring focus:ring-ring">
-                    <option value="">Select Proficiency</option>
-                    <option value="basic">Basic</option>
-                    <option value="advanced">Advanced</option>
-                </select>
-                <p class="mt-1 text-xs text-muted-foreground">As Notified by the Government</p>
-            </div>
-        </div>
-
-
-        <div v-for="document in mandatoryDocuments" :key="document.id" class="mb-4">
-            <label class="block text-sm font-medium text-foreground">Upload Proof of Prescribed Essential Qualification : {{ document.document_name }}</label>
-            <div class="mt-1 flex items-center border border-border rounded-md p-2 bg-card">
-                <input  type="file"
-                        :id="'document-' + document.id"
-                        :name="'documents[' + document.id + ']'"
-                        @change="(e) => form.documents[document.id] = e.target.files[0]" id="file-upload" class="flex-grow border-none focus:ring-0" />
-                <span class="ml-2 text-blue-600">+</span>
-            </div>
-            <p class="mt-1 text-xs text-muted-foreground">0.0B / 0.00%</p>
-            <span v-if="form.errors[`documents.${document.id}`]">
+        <div class="p-4 bg-background rounded-lg shadow-md">
+            <h2 class="text-lg font-bold mb-3">Required Documents</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div v-for="document in mandatoryDocuments" :key="document.id" class="mb-4">
+                    <label class="block text-sm font-medium text-foreground">
+                        Upload Proof of Prescribed Essential Qualification: {{ document.document_name }}
+                    </label>
+                    <div class="mt-1 flex items-center border border-border rounded-md p-2 bg-card">
+                        <input
+                            type="file"
+                            :id="'document-' + document.id"
+                            :name="'documents[' + document.id + ']'"
+                            @change="(e) => form.documents[document.id] = e.target.files[0]"
+                            class="flex-grow border-none focus:ring-0"
+                        />
+                        <span class="ml-2 text-blue-600">+</span>
+                    </div>
+<!--                    <p class="mt-1 text-xs text-muted-foreground">0.0B / 0.00%</p>-->
+                    <p class="mt-1 text-xs text-muted-foreground">{{ document.document_description }}</p>
+                    <span v-if="form.errors[`documents.${document.id}`]">
                 {{ form.errors[`documents.${document.id}`] }}
             </span>
+                </div>
+            </div>
         </div>
 
 
@@ -121,14 +115,14 @@
         <div class="mt-6 flex justify-between w-full">
             <div>
                 <span class="text-red-500 font-semibold">Date :</span>
-                <span class="text-red-500">21st November, 2024</span>
+                <span class="text-red-500">{{ currentDate }}</span>
             </div>
             <div class="flex items-center flex-col">
                 <img aria-hidden="true" alt="Signature of the Candidate" src="https://openui.fly.dev/openui/200x100.svg?text=Signature" class="border border-zinc-300 rounded" />
                 <p class="text-red-500 text-center mt-2">Signature of the Candidate</p>
             </div>
         </div>
-        <button @click="submitApplication" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-4 p-2 rounded-lg w-full">SAVE</button>
+        <button @click="submitApplication" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-4 p-2 rounded-lg w-full">APPLY</button>
     </div>
 
 
@@ -154,6 +148,14 @@ const toggleDiv = () => {
 const form = useForm({
     documents: {},
 });
+
+// Function to format the date
+function formatDate(date) {
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    return new Intl.DateTimeFormat('en-US', options).format(date);
+}
+
+const currentDate = ref(formatDate(new Date()));
 
 const submitApplication = () => {
     form.post(route('application.apply', { jobDetail: props.jobDetail.id }), {
