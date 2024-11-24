@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Applications;
 use App\Models\Documents;
 use App\Models\JobDetail;
 use Illuminate\Http\Request;
@@ -79,8 +80,9 @@ class JobDetailsController extends Controller
      */
     public function edit(Request $request, JobDetail $model)
     {
+//        dd($model->load(['documents', 'exams.subjects']));
         return inertia('Jobs/Edit', [
-            'data'=>$model->load('documents')
+            'data'=>$model->load(['documents', 'exams.subjects'])
         ]);
     }
 
@@ -158,4 +160,51 @@ class JobDetailsController extends Controller
 
         return redirect()->route('job.index')->with('success', 'Job deleted successfully.');
     }
+
+//    public function showMarks(JobDetail $model)
+//    {
+//        // Get the job details
+//        $jobDetail = JobDetail::with(['applicants.exams.examCenter'])->findOrFail($model->id);
+//
+//        // Get applicants with their associated exams, marks, and exam centers
+//        $applicants = Applications::with([
+//            'applicant', 'marks', 'examCenter'
+//        ])
+//            ->where('job_details_id', $model->id)
+//            ->get();
+//
+//        // Prepare data for the view (you can return this data to the frontend)
+////        return view('job_details.show_marks', compact('jobDetail', 'applicants'));
+//
+//        return Inertia::render('Jobs/Marks',[
+//            'jobDetail' => $jobDetail,
+//            'applicants' => $applicants
+//        ]);
+//    }
+    public function showMarks(JobDetail $model)
+    {
+        // Eager load exams, subjects, examMarks, and other related models
+        $jobDetail = JobDetail::with([
+            'exams.subjects', // Load subjects for the exams related to the job
+            'applications.applicant.examMarks.subject', // Eager load ExamMarks and the related subject for each applicant
+            'applications.examCenter',
+            'applications.applicant.user',
+        ])->findOrFail($model->id);
+
+        $applicants = $jobDetail->applications()->with([
+            'applicant.examMarks.subject', // Eager load ExamMarks for each applicant
+            'examCenter',
+            'applicant.user',
+        ])->get();
+
+        return Inertia::render('Jobs/Marks', [
+            'jobDetail' => $jobDetail,
+            'applicants' => $applicants
+        ]);
+    }
+
+
+
+
+
 }

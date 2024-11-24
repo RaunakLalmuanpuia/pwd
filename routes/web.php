@@ -8,6 +8,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\JobDetailsController;
 use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ExamController;
+use App\Http\Controllers\ExamMarksController;
+use App\Http\Controllers\ExamCenterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +65,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'applicant/address'], function
 
 
 Route::middleware('auth')->group(function () {
-
     // JobDetail Controller
     Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
         Route::get('/index', [JobDetailsController::class, 'index'])->middleware('role:Admin')->name('job.index');
@@ -71,12 +73,13 @@ Route::middleware('auth')->group(function () {
         Route::get('{model}', [JobDetailsController::class, 'edit'])->middleware('role:Admin')->name('job.edit');
         Route::put('{model}', [JobDetailsController::class, 'update'])->middleware('role:Admin')->name('job.update');
         Route::delete('{model}', [JobDetailsController::class, 'destroy'])->middleware('role:Admin')->name('job.destroy');
+
+
     });
 
 
     // Application Controller
     Route::group(['middleware' => 'auth', 'prefix' => 'application'], function () {
-
         // Citizen View and apply application
         Route::get('{jobDetail}/show', [ApplicationController::class, 'show'])->name('application.show');
         Route::post('{jobDetail}/apply', [ApplicationController::class, 'apply'])->name('application.apply');
@@ -92,6 +95,28 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/jobs/{jobDetail}/exams/create', [ExamController::class, 'create'])->name('exams.create');
+    Route::post('/jobs/{jobDetail}/exams', [ExamController::class, 'store'])->name('exams.store');
+    Route::get('/exams/{exam}/edit', [ExamController::class, 'edit'])->name('exams.edit');
+    Route::put('/exams/{exam}', [ExamController::class, 'update'])->name('exams.update');
+    Route::delete('/exam/{exam}', [ExamController::class, 'destroy'])->name('exam.destroy');
+
+});
+
+// Display form to assign marks to applicants
+Route::get('/exams/{exam}/assign-marks', [ExamMarksController::class, 'create'])->name('exams.assignMarks');
+// Store the marks assigned to applicants
+Route::post('/exams/{exam}/assign-marks', [ExamMarksController::class, 'store'])->name('exams.storeMarks');
+
+
+// routes/web.php
+Route::get('/exams/{exam}/assign-centers', [ExamCenterController::class, 'create'])->name('exams.assignCenters');
+Route::post('/exams/{exam}/assign-centers', [ExamCenterController::class, 'store'])->name('exams.storeCenters');
+
+Route::get('{model}', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
 
 require __DIR__.'/auth.php';
 

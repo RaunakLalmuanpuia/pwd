@@ -40,4 +40,8 @@ class JobDetail extends Model
     {
         return $this->hasMany(Documents::class);
     }
+    public function exams(): HasMany
+    {
+        return $this->hasMany(Exam::class, 'job_details_id');
+    }
 }

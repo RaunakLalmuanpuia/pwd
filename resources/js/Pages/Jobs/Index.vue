@@ -34,6 +34,7 @@
                                 <th class="border border-gray-300 px-4 py-2">Application Fee</th>
                                 <th class="border border-gray-300 px-4 py-2">Description</th>
                                 <th class="border border-gray-300 px-4 py-2">Status</th>
+                                <th class="border border-gray-300 px-4 py-2">Marks</th>
                                 <th class="border border-gray-300 px-4 py-2">Edit</th>
                             </tr>
                             </thead>
@@ -60,6 +61,14 @@
                                         >
                                             {{ job.active === 1 ? 'Active' : 'Inactive' }}
                                         </span>
+                                </td>
+                                <td class="border border-gray-300 px-4 py-2">
+                                    <q-btn
+                                        class="bg-yellow-500  hover:bg-yellow-600"
+                                        @click="$inertia.get(route('job.showMarks', job.id))"
+                                    >
+                                        Marks
+                                    </q-btn>
                                 </td>
                                 <td class="border border-gray-300 px-4 py-2">
                                     <q-btn

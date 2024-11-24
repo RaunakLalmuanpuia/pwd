@@ -14,7 +14,7 @@ class Applications extends Model
         'applicant_id',
         'job_details_id',
         'status',
-
+        'exam_center_id',
     ];
 
     public function applicant()
@@ -22,7 +22,17 @@ class Applications extends Model
         return $this->belongsTo(Applicants::class, 'applicant_id');
     }
 
-    public function jobDetils() :BelongsTo
+    public function marks()
+    {
+        return $this->hasMany(ExamMarks::class);
+    }
+
+    public function examCenter()
+    {
+        return $this->belongsTo(ExamCenter::class, 'exam_center_id');
+    }
+
+    public function jobDetail() :BelongsTo
     {
         return $this->belongsTo(JobDetail::class, 'job_details_id');
     }

@@ -76,7 +76,7 @@ class ApplicationController extends Controller
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         if (!$applicant) {
-            return redirect()->back()->with('error', 'Please Update your Bio and Address.');
+            return redirect()->back()->with('success', 'Please Update your Bio and Address.');
 //            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
         }
 

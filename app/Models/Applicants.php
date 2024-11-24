@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Applicants extends Model
 {
@@ -40,5 +41,9 @@ class Applicants extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function examMarks()
+    {
+        return $this->hasMany(ExamMarks::class, 'applicant_id'); // Assuming 'applicant_id' is the foreign key in the ExamMarks table
     }
 }
