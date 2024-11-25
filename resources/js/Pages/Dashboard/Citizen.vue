@@ -14,6 +14,13 @@
 
                     <div class="container mx-auto p-4">
                         <h2 class="text-2xl font-bold mb-4">Job Listings</h2>
+
+                        <div v-if="jobDetail.length === 0" class="text-center bg-gray-100 p-6 rounded-lg shadow-md">
+                            <p class="text-xl font-semibold text-gray-600">No job postings available yet</p>
+                            <p class="text-sm text-gray-500 mt-2">Please check back later for updates.</p>
+                        </div>
+
+
                         <ul class="space-y-4"  v-for="(job, index) in jobDetail" :key="index" :job="job" >
                             <li class="bg-card p-4 rounded-lg shadow-md flex justify-between items-center">
                                 <div>

@@ -230,6 +230,13 @@ class ApplicantController extends Controller
 
         DB::beginTransaction();
         try {
+
+            $existingApplicant = Applicants::where('user_id', Auth::id())->first();
+
+            if ($existingApplicant) {
+                return redirect()->back()->with('success', 'Bio Saved Successfully.');
+            }
+
             // Handle file uploads
             $filePaths = $this->handleFileUploads($request, ['community_attachment', 'passport_attachment', 'signature_attachment']);
 
@@ -245,7 +252,7 @@ class ApplicantController extends Controller
             ]));
 
             DB::commit();
-            return to_route('applicant.bio')->with('message', 'Bio saved successfully!');
+            return to_route('applicant.bio')->with('success', 'Bio saved successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->cleanupUploadedFiles($filePaths);
@@ -286,7 +293,7 @@ class ApplicantController extends Controller
             ]));
 
             DB::commit();
-            return to_route('applicant.bio')->with('message', 'Bio updated successfully!');
+            return to_route('applicant.bio')->with('success', 'Bio updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             $this->cleanupUploadedFiles($filePaths);
@@ -399,7 +406,7 @@ class ApplicantController extends Controller
         // Create the address
         Address::create($validatedData);
 
-        return to_route('applicant.address')->with('message', 'Address saved successfully!');
+        return to_route('applicant.address')->with('success', 'Address saved successfully!');
     }
     /**
      * Update an existing address.
@@ -419,7 +426,7 @@ class ApplicantController extends Controller
         // Update the address with validated data
         $address->update($validatedData);
 
-        return to_route('applicant.address')->with('message', 'Address updated successfully!');
+        return to_route('applicant.address')->with('success', 'Address updated successfully!');
 
     }
     /**
