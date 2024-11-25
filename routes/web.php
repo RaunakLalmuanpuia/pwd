@@ -12,6 +12,8 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamMarksController;
 use App\Http\Controllers\ExamCenterController;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +33,9 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])
+    ->name('login');
 
 //Dashboard Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
@@ -83,20 +88,24 @@ Route::middleware('auth')->group(function () {
         // Citizen View and apply application
         Route::get('{jobDetail}/show', [ApplicationController::class, 'show'])->name('application.show');
         Route::post('{jobDetail}/apply', [ApplicationController::class, 'apply'])->name('application.apply');
-
         // Citizen Application Index
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
         //Admin Application Index
         Route::get('/admin/applications', [ApplicationController::class, 'adminIndex'])->name('admin.applications.index');
-
         // Admin route to change the status of an application (approve or reject)
         Route::put('/admin/applications/{application}', [ApplicationController::class, 'changeStatus'])->name('admin.applications.changeStatus');
+
+//        Route::get('/admit-card/{applicant}', [ApplicationController::class, 'generateAdmitCard'])->name('admit-card');
+
+        Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
+
+
 
     });
 
 });
 
-
+//Admin Exam Controller
 Route::middleware(['auth'])->group(function () {
     Route::get('/jobs/{jobDetail}/exams/create', [ExamController::class, 'create'])->name('exams.create');
     Route::post('/jobs/{jobDetail}/exams', [ExamController::class, 'store'])->name('exams.store');
@@ -106,17 +115,20 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-// Display form to assign marks to applicants
-Route::get('/exams/{exam}/assign-marks', [ExamMarksController::class, 'create'])->name('exams.assignMarks');
-// Store the marks assigned to applicants
-Route::post('/exams/{exam}/assign-marks', [ExamMarksController::class, 'store'])->name('exams.storeMarks');
+
+Route::middleware(['auth'])->group(function () {
+    // Display form to assign marks to applicants
+    Route::get('/exams/{exam}/assign-marks', [ExamMarksController::class, 'create'])->name('exams.assignMarks');
+    // Store the marks assigned to applicants
+    Route::post('/exams/{exam}/assign-marks', [ExamMarksController::class, 'store'])->name('exams.storeMarks');
+    // Assign Exam Center
+    Route::get('/exams/{exam}/assign-centers', [ExamCenterController::class, 'create'])->name('exams.assignCenters');
+    Route::post('/exams/{exam}/assign-centers', [ExamCenterController::class, 'store'])->name('exams.storeCenters');
+    //Admin show marks
+    Route::get('{model}', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
+});
 
 
-// routes/web.php
-Route::get('/exams/{exam}/assign-centers', [ExamCenterController::class, 'create'])->name('exams.assignCenters');
-Route::post('/exams/{exam}/assign-centers', [ExamCenterController::class, 'store'])->name('exams.storeCenters');
-
-Route::get('{model}', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
 
 require __DIR__.'/auth.php';
 

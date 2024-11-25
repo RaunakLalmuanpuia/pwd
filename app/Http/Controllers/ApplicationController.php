@@ -7,7 +7,7 @@ use App\Models\ApplicationDocument;
 use App\Models\Applications;
 use App\Models\JobDetail;
 use Illuminate\Http\Request;
-
+use Barryvdh\DomPDF\Facade as PDF;
 class ApplicationController extends Controller
 {
     public function index()
@@ -15,9 +15,10 @@ class ApplicationController extends Controller
         $applicant = Applicants::where('user_id', auth()->id())->first();
 //        dd($applicant);
 
-        $applications = Applications::with('jobDetils') // Load related job details
-        ->where('applicant_id', $applicant->id)
-            ->get();
+        $applications = Applications::with([
+            'jobDetail.exams.subjects', // Eager load exams and their subjects
+            'examCenter'               // Eager load the assigned exam center
+        ])->where('applicant_id', $applicant->id)->get();
 //        dd($applications);
         return inertia('Applicant/Applications', [
             'applications' => $applications,
@@ -36,35 +37,6 @@ class ApplicationController extends Controller
         ]);
     }
 
-//    public function apply(Request $request, JobDetail $jobDetail)
-//    {
-//        $request->validate([
-//            'documents.*' => 'file',
-//        ]);
-//        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
-//        // Save application
-//        $application = Applications::create([
-//            'applicant_id' => $applicant->id,
-//            'job_details_id' => $jobDetail->id,
-//            'status' => 'Pending',
-//        ]);
-//
-//        if ($request->hasFile('documents') && is_array($request->file('documents'))) {
-//            foreach ($request->file('documents') as $key => $document) {
-//                // Check if the document is a valid file before storing
-//                if ($document->isValid()) {
-//                    $path = $document->store('documents');
-//
-//                    ApplicationDocument::create([
-//                        'application_id' => $application->id,
-//                        'document_id' => $key,
-//                        'document_path' => $path,
-//                    ]);
-//                }
-//            }
-//        }
-//        return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
-//    }
     public function apply(Request $request, JobDetail $jobDetail)
     {
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
@@ -168,5 +140,41 @@ class ApplicationController extends Controller
         } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
 
         return $uniqueId;
+    }
+
+//    public function generateAdmitCardByJob(JobDetail $jobDetail)
+//    {
+////        dd($jobDetail);
+//
+//
+//
+//        // Retrieve job details, including applications, exam centers, and exam details
+//        $jobDetail = JobDetail::with([
+//            'applications.applicant.user',
+//            'applications.examCenter', // Load the exam center
+//            'exams.subjects'
+//        ])->findOrFail($jobDetail->id);
+//
+//        // Generate the PDF from the view
+//        $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
+//
+//
+//        // Return the generated PDF as a download
+//        return $pdf->download('admit_card_' . $jobDetail->post_name . '.pdf');
+//    }
+    public function generateAdmitCardByJob(JobDetail $jobDetail)
+    {
+        // Retrieve job details, including applications, exam centers, and exam details
+        $jobDetail = JobDetail::with([
+            'applications.applicant.user',
+            'applications.examCenter', // Load the exam center
+            'exams.subjects'
+        ])->findOrFail($jobDetail->id);
+
+        // Generate the PDF from the view
+        $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
+
+        // Return the generated PDF as a download
+        return $pdf->download('admit_card_' . $jobDetail->post_name . '.pdf');
     }
 }

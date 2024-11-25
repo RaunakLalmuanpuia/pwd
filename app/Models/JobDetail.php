@@ -26,7 +26,6 @@ class JobDetail extends Model
         return $this->belongsTo(Departments::class);
     }
 
-
     public function applications(): HasMany
     {
         return $this->hasMany(Applications::class, 'job_details_id');

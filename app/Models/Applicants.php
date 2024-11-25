@@ -46,4 +46,15 @@ class Applicants extends Model
     {
         return $this->hasMany(ExamMarks::class, 'applicant_id'); // Assuming 'applicant_id' is the foreign key in the ExamMarks table
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Applications::class, 'applicant_id');
+    }
+
+
+    public function examCenter()
+    {
+        return $this->belongsTo(ExamCenter::class);
+    }
 }

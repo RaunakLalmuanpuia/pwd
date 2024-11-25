@@ -161,26 +161,6 @@ class JobDetailsController extends Controller
         return redirect()->route('job.index')->with('success', 'Job deleted successfully.');
     }
 
-//    public function showMarks(JobDetail $model)
-//    {
-//        // Get the job details
-//        $jobDetail = JobDetail::with(['applicants.exams.examCenter'])->findOrFail($model->id);
-//
-//        // Get applicants with their associated exams, marks, and exam centers
-//        $applicants = Applications::with([
-//            'applicant', 'marks', 'examCenter'
-//        ])
-//            ->where('job_details_id', $model->id)
-//            ->get();
-//
-//        // Prepare data for the view (you can return this data to the frontend)
-////        return view('job_details.show_marks', compact('jobDetail', 'applicants'));
-//
-//        return Inertia::render('Jobs/Marks',[
-//            'jobDetail' => $jobDetail,
-//            'applicants' => $applicants
-//        ]);
-//    }
     public function showMarks(JobDetail $model)
     {
         // Eager load exams, subjects, examMarks, and other related models
@@ -196,6 +176,11 @@ class JobDetailsController extends Controller
             'examCenter',
             'applicant.user',
         ])->get();
+
+        // Check if there are no applicants
+        if ($applicants->isEmpty()) {
+            return redirect()->back()->with('success', 'No applicants available yet.');
+        }
 
         return Inertia::render('Jobs/Marks', [
             'jobDetail' => $jobDetail,

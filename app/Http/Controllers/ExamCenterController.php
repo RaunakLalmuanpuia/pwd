@@ -18,6 +18,10 @@ class ExamCenterController extends Controller
             ->with(['applicant.user', 'examCenter'])
             ->get();
 
+        // Check if there are no applicants
+        if ($applicants->isEmpty()) {
+            return redirect()->back()->with('success', 'No applicants available yet.');
+        }
 
 //        dd($applicants);
         $examCenters = ExamCenter::all(); // Fetch all available centers
