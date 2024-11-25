@@ -171,6 +171,7 @@ class ApplicationController extends Controller
             'exams.subjects'
         ])->findOrFail($jobDetail->id);
 
+//        dd($jobDetail);
         // Generate the PDF from the view
         $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
 

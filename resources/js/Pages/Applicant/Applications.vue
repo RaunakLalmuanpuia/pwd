@@ -47,20 +47,12 @@
                                   application.exam_center_id &&
                                   application.job_detail?.exams?.some(exam => exam.subjects?.length > 0)"
                         >
-<!--                            {{application.job_detail.id}}-->
-<!--                            <q-btn-->
-<!--                                class="btn btn-primary"-->
-<!--                                @click="$inertia.get(route('admit-card-job', application.job_detail.id))"-->
-<!--                                label="Admit Card"-->
-<!--                            />-->
-                            <Link
-                                :href="route('admit-card-job', application.job_detail.id)"
-                                class="btn btn-primary"
-                                target="_blank"
+                            <button
+                                @click="openAdmitCard(application.job_detail.id)"
+                                class="btn btn-primary ml-2"
                             >
                                 Admit Card
-                            </Link>
-
+                            </button>
                         </template>
                         <template v-else-if="application.status === 'approved'">
                             <p class="text-sm text-gray-500 italic">
@@ -87,4 +79,11 @@ const props = defineProps(["applications"]);
 defineOptions({
     layout: ApplicantLayout,
 });
+
+// Define the function to open the admit card
+const openAdmitCard = (jobDetailId) => {
+    const url = route('admit-card-job', jobDetailId);
+    window.open(url, '_blank'); // Opens the link in a new tab
+};
+
 </script>
