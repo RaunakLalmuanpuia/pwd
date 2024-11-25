@@ -37,10 +37,10 @@ class ExamCenterController extends Controller
 
     public function store(Request $request,Exam $exam)
     {
-
+//    dd($request);
         $validated = $request->validate([
             'assignments' => 'required|array',
-            'assignments.*.applicant_id' => 'required|exists:applications,applicant_id',
+            'assignments.*.applicant_id' => 'required|integer|exists:applications,applicant_id', // Ensure it's an integer
             'assignments.*.exam_center_id' => 'nullable|exists:exam_centers,id',
         ]);
 

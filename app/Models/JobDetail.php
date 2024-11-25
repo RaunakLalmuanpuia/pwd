@@ -37,7 +37,7 @@ class JobDetail extends Model
 //    }
     public function documents(): HasMany
     {
-        return $this->hasMany(Documents::class);
+        return $this->hasMany(Documents::class, 'job_detail_id');
     }
     public function exams(): HasMany
     {

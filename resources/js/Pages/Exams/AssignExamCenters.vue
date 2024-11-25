@@ -4,17 +4,17 @@
 
         <form @submit.prevent="submit" class="space-y-6">
             <div v-for="applicant in applicants" :key="applicant.id" class="border p-4 rounded-lg shadow-sm">
-
+<!--{{applicant}}-->
                 <h2 class="text-lg font-semibold mb-2">{{ applicant.applicant.user.name }}</h2>
 
                 <!-- Exam Center Selection -->
                 <div>
-                    <label for="exam-center-{{ applicant.id }}" class="block text-sm font-medium text-gray-700">Select Exam Center</label>
+                    <label for="exam-center-{{ applicant.applicant_id }}" class="block text-sm font-medium text-gray-700">Select Exam Center</label>
                     <select
-                        v-model="assignments[applicant.id]"
-                        :id="'exam-center-' + applicant.id"
+                        v-model="assignments[applicant.applicant_id]"
+                        :id="'exam-center-' + applicant.applicant_id"
                         class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        aria-describedby="exam-center-help-{{ applicant.id }}"
+                        aria-describedby="exam-center-help-{{ applicant.applicant_id }}"
                     >
                         <option value="" disabled>Select Exam Center</option>
                         <option v-for="center in examCenters" :key="center.id" :value="center.id">
@@ -24,12 +24,12 @@
 
                     <!-- Error Message -->
                     <div
-                        v-if="form.errors['assignments.' + applicant.id]"
+                        v-if="form.errors['assignments.' + applicant.applicant_id]"
                         class="text-red-500 text-sm mt-2"
-                        id="exam-center-help-{{ applicant.id }}"
+                        id="exam-center-help-{{ applicant.applicant_id }}"
                         role="alert"
                     >
-                        {{ form.errors['assignments.' + applicant.id] }}
+                        {{ form.errors['assignments.' + applicant.applicant_id] }}
                     </div>
                 </div>
 
@@ -68,7 +68,7 @@ const props = defineProps({
 const assignments = ref({});
 props.applicants.forEach((applicant) => {
     // Initialize with existing exam center ID if present, or null otherwise
-    assignments.value[applicant.id] = applicant.exam_center_id || null;
+    assignments.value[applicant.applicant_id] = applicant.exam_center_id || null;
 });
 
 const form = useForm({

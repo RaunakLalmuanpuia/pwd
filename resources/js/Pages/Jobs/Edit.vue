@@ -2,10 +2,8 @@
     <div class="py-12 bg-gray-50">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white shadow sm:rounded-lg">
-
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-6">Edit Job Details</h3>
-
 
 <!--{{data.exams}}-->
                     <form @submit.prevent="submit">

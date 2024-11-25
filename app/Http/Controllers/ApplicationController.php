@@ -99,8 +99,19 @@ class ApplicationController extends Controller
     public function adminIndex()
     {
         // Get all job details with their applications
-        $jobDetails = JobDetail::with(['applications.applicant.user','documents', 'applications.applicationDocuments.jobDocument'])->get();
+        $jobDetails = JobDetail::with('documents')->get();
 //        dd($jobDetails);
+        return inertia('Applications/Jobs', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+
+    public function adminShow(JobDetail $jobDetails)
+    {
+        // Load the necessary relationships for the passed JobDetail instance
+        $jobDetails->load(['applications.applicant.user', 'documents', 'applications.applicationDocuments.jobDocument']);
+//        dd($jobDetails);
+        // Return the Inertia view with the specific JobDetail
         return inertia('Applications/AdminApplication', [
             'jobDetails' => $jobDetails,
         ]);
@@ -125,7 +136,7 @@ class ApplicationController extends Controller
 
         $application->save();
 
-        return redirect()->route('admin.applications.index')->with('success', 'Application status updated.');
+        return redirect()->route('admin.applications.show', $application->id)->with('success', 'Application status updated.');
     }
     /**
      * Generate a unique application ID

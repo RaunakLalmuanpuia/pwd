@@ -90,8 +90,13 @@ Route::middleware('auth')->group(function () {
         Route::post('{jobDetail}/apply', [ApplicationController::class, 'apply'])->name('application.apply');
         // Citizen Application Index
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
-        //Admin Application Index
+
+        //Admin Job Application Index
         Route::get('/admin/applications', [ApplicationController::class, 'adminIndex'])->name('admin.applications.index');
+
+        //Admin Job Application Show
+        Route::get('/admin/applications/{jobDetails}/show', [ApplicationController::class, 'adminShow'])->name('admin.applications.show');
+
         // Admin route to change the status of an application (approve or reject)
         Route::put('/admin/applications/{application}', [ApplicationController::class, 'changeStatus'])->name('admin.applications.changeStatus');
 
