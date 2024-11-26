@@ -6,7 +6,7 @@
 
                 <q-toolbar-title class="flex items-center gap-2">
                     <q-avatar>
-                        <img src="/images/pwd-logo.svg" alt="PWD Logo" />
+                        <img src="/images/pwd_logo.png" alt="PWD Logo" />
                     </q-avatar>
                     <div>
                         <h1 class="text-lg font-bold">
@@ -102,7 +102,7 @@
             <q-toolbar class="flex justify-between">
                 <q-toolbar-title class="flex items-center gap-2">
                     <q-avatar>
-                        <img src="/images/pwd-logo.svg" alt="PWD Logo" />
+                        <img src="/images/pwd_logo.png" alt="PWD Logo" />
                     </q-avatar>
                     <div>
                         <h2 class="text-lg font-bold">

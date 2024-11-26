@@ -131,7 +131,7 @@
 
 <div class="container">
     <div class="header">
-        <img src="{{ asset('images/mpsc-logo.png') }}" alt="PWD Logo">
+        <img src="{{ public_path('images/pwd_logo.png') }}" alt="PWD Logo">
         <h1>PUBLIC WORKS DEPARTMENT MIZORAM</h1>
         <p>Mizoram New Capital Complex, Khatla, Aizawl : Mizoram</p>
     </div>
