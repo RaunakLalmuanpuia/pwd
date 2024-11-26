@@ -75,7 +75,7 @@ class ApplicantController extends Controller
      */
     public function update_bio(Request $request, Applicants $applicant)
     {
-        $this->authorize('update_bio', [$applicant]);
+//        $this->authorize('update_bio', [$applicant]);
 
         $validatedData = $this->validateBio($request);
 
@@ -219,7 +219,7 @@ class ApplicantController extends Controller
     public function update_address(Request $request, Address $address){
 //        dd($request);
         // Ensure the authenticated user owns the address
-        $this->authorize('update', $address);
+//        $this->authorize('update', $address);
 
         $validatedData = $this->validateAddress($request);
 
