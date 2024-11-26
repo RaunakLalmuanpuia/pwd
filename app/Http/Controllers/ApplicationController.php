@@ -15,13 +15,12 @@ class ApplicationController extends Controller
     public function index()
     {
         $applicant = Applicants::where('user_id', auth()->id())->first();
-//        dd($applicant);
 
         $applications = Applications::with([
             'jobDetail.exams.subjects', // Eager load exams and their subjects
             'examCenter'               // Eager load the assigned exam center
         ])->where('applicant_id', $applicant->id)->get();
-//        dd($applications);
+
         return inertia('Applicant/Applications', [
             'applications' => $applications,
         ]);
@@ -51,7 +50,6 @@ class ApplicationController extends Controller
 
         if (!$applicant) {
             return redirect()->back()->with('error', 'Please Update your Bio and Address.');
-//            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
         }
 
         // Check if the applicant has already applied for this job
@@ -60,9 +58,7 @@ class ApplicationController extends Controller
             ->exists();
 
         if ($existingApplication) {
-//            dd(true);
             return redirect()->back()->with('error', 'You have already applied for this job.');
-//            return redirect()->route('dashboard.citizen')->with('error', 'You have already applied for this job.');
         }
 
         $uploadedDocuments = $request->file('documents') ? array_keys($request->file('documents')) : [];
@@ -102,7 +98,6 @@ class ApplicationController extends Controller
     {
         // Get all job details with their applications
         $jobDetails = JobDetail::with('documents')->get();
-//        dd($jobDetails);
         return inertia('Applications/Jobs', [
             'jobDetails' => $jobDetails,
         ]);
@@ -112,7 +107,6 @@ class ApplicationController extends Controller
     {
         // Load the necessary relationships for the passed JobDetail instance
         $jobDetails->load(['applications.applicant.user', 'documents', 'applications.applicationDocuments.jobDocument']);
-//        dd($jobDetails);
         // Return the Inertia view with the specific JobDetail
         return inertia('Applications/AdminApplication', [
             'jobDetails' => $jobDetails,
@@ -122,14 +116,12 @@ class ApplicationController extends Controller
     // Admin method to approve or reject an application
     public function changeStatus(Request $request, Applications $application)
     {
-//        dd($application);
         $request->validate([
             'status' => 'required|in:approved,rejected',
         ]);
 
         // Update application status
         $application->status = $request->status;
-
 
         // If the status is approved, generate a unique application_id
         if ($request->status === 'approved') {
@@ -139,8 +131,6 @@ class ApplicationController extends Controller
         $application->save();
 
         return redirect()->back()->with('success', 'Application status updated.');
-
-//        return redirect()->route('admin.applications.show', $application->id)->with('success', 'Application status updated.');
     }
     /**
      * Generate a unique application ID
@@ -175,7 +165,6 @@ class ApplicationController extends Controller
 
         // Check if the user has an application for this job
         if ($jobDetail->applications->isEmpty()) {
-//            abort(403, 'You do not have an application for this job.');
             return redirect()->back()->with('error', 'You do not have an application for this job.');
         }
 
