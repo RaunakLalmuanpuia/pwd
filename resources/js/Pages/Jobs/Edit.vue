@@ -5,7 +5,6 @@
                 <div class="p-6">
                     <h3 class="text-lg font-medium text-gray-900 mb-6">Edit Job Details</h3>
 
-<!--{{data.exams}}-->
                     <form @submit.prevent="submit">
 
                         <div class="mb-3">
@@ -222,13 +221,6 @@
                         <div class="flex justify-between items-center">
                             <h2 class="text-xl font-semibold">{{ exam.exam_name }}</h2>
 
-<!--                            <button-->
-<!--                                class="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 transition"-->
-<!--                                @click="editExam(exam.id)"-->
-<!--                            >-->
-<!--                                Edit-->
-<!--                            </button>-->
-
                             <q-btn
                                 class="bg-yellow-500  hover:bg-yellow-600"
                                 @click="$inertia.get(route('exams.assignMarks', exam.id))"
@@ -273,11 +265,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
 
 
 </template>
@@ -336,14 +323,6 @@ const removeDocument = (index) => {
 };
 
 const submit = () => {
-    // form.put(route('job.update', props.data.id), {
-    //     preserveState: false,
-    //     onStart: () => state.submitting = true,
-    //     onFinish: () => state.submitting = false,
-    //     onError: (err) => {
-    //         errors.value = err;
-    //     },
-    // });
     form.put(route('job.update', props.data.id), {
         onError: (err) => {
             errors.value = err;
@@ -365,14 +344,15 @@ const formatDate = (date) => {
     return new Date(date).toLocaleDateString(undefined, options);
 };
 
-// Function to format time
-const formatTime = (time) => {
-    return new Date(`1970-01-01T${time}Z`).toLocaleTimeString(undefined, {
-        hour: "2-digit",
-        minute: "2-digit",
-    });
-};
 
+function formatTime(time) {
+    const [hours, minutes, seconds] = time.split(':');
+    const date = new Date();
+    date.setHours(hours, minutes, seconds);
+
+    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+    return date.toLocaleTimeString([], options);
+}
 // Edit button handler
 const editExam = (id) => {
     console.log(`Edit exam with ID: ${id}`);

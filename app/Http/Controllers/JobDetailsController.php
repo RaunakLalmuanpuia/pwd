@@ -161,18 +161,53 @@ class JobDetailsController extends Controller
         return redirect()->route('job.index')->with('success', 'Job deleted successfully.');
     }
 
+//    public function showMarks(JobDetail $model)
+//    {
+//        // Eager load exams, subjects, examMarks, and other related models
+//        $jobDetail = JobDetail::with([
+//            'exams.subjects', // Load subjects for the exams related to the job
+//            'applications.applicant.examMarks.subject', // Eager load ExamMarks and the related subject for each applicant
+//            'applications.examCenter',
+//            'applications.applicant.user',
+//        ])->findOrFail($model->id);
+//
+//        $applicants = $jobDetail->applications()->with([
+//            'applicant.examMarks.subject', // Eager load ExamMarks for each applicant
+//            'examCenter',
+//            'applicant.user',
+//        ])->get();
+//
+//        dd($applicants);
+//
+//        // Check if there are no applicants
+//        if ($applicants->isEmpty()) {
+//            return redirect()->back()->with('success', 'No applicants available yet.');
+//        }
+//
+//        return Inertia::render('Jobs/Marks', [
+//            'jobDetail' => $jobDetail,
+//            'applicants' => $applicants
+//        ]);
+//    }
+
     public function showMarks(JobDetail $model)
     {
-        // Eager load exams, subjects, examMarks, and other related models
+        // Load related data for the specific job
         $jobDetail = JobDetail::with([
             'exams.subjects', // Load subjects for the exams related to the job
-            'applications.applicant.examMarks.subject', // Eager load ExamMarks and the related subject for each applicant
-            'applications.examCenter',
-            'applications.applicant.user',
         ])->findOrFail($model->id);
 
+        // Get the IDs of subjects related to this job's exams
+        $subjectIds = $jobDetail->exams->flatMap(function ($exam) {
+            return $exam->subjects->pluck('id');
+        });
+
+        // Fetch applicants and their marks only for the subjects of this job
         $applicants = $jobDetail->applications()->with([
-            'applicant.examMarks.subject', // Eager load ExamMarks for each applicant
+            'applicant.examMarks' => function ($query) use ($subjectIds) {
+                $query->whereIn('subject_id', $subjectIds); // Filter marks by subjects related to the job
+            },
+            'applicant.examMarks.subject', // Load the related subject for each mark
             'examCenter',
             'applicant.user',
         ])->get();
@@ -182,14 +217,12 @@ class JobDetailsController extends Controller
             return redirect()->back()->with('success', 'No applicants available yet.');
         }
 
+        // Render the view with the filtered data
         return Inertia::render('Jobs/Marks', [
             'jobDetail' => $jobDetail,
-            'applicants' => $applicants
+            'applicants' => $applicants,
         ]);
     }
-
-
-
 
 
 }

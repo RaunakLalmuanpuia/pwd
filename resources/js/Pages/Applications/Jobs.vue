@@ -48,10 +48,10 @@
 
 <script setup>
 
-import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
+import AdminLayout from "@/Layouts/Admin.vue";
 
 defineOptions({
-    layout:ApplicantLayout
+    layout:AdminLayout
 })
 
 const props = defineProps(['jobDetails']);
