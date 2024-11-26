@@ -93,7 +93,7 @@
                         />
                         <span class="ml-2 text-blue-600">+</span>
                     </div>
-<!--                    <p class="mt-1 text-xs text-muted-foreground">0.0B / 0.00%</p>-->
+
                     <p class="mt-1 text-xs text-muted-foreground">{{ document.document_description }}</p>
                     <span v-if="form.errors[`documents.${document.id}`]">
                 {{ form.errors[`documents.${document.id}`] }}
@@ -117,13 +117,21 @@
                 <span class="text-red-500 font-semibold">Date :</span>
                 <span class="text-red-500">{{ currentDate }}</span>
             </div>
-            <div class="flex items-center flex-col">
-                <img aria-hidden="true" alt="Signature of the Candidate" src="https://openui.fly.dev/openui/200x100.svg?text=Signature" class="border border-zinc-300 rounded" />
+            <!-- Right-aligned and smaller image container -->
+            <div class="flex items-center justify-end flex-col">
+                <img
+                    v-if="applicant.signature_photo"
+                    :alt="'Signature of the Candidate'"
+                    :src="`/storage/${applicant.signature_photo}`"
+                    class="border border-zinc-300 rounded w-40 h-40 object-contain"
+                />
                 <p class="text-red-500 text-center mt-2">Signature of the Candidate</p>
             </div>
         </div>
         <button @click="submitApplication" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 mt-4 p-2 rounded-lg w-full">APPLY</button>
     </div>
+
+
 
 
 </template>

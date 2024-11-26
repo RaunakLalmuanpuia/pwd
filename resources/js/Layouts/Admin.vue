@@ -21,54 +21,39 @@
 
         <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
             <q-scroll-area class="fit">
-                <q-list padding class="menu-list">
-                    <q-item clickable v-ripple>
+                <q-list padding class="menu-list text-grey-9 text-weight-medium">
+                    <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='dashboard.admin'"
+                            @click="$inertia.get(route('dashboard'))">
                         <q-item-section avatar>
                             <q-icon name="inbox" />
                         </q-item-section>
-
                         <q-item-section>
-
-<!--                            Dashboard-->
-                            <NavLink
-                                :href="route('dashboard')"
-                                :active="route().current('dashboard')"
-                            >
-                                Dashboard
-                            </NavLink>
-
-
-                        </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-ripple>
-                        <q-item-section avatar>
-                            <q-icon name="inbox" />
-                        </q-item-section>
-
-                        <q-item-section>
-
-                            <!--                            Dashboard-->
-                            <NavLink
-                                :href="route('admin.applications.index')"
-                                :active="route().current('admin.applications.index')"
-                            >
-                                Applications
-                            </NavLink>
-
-
+                            <q-item-label>Dashboard</q-item-label>
                         </q-item-section>
                     </q-item>
 
 
-                    <q-item active clickable v-ripple>
+                    <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='admin.applications.index'"
+                            @click="$inertia.get(route('admin.applications.index'))">
+                        <q-item-section avatar>
+                            <q-icon name="inbox" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Applications</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+
+                    <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='job.index'"
+                            @click="$inertia.get(route('job.index'))">
                         <q-item-section avatar>
                             <q-icon name="star" />
                         </q-item-section>
-
                         <q-item-section>
-                            <q-btn @click="$inertia.get(route('job.index'))">Jobs</q-btn>
-
+                            <q-item-label>Jobs</q-item-label>
                         </q-item-section>
                     </q-item>
 
@@ -76,29 +61,27 @@
                         <q-item-section avatar>
                             <q-icon name="send" />
                         </q-item-section>
-
                         <q-item-section>
                             Send
                         </q-item-section>
                     </q-item>
 
-                    <q-item clickable v-ripple>
+                    <q-item clickable v-ripple @click="$inertia.get(route('profile.edit'))">
                         <q-item-section avatar>
                             <q-icon name="drafts" />
                         </q-item-section>
 
                         <q-item-section>
-                            <q-btn @click="$inertia.get(route('profile.edit'))">Profile</q-btn>
+                            Profile
                         </q-item-section>
                     </q-item>
 
-                    <q-item clickable v-ripple>
+                    <q-item clickable v-ripple @click="$inertia.post(route('logout'))">
                         <q-item-section avatar>
                             <q-icon name="drafts" />
                         </q-item-section>
-
                         <q-item-section>
-                            <q-btn @click="$inertia.post(route('logout'))">Logout</q-btn>
+                            Logout
                         </q-item-section>
                     </q-item>
                 </q-list>
@@ -108,6 +91,9 @@
         <q-page-container>
             <div v-if="flashSuccess" class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2">
                 {{ flashSuccess }}
+            </div>
+            <div v-if="flashError" class="mb-4 border rounded-md shadow-sm border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900 p-2">
+                {{ flashError }}
             </div>
             <slot />
         </q-page-container>
@@ -143,7 +129,9 @@ const page = usePage()
 const flashSuccess = computed(
     () => page.props.flash.success,
 )
-
+const flashError = computed(
+    () => page.props.flash.error,
+)
 const leftDrawerOpen = ref(false)
 
 const toggleLeftDrawer = () => {

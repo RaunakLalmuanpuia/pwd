@@ -31,7 +31,7 @@
                                 <td class="border border-gray-300 px-4 py-3">
                                     {{ application.job_detail?.post_name || "N/A" }}
                                 </td>
-                                <td class="border border-gray-300 px-4 py-3">
+                                <td class="border border-gray-300 px-4 py-3 ">
                                     <!-- Status Badge -->
                                     <span
                                         :class="[
@@ -47,26 +47,28 @@
                             </span>
 
                                     <!-- Show Admit Card Button -->
-                                    <template
-                                        v-if="application.status === 'approved' &&
-                                      application.exam_center_id &&
-                                      application.job_detail?.exams?.some(exam => exam.subjects?.length > 0)"
-                                    >
-                                        <button
-                                            @click="openAdmitCard(application.job_detail.id)"
-                                            class="inline-block mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
-                                        >
-                                            Admit Card
-                                        </button>
-                                    </template>
-                                    <template v-else-if="application.status === 'approved'">
-                                        <p class="text-sm text-gray-500 italic">
-                                            Admit Card not yet available.
-                                        </p>
-                                    </template>
+                                    <div>
+                                        <template
+                                            v-if="application.status === 'approved' &&
+                                            application.exam_center_id &&
+                                             application.job_detail?.exams?.some(exam => exam.subjects?.length > 0)"
+                                            >
+                                            <button
+                                                @click="openAdmitCard(application.job_detail.id)"
+                                                class="inline-block mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+                                            >
+                                                Admit Card
+                                            </button>
+                                        </template>
+                                        <template v-else-if="application.status === 'approved'">
+                                            <p class="text-sm text-gray-500 italic">
+                                                Admit Card not yet available.
+                                            </p>
+                                        </template>
+                                    </div>
                                 </td>
                                 <td class="border border-gray-300 px-4 py-3">
-                                    {{ new Date(application.created_at).toLocaleDateString() }}
+                                    {{ formatDate(application.created_at)}}
                                 </td>
                             </tr>
                             </tbody>
@@ -95,6 +97,15 @@ defineOptions({
 const openAdmitCard = (jobDetailId) => {
     const url = route('admit-card-job', jobDetailId);
     window.open(url, '_blank'); // Opens the link in a new tab
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-based)
+    const year = date.getFullYear(); // Get the full year
+
+    return `${day}/${month}/${year}`;
 };
 
 </script>
