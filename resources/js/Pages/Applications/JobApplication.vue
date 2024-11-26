@@ -120,9 +120,9 @@
             <!-- Right-aligned and smaller image container -->
             <div class="flex items-center justify-end flex-col">
                 <img
-                    v-if="applicant.signature_photo"
+                    v-if="applicant?.signature_photo"
                     :alt="'Signature of the Candidate'"
-                    :src="`/storage/${applicant.signature_photo}`"
+                    :src="`/storage/${applicant?.signature_photo}`"
                     class="border border-zinc-300 rounded w-40 h-40 object-contain"
                 />
                 <p class="text-red-500 text-center mt-2">Signature of the Candidate</p>

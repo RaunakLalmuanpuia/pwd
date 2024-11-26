@@ -11,7 +11,7 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
-    role: '',
+    phone: '',
 });
 
 const submit = () => {
@@ -58,18 +58,18 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="role" value="Role" />
+                <InputLabel for="phone" value="Phone" />
 
                 <TextInput
-                    id="role"
+                    id="phone"
                     type="text"
                     class="mt-1 block w-full"
-                    v-model="form.role"
+                    v-model="form.phone"
                     required
-                    autocomplete="role"
+                    autocomplete="phone"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
             <div class="mt-4">

@@ -8,6 +8,8 @@ use App\Models\Applications;
 use App\Models\JobDetail;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Auth;
+
 class ApplicationController extends Controller
 {
     public function index()
@@ -48,7 +50,7 @@ class ApplicationController extends Controller
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         if (!$applicant) {
-            return redirect()->back()->with('success', 'Please Update your Bio and Address.');
+            return redirect()->back()->with('error', 'Please Update your Bio and Address.');
 //            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
         }
 
@@ -136,7 +138,9 @@ class ApplicationController extends Controller
 
         $application->save();
 
-        return redirect()->route('admin.applications.show', $application->id)->with('success', 'Application status updated.');
+        return redirect()->back()->with('success', 'Application status updated.');
+
+//        return redirect()->route('admin.applications.show', $application->id)->with('success', 'Application status updated.');
     }
     /**
      * Generate a unique application ID
@@ -153,36 +157,28 @@ class ApplicationController extends Controller
         return $uniqueId;
     }
 
-//    public function generateAdmitCardByJob(JobDetail $jobDetail)
-//    {
-////        dd($jobDetail);
-//
-//
-//
-//        // Retrieve job details, including applications, exam centers, and exam details
-//        $jobDetail = JobDetail::with([
-//            'applications.applicant.user',
-//            'applications.examCenter', // Load the exam center
-//            'exams.subjects'
-//        ])->findOrFail($jobDetail->id);
-//
-//        // Generate the PDF from the view
-//        $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
-//
-//
-//        // Return the generated PDF as a download
-//        return $pdf->download('admit_card_' . $jobDetail->post_name . '.pdf');
-//    }
     public function generateAdmitCardByJob(JobDetail $jobDetail)
     {
-        // Retrieve job details, including applications, exam centers, and exam details
+        $userId = Auth::id(); // Get the authenticated user ID
+
+        // Retrieve job details and filter applications for the authenticated user
         $jobDetail = JobDetail::with([
+            'applications' => function ($query) use ($userId) {
+                $query->whereHas('applicant.user', function ($q) use ($userId) {
+                    $q->where('id', $userId);
+                });
+            },
             'applications.applicant.user',
-            'applications.examCenter', // Load the exam center
-            'exams.subjects'
+            'applications.examCenter',
+            'exams.subjects',
         ])->findOrFail($jobDetail->id);
 
-//        dd($jobDetail);
+        // Check if the user has an application for this job
+        if ($jobDetail->applications->isEmpty()) {
+//            abort(403, 'You do not have an application for this job.');
+            return redirect()->back()->with('error', 'You do not have an application for this job.');
+        }
+
         // Generate the PDF from the view
         $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
 
