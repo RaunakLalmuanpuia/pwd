@@ -93,16 +93,46 @@ Route::middleware('auth')->group(function () {
         //Citizen Download Admit Card
         Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
 
-        //Admin Job Application Index
-        Route::get('/admin/applications', [ApplicationController::class, 'adminIndex'])->middleware('role:Admin')->name('admin.applications.index');
-        //Admin Job Application Show
-        Route::get('/admin/applications/{jobDetails}/show', [ApplicationController::class, 'adminShow'])->middleware('role:Admin')->name('admin.applications.show');
+//        //Admin Job Application Index
+//        Route::get('/admin/applications', [ApplicationController::class, 'adminIndex'])->middleware('role:Admin')->name('admin.applications.index');
+
+        Route::get('admin/{jobDetails}/applicant/{application}/show', [ApplicationController::class, 'showApplicantDetail'])->name('admin.application.show_applicant_detail');
+        //Admin Job Application Index - Submission
+        Route::get('/admin/applications/submission', [ApplicationController::class, 'adminIndexSubmission'])->middleware('role:Admin')->name('admin.applications.index_submission');
+
+        //Admin Job Application Index - Approved
+        Route::get('/admin/applications/approved', [ApplicationController::class, 'adminIndexApproved'])->middleware('role:Admin')->name('admin.applications.index_approved');
+
+        //Admin Job Application Index - Approved
+        Route::get('/admin/applications/eligible', [ApplicationController::class, 'adminIndexEligible'])->middleware('role:Admin')->name('admin.applications.index_eligible');
+
+//        //Admin Job Application Show
+//        Route::get('/admin/applications/{jobDetails}/show', [ApplicationController::class, 'adminShow'])->middleware('role:Admin')->name('admin.applications.show');
+
+        //Admin Job Application Show submission
+        Route::get('/admin/applications/{jobDetails}/submission', [ApplicationController::class, 'adminShowSubmitted'])->middleware('role:Admin')->name('admin.applications.show_submission');
+
+        //Admin Job Application Show Approved
+        Route::get('/admin/applications/{jobDetails}/approved', [ApplicationController::class, 'adminShowApproved'])->middleware('role:Admin')->name('admin.applications.show_approved');
+
+        //Admin Job Application Show Eligible
+        Route::get('/admin/applications/{jobDetails}/eligible', [ApplicationController::class, 'adminShowEligible'])->middleware('role:Admin')->name('admin.applications.show_eligible');
+
+
         // Admin route to change the status of an application (approve or reject)
         Route::put('/admin/applications/{application}', [ApplicationController::class, 'changeStatus'])->middleware('role:Admin')->name('admin.applications.changeStatus');
+
+        Route::put('/admin/applications/bulk-change-status', [ApplicationController::class, 'bulkChangeStatus'])
+            ->middleware('role:Admin')
+            ->name('admin.applications.bulkChangeStatus');
 
     });
 
 });
+
+Route::put('/admin/applications/bulk-change-status', [ApplicationController::class, 'bulkChangeStatus'])
+    ->middleware('role:Admin')
+    ->name('admin.applications.bulkChangeStatus');
 
 //Admin Exam Controller
 Route::middleware(['auth'])->group(function () {

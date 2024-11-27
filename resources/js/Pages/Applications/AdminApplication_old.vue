@@ -51,7 +51,7 @@
                             </thead>
                             <tbody>
                             <tr v-for="application in filteredApplications" :key="application.id" class="hover:bg-gray-50 transition duration-150">
-<!--                                {{application}}-->
+                                <!--                                {{application}}-->
                                 <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
                                 <td class="px-4 py-2">{{ application.application_id || 'N/A' }}</td>
                                 <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>

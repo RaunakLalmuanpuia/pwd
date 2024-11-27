@@ -22,6 +22,7 @@
         <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
             <q-scroll-area class="fit">
                 <q-list padding class="menu-list text-grey-9 text-weight-medium">
+
                     <q-item clickable v-ripple active-class="active-menu"
                             :active="route().current()==='dashboard.admin'"
                             @click="$inertia.get(route('dashboard'))">
@@ -33,38 +34,86 @@
                         </q-item-section>
                     </q-item>
 
+                    <q-expansion-item  default-opened label="Applications" group="menu" icon="article">
 
-                    <q-item clickable v-ripple active-class="active-menu"
-                            :active="route().current()==='admin.applications.index'"
-                            @click="$inertia.get(route('admin.applications.index'))">
-                        <q-item-section avatar>
-                            <q-icon name="inbox" />
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>Applications</q-item-label>
-                        </q-item-section>
-                    </q-item>
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='admin.applications.index_submission'"
+                                @click="$inertia.get(route('admin.applications.index_submission'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>Submission</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='admin.applications.index_approved'"
+                                @click="$inertia.get(route('admin.applications.index_approved'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>Qualified</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='admin.applications.index_eligible'"
+                                @click="$inertia.get(route('admin.applications.index_eligible'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>Eligible</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
+                    </q-expansion-item>
+
+                    <q-expansion-item label="Administration" group="menu" icon="manage_accounts">
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='job.index'"
+                                @click="$inertia.get(route('job.index'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>Jobs</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple>
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                Exams
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple>
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                Marks
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple>
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                Exam Center
+                            </q-item-section>
+                        </q-item>
+
+                    </q-expansion-item>
 
 
-                    <q-item clickable v-ripple active-class="active-menu"
-                            :active="route().current()==='job.index'"
-                            @click="$inertia.get(route('job.index'))">
-                        <q-item-section avatar>
-                            <q-icon name="star" />
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>Jobs</q-item-label>
-                        </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-ripple>
-                        <q-item-section avatar>
-                            <q-icon name="send" />
-                        </q-item-section>
-                        <q-item-section>
-                            Send
-                        </q-item-section>
-                    </q-item>
+                    <q-separator></q-separator>
 
                     <q-item clickable v-ripple @click="$inertia.get(route('profile.edit'))">
                         <q-item-section avatar>

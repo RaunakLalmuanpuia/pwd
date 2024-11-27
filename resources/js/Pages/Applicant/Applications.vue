@@ -49,7 +49,7 @@
                                     <!-- Show Admit Card Button -->
                                     <div>
                                         <template
-                                            v-if="application.status === 'approved' &&
+                                            v-if="application.status === 'eligible' &&
                                             application.exam_center_id &&
                                              application.job_detail?.exams?.some(exam => exam.subjects?.length > 0)"
                                             >

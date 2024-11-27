@@ -94,43 +94,160 @@ class ApplicationController extends Controller
 
 
     // Admin view to list all applications based on job details
-    public function adminIndex()
-    {
-        // Get all job details with their applications
-        $jobDetails = JobDetail::with('documents')->get();
-        return inertia('Applications/Jobs', [
-            'jobDetails' => $jobDetails,
-        ]);
-    }
+//    public function adminIndex()
+//    {
+//        // Get all job details with their applications
+////        $jobDetails = JobDetail::with('documents')->get();
+//        // Get all job details with the count of their applications
+//        $jobDetails = JobDetail::withCount('applications')->with('documents')->get();
+//        return inertia('Applications/Jobs', [
+//            'jobDetails' => $jobDetails,
+//        ]);
+//    }
 
-    public function adminShow(JobDetail $jobDetails)
+    public function showApplicantDetail(JobDetail $jobDetails, Applications $application)
     {
-        // Load the necessary relationships for the passed JobDetail instance
-        $jobDetails->load(['applications.applicant.user', 'documents', 'applications.applicationDocuments.jobDocument']);
+        // Filter the applications to include only the one matching the given $application->id
+        $jobDetails->load([
+            'applications' => function ($query) use ($application) {
+                $query->where('id', $application->id);
+            },
+            'applications.applicant.user.address',
+            'documents',
+            'applications.applicationDocuments.jobDocument',
+        ]);
+
         // Return the Inertia view with the specific JobDetail
-        return inertia('Applications/AdminApplication', [
+        return inertia('Applicant/ApplicantDetail', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+    public function adminIndexSubmission()
+    {
+        // Get all job details with the count of their pending applications and related documents
+        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
+            $query->where('status', 'pending');
+        }])
+            ->with('documents')
+            ->get();
+
+        return inertia('Applications/Submission', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+    public function adminIndexApproved()
+    {
+        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
+            $query->where('status', 'approved');
+        }])
+            ->with('documents')
+            ->get();
+
+        return inertia('Applications/Approved', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+    public function adminIndexEligible()
+    {
+        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
+            $query->where('status', 'eligible');
+        }])
+            ->with('documents')
+            ->get();
+
+        return inertia('Applications/Eligible', [
             'jobDetails' => $jobDetails,
         ]);
     }
 
-    // Admin method to approve or reject an application
-    public function changeStatus(Request $request, Applications $application)
+//    public function adminShow(JobDetail $jobDetails)
+//    {
+//        // Load the necessary relationships for the passed JobDetail instance
+//        $jobDetails->load(['applications.applicant.user', 'documents', 'applications.applicationDocuments.jobDocument']);
+//        // Return the Inertia view with the specific JobDetail
+//        return inertia('Applications/AdminApplication', [
+//            'jobDetails' => $jobDetails,
+//        ]);
+//    }
+    public function adminShowSubmitted(JobDetail $jobDetails)
     {
-        $request->validate([
-            'status' => 'required|in:approved,rejected',
+        // Load the necessary relationships, but filter applications by 'approved' status
+        $jobDetails->load([
+            'applications' => function ($query) {
+                $query->where('status', 'pending');
+            },
+            'applications.applicant.user',
+            'documents',
+            'applications.applicationDocuments.jobDocument',
         ]);
 
-        // Update application status
-        $application->status = $request->status;
+        // Return the Inertia view with the specific JobDetail
+        return inertia('Applications/SubmittedApplication', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
 
-        if ($request->status === 'approved') {
-            $application->application_id = $this->generateUniqueApplicationId();
+    public function adminShowApproved(JobDetail $jobDetails)
+    {
+        // Load the necessary relationships, but filter applications by 'approved' status
+        $jobDetails->load([
+            'applications' => function ($query) {
+                $query->where('status', 'approved');
+            },
+            'applications.applicant.user',
+            'documents',
+            'applications.applicationDocuments.jobDocument',
+        ]);
+
+        // Return the Inertia view with the specific JobDetail
+        return inertia('Applications/ApprovedApplications', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+
+    public function adminShowEligible(JobDetail $jobDetails)
+    {
+        // Load the necessary relationships, but filter applications by 'approved' status
+        $jobDetails->load([
+            'applications' => function ($query) {
+                $query->where('status', 'eligible');
+            },
+            'applications.applicant.user',
+            'documents',
+            'applications.applicationDocuments.jobDocument',
+        ]);
+
+        // Return the Inertia view with the specific JobDetail
+        return inertia('Applications/EligibleApplications', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+
+
+
+    public function bulkChangeStatus(Request $request)
+    {
+//        dd($request);
+        $request->validate([
+            'status' => 'required|in:approved,pending,eligible',
+            'application_ids' => 'required|array',
+            'application_ids.*' => 'exists:applications,id',
+        ]);
+
+        $status = $request->status;
+
+        foreach ($request->application_ids as $applicationId) {
+            $application = Applications::findOrFail($applicationId);
+            $application->status = $status;
+
+            if ($status === 'approved') {
+                $application->application_id = $this->generateUniqueApplicationId();
+            } elseif ($status === 'pending') {
+                $application->application_id = null;
+            }
+
+            $application->save();
         }
-        // If the status is rejected, remove the application_id
-        elseif ($request->status === 'rejected') {
-            $application->application_id = null;
-        }
-        $application->save();
 
         return redirect()->back()->with('success', 'Application status updated.');
     }

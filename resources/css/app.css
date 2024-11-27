@@ -42,4 +42,13 @@
         border-right-width: 4px;
         border-right-style: solid;
     }
+    .zcard {
+        border-radius: 8px;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1);
+        border: solid 1px #dedede;
+        background-color: #fff;
+    }
+    .ztext , q-table{
+        color: #484848;
+    }
 }
