@@ -55,23 +55,23 @@
 
         <div class="w-full md:w-1/2 p-4">
             <h2 class="text-lg font-semibold">Permanent Address</h2>
-            <p><strong>House No:</strong>{{applicant.user.address.permanent_house_no }}</p>
-            <p><strong>Street:</strong> {{applicant.user.address.permanent_street }}</p>
-            <p><strong>Locality (Veng):</strong> {{applicant.user.address.permanent_locality }}</p>
-            <p><strong>Landmark:</strong> {{applicant.user.address.permanent_landmark }}</p>
-            <p><strong>Town / City:</strong> {{applicant.user.address.permanent_city }}</p>
-            <p><strong>District:</strong> {{applicant.user.address.permanent_district }}</p>
-            <p><strong>State / UT:</strong> {{applicant.user.address.permanent_state }}</p>
-            <p><strong>PIN:</strong> {{applicant.user.address.permanent_pin_code }}</p>
+            <p><strong>House No:</strong>{{applicant?.user.address.permanent_house_no }}</p>
+            <p><strong>Street:</strong> {{applicant?.user.address.permanent_street }}</p>
+            <p><strong>Locality (Veng):</strong> {{applicant?.user.address.permanent_locality }}</p>
+            <p><strong>Landmark:</strong> {{applicant?.user.address.permanent_landmark }}</p>
+            <p><strong>Town / City:</strong> {{applicant?.user.address.permanent_city }}</p>
+            <p><strong>District:</strong> {{applicant?.user.address.permanent_district }}</p>
+            <p><strong>State / UT:</strong> {{applicant?.user.address.permanent_state }}</p>
+            <p><strong>PIN:</strong> {{applicant?.user.address.permanent_pin_code }}</p>
             <h2 class="text-lg font-semibold mt-4">Communication Address</h2>
-            <p><strong>House No:</strong> {{applicant.user.address.communication_house_no }}</p>
-            <p><strong>Street:</strong> {{applicant.user.address.communication_street }}</p>
-            <p><strong>Locality (Veng):</strong> {{applicant.user.address.communication_locality }}</p>
-            <p><strong>Landmark:</strong> {{applicant.user.address.communication_landmark }}</p>
-            <p><strong>Town / City:</strong> {{applicant.user.address.communication_city }}</p>
-            <p><strong>District:</strong> {{applicant.user.address.communication_district }}</p>
-            <p><strong>State / UT:</strong>{{applicant.user.address.communication_state }}</p>
-            <p><strong>PIN:</strong> {{applicant.user.address.communication_pin_code }}</p>
+            <p><strong>House No:</strong> {{applicant?.user.address.communication_house_no }}</p>
+            <p><strong>Street:</strong> {{applicant?.user.address.communication_street }}</p>
+            <p><strong>Locality (Veng):</strong> {{applicant?.user.address.communication_locality }}</p>
+            <p><strong>Landmark:</strong> {{applicant?.user.address.communication_landmark }}</p>
+            <p><strong>Town / City:</strong> {{applicant?.user.address.communication_city }}</p>
+            <p><strong>District:</strong> {{applicant?.user.address.communication_district }}</p>
+            <p><strong>State / UT:</strong>{{applicant?.user.address.communication_state }}</p>
+            <p><strong>PIN:</strong> {{applicant?.user.address.communication_pin_code }}</p>
         </div>
     </div>
 
@@ -96,8 +96,8 @@
 
                     <p class="mt-1 text-xs text-muted-foreground">{{ document.document_description }}</p>
                     <span v-if="form.errors[`documents.${document.id}`]">
-                {{ form.errors[`documents.${document.id}`] }}
-            </span>
+                        {{ form.errors[`documents.${document.id}`] }}
+                    </span>
                 </div>
             </div>
         </div>

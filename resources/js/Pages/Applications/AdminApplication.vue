@@ -49,7 +49,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="application in jobDetails.applications" :key="application.id" class="hover:bg-gray-50 transition duration-150">
+                            <tr v-for="application in filteredApplications" :key="application.id" class="hover:bg-gray-50 transition duration-150">
                                 <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
                                 <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>
                                 <td class="px-4 py-2">{{ application.applicant?.disability ? 'Yes' : 'No' }}</td>
@@ -147,7 +147,7 @@ const searchTerm = ref('');
 
 // Filtered applications based on the search term
 const filteredApplications = computed(() => {
-    return jobDetails.applications.filter(application => {
+    return props.jobDetails.applications.filter(application => {
         const applicantName = application.applicant.user?.name.toLowerCase() || '';
         return applicantName.includes(searchTerm.value.toLowerCase());
     });
