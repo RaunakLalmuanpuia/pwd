@@ -123,11 +123,13 @@ class ApplicationController extends Controller
         // Update application status
         $application->status = $request->status;
 
-        // If the status is approved, generate a unique application_id
         if ($request->status === 'approved') {
             $application->application_id = $this->generateUniqueApplicationId();
         }
-
+        // If the status is rejected, remove the application_id
+        elseif ($request->status === 'rejected') {
+            $application->application_id = null;
+        }
         $application->save();
 
         return redirect()->back()->with('success', 'Application status updated.');

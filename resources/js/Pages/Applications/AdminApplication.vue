@@ -42,6 +42,7 @@
                             <thead class="bg-gray-100">
                             <tr>
                                 <th class="px-4 py-2 text-left text-gray-600">Applicant Name</th>
+                                <th class="px-4 py-2 text-left text-gray-600">Roll No</th>
                                 <th class="px-4 py-2 text-left text-gray-600">Community</th>
                                 <th class="px-4 py-2 text-left text-gray-600">Disability</th>
                                 <th class="px-4 py-2 text-left text-gray-600">Status</th>
@@ -50,7 +51,9 @@
                             </thead>
                             <tbody>
                             <tr v-for="application in filteredApplications" :key="application.id" class="hover:bg-gray-50 transition duration-150">
+<!--                                {{application}}-->
                                 <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
+                                <td class="px-4 py-2">{{ application.application_id || 'N/A' }}</td>
                                 <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>
                                 <td class="px-4 py-2">{{ application.applicant?.disability ? 'Yes' : 'No' }}</td>
                                 <td class="px-4 py-2">
