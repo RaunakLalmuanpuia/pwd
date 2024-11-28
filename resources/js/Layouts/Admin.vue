@@ -71,7 +71,7 @@
 
                     </q-expansion-item>
 
-                    <q-expansion-item label="Administration" group="menu" icon="manage_accounts">
+                    <q-expansion-item label="Job Management" group="menu" icon="manage_accounts">
                         <q-item clickable v-ripple active-class="active-menu"
                                 :active="route().current()==='job.index'"
                                 @click="$inertia.get(route('job.index'))">
@@ -105,18 +105,61 @@
                             </q-item-section>
                         </q-item>
 
+<!--                        <q-item clickable v-ripple>-->
+<!--                            <q-item-section avatar>-->
+<!--                                <q-icon name="circle" />-->
+<!--                            </q-item-section>-->
+<!--                            <q-item-section>-->
+<!--                                Exam Center-->
+<!--                            </q-item-section>-->
+<!--                        </q-item>-->
+
+                    </q-expansion-item>
+
+                    <q-expansion-item label="Administration" group="menu" icon="manage_accounts">
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='job.index'"
+                                @click="$inertia.get(route('job.index'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>Exam Center</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='exams.index'"
+                                @click="$inertia.get(route('exams.index'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                Users
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='exams.marks.index'"
+                                @click="$inertia.get(route('exams.marks.index'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" />
+                            </q-item-section>
+                            <q-item-section>
+                                Payments
+                            </q-item-section>
+                        </q-item>
+
                         <q-item clickable v-ripple>
                             <q-item-section avatar>
                                 <q-icon name="circle" />
                             </q-item-section>
                             <q-item-section>
-                                Exam Center
+                               Report
                             </q-item-section>
                         </q-item>
 
                     </q-expansion-item>
-
-
                     <q-separator></q-separator>
 
                     <q-item clickable v-ripple @click="$inertia.get(route('profile.edit'))">
