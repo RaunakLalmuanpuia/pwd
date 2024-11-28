@@ -18,16 +18,27 @@
         <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
         <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>
     </div>
-
-    <div class="p-4">
-        <button
-            @click="toggleDiv"
-            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-            {{ isVisible ? "Hide Profile" : "Show Profile" }}
-        </button>
-
+    <div class="mt-6 flex justify-between w-full">
+        <div class="p-4">
+            <button
+                @click="toggleDiv"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+                {{ isVisible ? "Hide Profile" : "Show Profile" }}
+            </button>
+        </div>
+        <!-- Right-aligned and smaller image container -->
+        <div class="p-4">
+            <button
+                @click="toggleDiv"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+                {{ isVisible ? "Hide Payment" : "Show Payment" }}
+            </button>
+        </div>
     </div>
+
+
 
 
     <div v-if="isVisible" class="flex flex-col md:flex-row p-4 bg-background rounded-lg shadow-md">
@@ -36,8 +47,8 @@
                 <q-img
                     :src="`/storage/${applicant.passport_photo}`"
                     alt="Passport Size Photo"
-                    class="rounded-full mr-4"
-                    style="width: 100px; height: 100px; object-fit: cover;" />
+                    class="mr-4"
+                    style="width: 120px; height: 120px; object-fit: cover;" />
                 <div>
                     <h3 class="text-md font-bold">{{ applicant?.user.name }}</h3>
                     <p class="text-muted-foreground">Name (As HSLC Cert. / Service Book)</p>
@@ -78,30 +89,26 @@
         </div>
     </div>
 
+
+
     <div class="p-4 bg-background rounded-lg shadow-md">
         <h2 class="text-lg font-bold mb-3">Required Documents</h2>
         <div class="grid grid-cols-2 gap-4">
-            <div v-for="document in mandatoryDocuments" :key="document.id" class="mb-4">
-                <label class="block text-sm font-medium text-foreground">
-                    {{ document.document_name }}
-                </label>
-<!--                <p class="text-sm text-muted-foreground">{{ document.document_description }}</p>-->
+            <div
+                v-for="document in mandatoryDocuments" :key="document.id"
+                class="row col-xs-12 col-sm-6 print-hide"
+            >
+                <div class="col-xs-8 flex items-center text-grey-6">
+                    <label class="block text-sm font-medium text-bold">{{ document.document_name }}</label>
+                </div>
 
-                <!-- Check if the document is uploaded -->
-                <div class="mt-1 flex items-center border border-border rounded-md p-2 bg-card">
-                    <div v-if="isDocumentUploaded(document.id)" class="flex items-center gap-2">
-                        <a
-                            :href="getUploadedDocumentPath(document.id)"
-                            target="_blank"
-                            class="text-blue-600 underline"
-                        >
-                            View Uploaded Document
-                        </a>
-                        <span class="text-green-600"> Uploaded</span>
-                    </div>
-                    <div v-else class="text-red-600">
-                        ✘ Not Uploaded
-                    </div>
+                <div class="col-xs-4">
+                    <q-btn
+                        :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
+                        color="primary"
+                        flat
+
+                    />
                 </div>
             </div>
         </div>
