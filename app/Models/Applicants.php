@@ -57,4 +57,16 @@ class Applicants extends Model
     {
         return $this->belongsTo(ExamCenter::class);
     }
+
+    public function exams()
+    {
+        return $this->hasManyThrough(
+            Exam::class,
+            Applications::class,
+            'applicant_id',      // Foreign key on Applications table
+            'job_details_id',    // Foreign key on Exams table
+            'id',                // Local key on Applicants table
+            'job_details_id'     // Local key on Applications table
+        );
+    }
 }

@@ -118,9 +118,7 @@ Route::middleware('auth')->group(function () {
         // Admin route to change the status of an application (approve or reject)
         Route::put('/admin/applications/{application}', [ApplicationController::class, 'changeStatus'])->middleware('role:Admin')->name('admin.applications.changeStatus');
 
-//        Route::put('/admin/applications/bulk-change-status', [ApplicationController::class, 'bulkChangeStatus'])
-//            ->middleware('role:Admin')
-//            ->name('admin.applications.bulkChangeStatus');
+
 
 
     });

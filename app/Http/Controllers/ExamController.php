@@ -13,10 +13,10 @@ class ExamController extends Controller
     /**
      * Show the form to create a new exam for a job.
      */
-
+    // Job List for Marks.
     public function index(){
         $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->where('status', 'approved');
+            $query->whereIn('status', ['approved','eligible']);
         }])
             ->with('documents')
             ->get();
@@ -25,7 +25,7 @@ class ExamController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
-
+    // Create Exam
     public function create(JobDetail $jobDetail)
     {
         return Inertia::render('Exams/Create', [
@@ -33,10 +33,8 @@ class ExamController extends Controller
         ]);
     }
 
-
+    // View Exam
     public function show(JobDetail $jobDetail){
-//        dd($jobDetail);
-
         return inertia('Exams/Show', [
             'data'=>$jobDetail->load(['documents', 'exams.subjects'])
         ]);
@@ -46,6 +44,7 @@ class ExamController extends Controller
     /**
      * Store a new exam along with its subjects.
      */
+    //Create Exam and Subjects
     public function store(Request $request, JobDetail $jobDetail)
     {
         $validated = $request->validate([
@@ -79,6 +78,8 @@ class ExamController extends Controller
     /**
      * Show the form to edit an existing exam and its subjects.
      */
+
+    // Open edit exam page
     public function edit(Exam $exam)
     {
         $exam->load('subjects');
@@ -92,6 +93,7 @@ class ExamController extends Controller
     /**
      * Update an existing exam along with its subjects.
      */
+    // Update Exam and subjects
     public function update(Request $request, Exam $exam)
     {
 //        dd($request);
@@ -133,6 +135,7 @@ class ExamController extends Controller
         return redirect()->route('exams.show', $exam->job_details_id)
             ->with('success', 'Exam and subjects updated successfully.');
     }
+    //Delete Exam
     public function destroy(Exam $exam)
     {
         // Ensure the exam exists

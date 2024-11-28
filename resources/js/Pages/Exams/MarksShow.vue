@@ -4,17 +4,17 @@
             <div class="bg-white shadow sm:rounded-lg">
                 <div class="container mx-auto p-4">
                     <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold mb-6">Assign Marks to Exams and Subjects</h1>
+                        <h1 class="text-2xl font-bold mb-6">Assign Marks to Exams and Subjects : {{data.exams[0]?.exam_name }}</h1>
 
                     </div>
 
                     <div v-for="exam in data.exams" :key="exam.id" class="mb-6 p-4 border rounded-lg shadow-md bg-white">
                         <div class="flex justify-between items-center">
-                            <h2 class="text-xl font-semibold">{{ exam.exam_name }}</h2>
+                            <h2 class="text-xl font-semibold">{{ exam?.exam_name }}</h2>
 
                             <q-btn @click="$inertia.get(route('exams.assignMarks', exam.id))" class="sized-btn" color="negative" outline label="Assign Marks"/>
                         </div>
-                        <p class="text-gray-600 mt-2">Exam Date: {{ formatDate(exam.exam_date) }}</p>
+                        <p class="text-gray-600 mt-2">Exam Date: {{ formatDate(exam?.exam_date) }}</p>
                         <div class="mt-4">
                             <h3 class="text-lg font-semibold">Subjects</h3>
                             <ul class="mt-2 space-y-2">
@@ -24,9 +24,9 @@
                                     class="p-3 border rounded-lg bg-gray-50"
                                 >
                                     <div class="flex justify-between">
-                                        <span>{{ subject.subject_name }}</span>
+                                        <span>{{ subject?.subject_name }}</span>
                                         <span class="text-gray-500 text-sm">
-                                            {{ formatDate(subject.exam_date) }} - {{ formatTime(subject.exam_time) }}
+                                            {{ formatDate(subject?.exam_date) }} - {{ formatTime(subject?.exam_time) }}
                                         </span>
                                     </div>
                                 </li>

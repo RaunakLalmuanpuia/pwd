@@ -11,11 +11,10 @@ use Inertia\Inertia;
 
 class ExamMarksController extends Controller
 {
-    //
-
+    // Show Job list for Exam Marks
     public function index(){
         $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->where('status', 'approved');
+            $query->whereIn('status', ['approved', 'eligible']);
         }])
             ->with('documents')
             ->get();
@@ -24,7 +23,7 @@ class ExamMarksController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
-
+    // Show for Exam Marks Page
     public function show(JobDetail $jobDetail){
 
 //        dd($jobDetail);
@@ -33,11 +32,12 @@ class ExamMarksController extends Controller
             'data'=>$jobDetail->load(['documents', 'exams.subjects'])
         ]);
     }
+
     public function create(Exam $exam)
     {
         $exam->load('subjects');
 
-        $applicants = $exam->jobDetail->applications()->where('status', 'approved')
+        $applicants = $exam->jobDetail->applications()->whereIn('status', ['approved', 'eligible'])
             ->get()
             ->map(function ($application) {
                 return $application->applicant->load('user');
@@ -61,6 +61,8 @@ class ExamMarksController extends Controller
             'examMarks' => $examMarks,
         ]);
     }
+
+    // Store Exam Marks
 
     public function store(Request $request, Exam $exam)
     {

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationController extends Controller
 {
+    // Citizen Application List
     public function index()
     {
         $applicant = Applicants::where('user_id', auth()->id())->first();
@@ -25,7 +26,7 @@ class ApplicationController extends Controller
             'applications' => $applications,
         ]);
     }
-
+    // Citizen View Application
     public function show(JobDetail $jobDetail)
     {
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
@@ -37,7 +38,7 @@ class ApplicationController extends Controller
             'applicant' => $applicant
         ]);
     }
-
+    // Citizen Apply for application
     public function apply(Request $request, JobDetail $jobDetail)
     {
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
@@ -91,10 +92,7 @@ class ApplicationController extends Controller
 
         return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
     }
-
-
-
-
+    // Admin See applicant Detail
     public function showApplicantDetail(JobDetail $jobDetails, Applications $application)
     {
         // Filter the applications to include only the one matching the given $application->id
@@ -112,6 +110,7 @@ class ApplicationController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
+    // Admin all jobs page (Submitted)
     public function adminIndexSubmission()
     {
         // Get all job details with the count of their pending applications and related documents
@@ -125,6 +124,7 @@ class ApplicationController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
+    // Admin all jobs page (Approved)
     public function adminIndexApproved()
     {
         $jobDetails = JobDetail::withCount(['applications' => function ($query) {
@@ -137,6 +137,7 @@ class ApplicationController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
+    // Admin all jobs page (Eligible)
     public function adminIndexEligible()
     {
         $jobDetails = JobDetail::withCount(['applications' => function ($query) {
@@ -150,7 +151,7 @@ class ApplicationController extends Controller
         ]);
     }
 
-
+    // Admin view All submitted application list
     public function adminShowSubmitted(JobDetail $jobDetails)
     {
         // Load the necessary relationships, but filter applications by 'approved' status
@@ -168,7 +169,7 @@ class ApplicationController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
-
+    // Admin view All Approved application list
     public function adminShowApproved(JobDetail $jobDetails)
     {
         // Load the necessary relationships, but filter applications by 'approved' status
@@ -186,7 +187,7 @@ class ApplicationController extends Controller
             'jobDetails' => $jobDetails,
         ]);
     }
-
+    // Admin view All Eligible application list
     public function adminShowEligible(JobDetail $jobDetails)
     {
         // Load the necessary relationships, but filter applications by 'approved' status
@@ -195,18 +196,22 @@ class ApplicationController extends Controller
                 $query->where('status', 'eligible');
             },
             'applications.applicant.user',
+            'applications.applicant.exams',
+            'applications.applicant.examMarks.subject',
             'documents',
             'applications.applicationDocuments.jobDocument',
         ]);
+//        dd($jobDetails);
+//        dd($jobDetails->applications->first()->applicant->examMarks);
 
         // Return the Inertia view with the specific JobDetail
         return inertia('Applications/EligibleApplications', [
-            'jobDetails' => $jobDetails,
+            'jobDetails' => $jobDetails->toArray(),
         ]);
     }
 
 
-
+    // Admin change status of applicants
     public function bulkChangeStatus(Request $request)
     {
 //        dd($request);
@@ -238,6 +243,7 @@ class ApplicationController extends Controller
      *
      * @return string
      */
+    // Generate Unique ID
     private function generateUniqueApplicationId()
     {
         do {
@@ -248,6 +254,7 @@ class ApplicationController extends Controller
         return $uniqueId;
     }
 
+    // Generate Admit card (Applicant)
     public function generateAdmitCardByJob(JobDetail $jobDetail)
     {
         $userId = Auth::id(); // Get the authenticated user ID
