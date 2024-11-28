@@ -93,9 +93,7 @@ Route::middleware('auth')->group(function () {
         //Citizen Download Admit Card
         Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
 
-//        //Admin Job Application Index
-//        Route::get('/admin/applications', [ApplicationController::class, 'adminIndex'])->middleware('role:Admin')->name('admin.applications.index');
-
+        //Admin Show Applicant Detaiils
         Route::get('admin/{jobDetails}/applicant/{application}/show', [ApplicationController::class, 'showApplicantDetail'])->name('admin.application.show_applicant_detail');
         //Admin Job Application Index - Submission
         Route::get('/admin/applications/submission', [ApplicationController::class, 'adminIndexSubmission'])->middleware('role:Admin')->name('admin.applications.index_submission');
@@ -106,8 +104,6 @@ Route::middleware('auth')->group(function () {
         //Admin Job Application Index - Approved
         Route::get('/admin/applications/eligible', [ApplicationController::class, 'adminIndexEligible'])->middleware('role:Admin')->name('admin.applications.index_eligible');
 
-//        //Admin Job Application Show
-//        Route::get('/admin/applications/{jobDetails}/show', [ApplicationController::class, 'adminShow'])->middleware('role:Admin')->name('admin.applications.show');
 
         //Admin Job Application Show submission
         Route::get('/admin/applications/{jobDetails}/submission', [ApplicationController::class, 'adminShowSubmitted'])->middleware('role:Admin')->name('admin.applications.show_submission');
@@ -122,9 +118,10 @@ Route::middleware('auth')->group(function () {
         // Admin route to change the status of an application (approve or reject)
         Route::put('/admin/applications/{application}', [ApplicationController::class, 'changeStatus'])->middleware('role:Admin')->name('admin.applications.changeStatus');
 
-        Route::put('/admin/applications/bulk-change-status', [ApplicationController::class, 'bulkChangeStatus'])
-            ->middleware('role:Admin')
-            ->name('admin.applications.bulkChangeStatus');
+//        Route::put('/admin/applications/bulk-change-status', [ApplicationController::class, 'bulkChangeStatus'])
+//            ->middleware('role:Admin')
+//            ->name('admin.applications.bulkChangeStatus');
+
 
     });
 
@@ -136,6 +133,8 @@ Route::put('/admin/applications/bulk-change-status', [ApplicationController::cla
 
 //Admin Exam Controller
 Route::middleware(['auth'])->group(function () {
+    Route::get('/jobs', [ExamController::class, 'index'])->middleware('role:Admin')->name('exams.index');
+    Route::get('/jobs/{jobDetail}/show', [ExamController::class, 'show'])->middleware('role:Admin')->name('exams.show');
     Route::get('/jobs/{jobDetail}/exams/create', [ExamController::class, 'create'])->middleware('role:Admin')->name('exams.create');
     Route::post('/jobs/{jobDetail}/exams', [ExamController::class, 'store'])->middleware('role:Admin')->name('exams.store');
     Route::get('/exams/{exam}/edit', [ExamController::class, 'edit'])->middleware('role:Admin')->name('exams.edit');
@@ -146,6 +145,9 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/assign-marks', [ExamMarksController::class, 'index'])->middleware('role:Admin')->name('exams.marks.index');
+    //Show exam marks page
+    Route::get('/assign-marks/{jobDetail}/show', [ExamMarksController::class, 'show'])->middleware('role:Admin')->name('exams.marks.show');
     // Display form to assign marks to applicants
     Route::get('/exams/{exam}/assign-marks', [ExamMarksController::class, 'create'])->middleware('role:Admin')->name('exams.assignMarks');
     // Store the marks assigned to applicants

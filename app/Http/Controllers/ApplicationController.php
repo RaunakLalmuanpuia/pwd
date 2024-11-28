@@ -31,7 +31,7 @@ class ApplicationController extends Controller
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
-        return inertia('Applications/JobApplication', [
+        return inertia('Applicant/JobApplication', [
             'jobDetail' => $jobDetail,
             'mandatoryDocuments' => $mandatoryDocuments,
             'applicant' => $applicant
@@ -93,17 +93,7 @@ class ApplicationController extends Controller
     }
 
 
-    // Admin view to list all applications based on job details
-//    public function adminIndex()
-//    {
-//        // Get all job details with their applications
-////        $jobDetails = JobDetail::with('documents')->get();
-//        // Get all job details with the count of their applications
-//        $jobDetails = JobDetail::withCount('applications')->with('documents')->get();
-//        return inertia('Applications/Jobs', [
-//            'jobDetails' => $jobDetails,
-//        ]);
-//    }
+
 
     public function showApplicantDetail(JobDetail $jobDetails, Applications $application)
     {
@@ -160,15 +150,7 @@ class ApplicationController extends Controller
         ]);
     }
 
-//    public function adminShow(JobDetail $jobDetails)
-//    {
-//        // Load the necessary relationships for the passed JobDetail instance
-//        $jobDetails->load(['applications.applicant.user', 'documents', 'applications.applicationDocuments.jobDocument']);
-//        // Return the Inertia view with the specific JobDetail
-//        return inertia('Applications/AdminApplication', [
-//            'jobDetails' => $jobDetails,
-//        ]);
-//    }
+
     public function adminShowSubmitted(JobDetail $jobDetails)
     {
         // Load the necessary relationships, but filter applications by 'approved' status

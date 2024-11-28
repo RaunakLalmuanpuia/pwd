@@ -13,12 +13,35 @@ class ExamController extends Controller
     /**
      * Show the form to create a new exam for a job.
      */
+
+    public function index(){
+        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
+            $query->where('status', 'approved');
+        }])
+            ->with('documents')
+            ->get();
+
+        return inertia('Exams/Index', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+
     public function create(JobDetail $jobDetail)
     {
         return Inertia::render('Exams/Create', [
             'job' => $jobDetail,
         ]);
     }
+
+
+    public function show(JobDetail $jobDetail){
+//        dd($jobDetail);
+
+        return inertia('Exams/Show', [
+            'data'=>$jobDetail->load(['documents', 'exams.subjects'])
+        ]);
+    }
+
 
     /**
      * Store a new exam along with its subjects.
@@ -50,7 +73,7 @@ class ExamController extends Controller
             ]);
         }
 
-        return redirect()->route('job.edit', $jobDetail->id)
+        return redirect()->route('exams.show', $jobDetail->id)
             ->with('success', 'Exam and subjects created successfully.');
     }
     /**
@@ -107,14 +130,14 @@ class ExamController extends Controller
             }
         }
 
-        return redirect()->route('job.edit', $exam->job_details_id)
+        return redirect()->route('exams.show', $exam->job_details_id)
             ->with('success', 'Exam and subjects updated successfully.');
     }
     public function destroy(Exam $exam)
     {
         // Ensure the exam exists
         if (!$exam) {
-            return redirect()->route('job.edit',$exam->job_details_id)->with('error', 'Exam not found.');
+            return redirect()->route('exams.marks.show',$exam->job_details_id)->with('error', 'Exam not found.');
         }
         // Delete associated exam marks first
         foreach ($exam->subjects as $subject) {
@@ -128,7 +151,7 @@ class ExamController extends Controller
 
         // Delete the exam
         $exam->delete();
-        return redirect()->route('job.edit',$exam->job_details_id)
+        return redirect()->route('exams.show', $exam->job_details_id)
             ->with('success', 'Exam and its subjects deleted successfully.');
     }
 }

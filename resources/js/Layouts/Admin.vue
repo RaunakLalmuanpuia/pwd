@@ -83,7 +83,9 @@
                             </q-item-section>
                         </q-item>
 
-                        <q-item clickable v-ripple>
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='exams.index'"
+                                @click="$inertia.get(route('exams.index'))">
                             <q-item-section avatar>
                                 <q-icon name="circle" />
                             </q-item-section>
@@ -92,7 +94,9 @@
                             </q-item-section>
                         </q-item>
 
-                        <q-item clickable v-ripple>
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='exams.marks.index'"
+                                @click="$inertia.get(route('exams.marks.index'))">
                             <q-item-section avatar>
                                 <q-icon name="circle" />
                             </q-item-section>

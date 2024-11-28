@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ExamMarks;
 use App\Models\Exam;
+use App\Models\JobDetail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,6 +12,27 @@ use Inertia\Inertia;
 class ExamMarksController extends Controller
 {
     //
+
+    public function index(){
+        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
+            $query->where('status', 'approved');
+        }])
+            ->with('documents')
+            ->get();
+
+        return inertia('Exams/MarksIndex', [
+            'jobDetails' => $jobDetails,
+        ]);
+    }
+
+    public function show(JobDetail $jobDetail){
+
+//        dd($jobDetail);
+
+        return inertia('Exams/MarksShow', [
+            'data'=>$jobDetail->load(['documents', 'exams.subjects'])
+        ]);
+    }
     public function create(Exam $exam)
     {
         $exam->load('subjects');
@@ -60,7 +82,7 @@ class ExamMarksController extends Controller
             );
         }
 
-        return redirect()->route('job.edit', $exam->job_details_id)->with('success', 'Marks updated successfully.');
+        return redirect()->route('exams.marks.show', $exam->job_details_id)->with('success', 'Marks updated successfully.');
     }
 
 }
