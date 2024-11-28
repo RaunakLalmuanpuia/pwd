@@ -87,9 +87,12 @@ Route::middleware('auth')->group(function () {
         // Citizen View application
         Route::get('{jobDetail}/show', [ApplicationController::class, 'show'])->name('application.show');
         // Citizen apply application
+
         Route::post('{jobDetail}/apply', [ApplicationController::class, 'apply'])->name('application.apply');
         // Citizen Application Index
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
+        // Citizen View applications detail
+        Route::get('{jobDetail}/detail', [ApplicationController::class, 'viewApplication'])->name('application.viewApplication');
         //Citizen Download Admit Card
         Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
 

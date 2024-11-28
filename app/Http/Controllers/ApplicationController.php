@@ -39,6 +39,25 @@ class ApplicationController extends Controller
             'applicant' => $applicant
         ]);
     }
+    public function viewApplication(JobDetail $jobDetail)
+    {
+//        dd($jobDetail);
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        $application = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->with(['applicationDocuments']) // Load documents associated with the application
+            ->first();
+
+        return inertia('Applicant/ViewApplication', [
+            'jobDetail' => $jobDetail,
+            'mandatoryDocuments' => $mandatoryDocuments,
+            'applicant' => $applicant,
+            'application' => $application,
+        ]);
+    }
+
     // Citizen Apply for application
     public function apply(Request $request, JobDetail $jobDetail)
     {
@@ -93,6 +112,7 @@ class ApplicationController extends Controller
 
         return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
     }
+
     // Admin See applicant Detail
     public function showApplicantDetail(JobDetail $jobDetails, Applications $application)
     {
