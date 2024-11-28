@@ -6,6 +6,7 @@ use App\Models\Applications;
 use App\Models\Exam;
 use App\Models\ExamCenter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ExamCenterController extends Controller
@@ -36,6 +37,7 @@ class ExamCenterController extends Controller
 
     public function store(Request $request,Exam $exam)
     {
+//        dd($request);
         $validated = $request->validate([
             'assignments' => 'required|array',
             'assignments.*.applicant_id' => 'required|integer|exists:applications,applicant_id', // Ensure it's an integer
@@ -51,5 +53,33 @@ class ExamCenterController extends Controller
         }
 
         return redirect()->route('job.edit', $exam->job_details_id)->with('success', 'Exam centers assigned successfully.');
+    }
+    public function storeCenters(Request $request)
+    {
+//        dd($request);
+        // Validate incoming request data
+        $validator = Validator::make($request->all(), [
+            'exam_center_id.id' => 'required|integer|exists:exam_centers,id',
+            'application_ids' => 'required|array|min:1',
+            'application_ids.*' => 'integer|exists:applications,id',
+        ]);
+
+        // Handle validation failures
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Extract validated data
+        $examCenterId = $request->input('exam_center_id.id');
+        $applicationIds = $request->input('application_ids');
+
+        // Update the exam_center_id for the provided application IDs
+        Applications::whereIn('id', $applicationIds)->update(['exam_center_id' => $examCenterId]);
+
+        // Redirect back with a success message
+        return redirect()->back()->with([
+            'success' => 'Exam center assigned successfully.',
+        ]);
+
     }
 }

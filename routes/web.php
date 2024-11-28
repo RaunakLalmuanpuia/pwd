@@ -152,7 +152,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/exams/{exam}/assign-marks', [ExamMarksController::class, 'store'])->middleware('role:Admin')->name('exams.storeMarks');
     // Assign Exam Center
     Route::get('/exams/{exam}/assign-centers', [ExamCenterController::class, 'create'])->middleware('role:Admin')->name('exams.assignCenters');
+
     Route::post('/exams/{exam}/assign-centers', [ExamCenterController::class, 'store'])->middleware('role:Admin')->name('exams.storeCenters');
+
+
+    Route::post('/exams/store-centers', [ExamCenterController::class, 'storeCenters'])->name('exams.allotCenters');
+
+
     //Admin show marks
     Route::get('/exam/{model}/marks', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
 });

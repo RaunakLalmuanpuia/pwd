@@ -15,6 +15,7 @@
             </q-input>
 
             <div class="flex items-center q-gutter-md">
+                <q-btn @click="assignExamCenter" color="primary"  :disabled="selectedApplications.length === 0"  label="Assign Exam Center"/>
                 <q-btn @click="approveSelectedApplications" color="primary"  :disabled="selectedApplications.length === 0"  label="Mark as Disqualified"/>
                 <q-btn @click="eligibleSelectedApplications" color="primary"  :disabled="selectedApplications.length === 0"  label="Mark as Eligible"/>
                 <q-separator vertical/>
@@ -189,6 +190,28 @@
             </q-card>
         </q-dialog>
 
+        <q-dialog v-model="assignExamCenterDialogOpen" persistent>
+            <q-card style="min-width: 450px;">
+                <q-card-section>
+                    <div class="text-h6 q-mb-md">Assign Exam Center to Selected Applicants</div>
+                    <q-select
+                        v-model="examCenterForm.exam_center_id"
+                        :options="examCenters"
+                        label="Select Exam Center"
+                        dense
+                        outlined
+                        option-label="center_name"
+                    option-value="id"
+                    />
+                </q-card-section>
+
+                <q-card-actions>
+                    <q-btn flat label="Cancel" @click="assignExamCenterDialogOpen = false" color="primary" />
+                    <q-btn flat label="Assign" @click="assignExamCenterToApplicants" color="primary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
     </q-page>
 </template>
 
@@ -203,20 +226,27 @@ defineOptions({
 
 import { useForm } from '@inertiajs/vue3';
 
-const props = defineProps(['jobDetails']);
+const props = defineProps(['jobDetails','examCenters']);
 
 const approveRejectForm = useForm({
     application_ids: [],
     status: '',
 });
+// Inertia form
+const examCenterForm = useForm({
+    exam_center_id: [], // Holds selected exam center ID
+    application_ids: []       // Holds the assignments
+});
 
 // Dialog state
 const marksDialogOpen = ref(false);
+const assignExamCenterDialogOpen = ref(false);
 const selectedApplicant = ref(null);
-
+const selectedExamCenter = ref(null); // Holds selected exam center
 
 // Open dialog and set selected application
 const selectedApplications = ref([]);
+
 const allSelected = computed(() =>
     filteredApplications.value.length > 0 &&
     filteredApplications.value.every(app => selectedApplications.value.includes(app.id))
@@ -247,6 +277,33 @@ const filteredApplications = computed(() => {
     });
 });
 
+// Assign Exam Center Dialog
+const assignExamCenter = () => {
+    assignExamCenterDialogOpen.value = true;
+};
+
+
+// Function to assign exam center
+const assignExamCenterToApplicants = () => {
+    if (!examCenterForm.exam_center_id) {
+        alert('Please select an exam center.');
+        return;
+    }
+
+    examCenterForm.application_ids = selectedApplications.value;
+
+    // Submit the assignment to the server
+    examCenterForm.post(route('exams.allotCenters'), {
+        onSuccess: () => {
+            assignExamCenterDialogOpen.value = false;
+            examCenterForm.reset(); // Clear the form
+        },
+        onError: (err) => {
+            console.error(err);
+            alert('An error occurred while assigning exam centers.');
+        }
+    });
+};
 
 const approveSelectedApplications = () => {
     if (selectedApplications.value.length === 0) {
@@ -293,21 +350,6 @@ button:hover {
     transition: transform 0.2s ease-in-out;
 }
 
-/* Modal animation */
-.transition-all {
-    transition: all 0.3s ease-in-out;
-}
-
-/* Optional custom styling */
-.bg-gray-800 {
-    background-color: rgba(0, 0, 0, 0.6);
-}
-
-/* Tailwind customization */
-.list-disc {
-    list-style-type: disc;
-    padding-left: 1.25rem;
-}
 .page-title {
     font-family: 'Poppins';
     font-size: 21px;
@@ -315,10 +357,5 @@ button:hover {
     text-transform: capitalize;
     letter-spacing: normal;
     color: #333333;
-
 }
-.ztext {
-    font-size: 0.875rem;
-}
-
 </style>

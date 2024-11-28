@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Applicants;
 use App\Models\ApplicationDocument;
 use App\Models\Applications;
+use App\Models\ExamCenter;
 use App\Models\JobDetail;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -181,12 +182,15 @@ class ApplicationController extends Controller
             'applications.applicant.exams',
             'applications.applicant.examMarks.subject',
             'documents',
+            'applications.examCenter',
             'applications.applicationDocuments.jobDocument',
         ]);
+        $examCenters = ExamCenter::all(); // Fetch all available centers
 
         // Return the Inertia view with the specific JobDetail
         return inertia('Applications/ApprovedApplications', [
             'jobDetails' => $jobDetails,
+            'examCenters' => $examCenters,
         ]);
     }
     // Admin view All Eligible application list
