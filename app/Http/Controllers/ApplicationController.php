@@ -178,6 +178,8 @@ class ApplicationController extends Controller
                 $query->where('status', 'approved');
             },
             'applications.applicant.user',
+            'applications.applicant.exams',
+            'applications.applicant.examMarks.subject',
             'documents',
             'applications.applicationDocuments.jobDocument',
         ]);
@@ -199,6 +201,7 @@ class ApplicationController extends Controller
             'applications.applicant.exams',
             'applications.applicant.examMarks.subject',
             'documents',
+            'applications.examCenter',
             'applications.applicationDocuments.jobDocument',
         ]);
 //        dd($jobDetails);
@@ -206,7 +209,7 @@ class ApplicationController extends Controller
 
         // Return the Inertia view with the specific JobDetail
         return inertia('Applications/EligibleApplications', [
-            'jobDetails' => $jobDetails->toArray(),
+            'jobDetails' => $jobDetails,
         ]);
     }
 

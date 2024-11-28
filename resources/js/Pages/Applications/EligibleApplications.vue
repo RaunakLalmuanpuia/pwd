@@ -1,6 +1,6 @@
 <template>
     <q-page padding>
-        <p class="page-title">ElIGIBLE APPLICATIONS</p>
+        <p class="page-title">ELIGIBLE APPLICATIONS</p>
         <div class="flex justify-between items-center zcard q-pa-md">
             <q-input v-model="searchTerm"
                      dense
@@ -54,7 +54,7 @@
         </div>
         <div class="row q-mt-sm">
 
-            <p class="page-title">{{ jobDetails?.post_name}} : APPLICATIONS</p>
+            <p class="page-title">APPLICATIONS: {{ jobDetails?.post_name}} </p>
             <div class="col-xs-12">
                 <table class="table-auto border-collapse border border-gray-300 w-full mt-6 text-sm">
                     <thead class="bg-gray-100">
@@ -68,10 +68,12 @@
                         </th>
                         <th class="px-4 py-2 text-left text-gray-600">Applicant Name</th>
                         <th class="px-4 py-2 text-left text-gray-600">Roll No</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Parent Name</th>
                         <th class="px-4 py-2 text-left text-gray-600">Community</th>
-                        <th class="px-4 py-2 text-left text-gray-600">Disability</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Exam Center</th>
                         <th class="px-4 py-2 text-left text-gray-600">Status</th>
                         <th class="px-4 py-2 text-left text-gray-600">Actions</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Marks</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -80,6 +82,7 @@
                         :key="application.id"
                         class="hover:bg-gray-50 transition duration-150"
                     >
+<!--                        {{application.exam_center.center_name}}-->
                         <td class="px-4 py-2">
                             <input
                                 type="checkbox"
@@ -89,8 +92,9 @@
                         </td>
                         <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.application_id || 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ application.applicant?.parents_name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>
-                        <td class="px-4 py-2">{{ application.applicant?.disability ? 'Yes' : 'No' }}</td>
+                        <td class="px-4 py-2">{{ application.exam_center?.center_name|| 'N/A' }}</td>
                         <td class="px-4 py-2">
                 <span
                     :class="[
@@ -113,11 +117,74 @@
                                 Preview
                             </button>
                         </td>
+                        <td class="px-4 py-2">
+                            <button
+                                @click="viewMarks(application)"
+                                class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded mr-2 transition duration-150"
+                            >
+                                View Marks
+                            </button>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <q-dialog v-model="marksDialogOpen" persistent>
+            <q-card style="min-width: 450px;">
+                <q-card-section>
+                    <div class="text-h6 q-mb-md">Exam Details: {{ selectedApplicant.user.name }}</div>
+
+                    <!-- Check if the selected applicant has any exams -->
+                    <div v-if="selectedApplicant.exams.length === 0">
+                        <q-banner class="bg-warning text-black q-mb-md">
+                            <div>No exams found for this applicant.</div>
+                        </q-banner>
+                    </div>
+
+                    <!-- Check if there are no marks assigned -->
+                    <div v-if="selectedApplicant.exam_marks.length === 0">
+                        <q-banner class="bg-warning text-black q-mb-md">
+                            <div>No marks assigned for the selected exams.</div>
+                        </q-banner>
+                    </div>
+
+                    <div v-for="(exam, index) in selectedApplicant.exams" :key="exam.id" class="q-mt-md">
+                        <div class="q-pa-sm">
+                            <q-banner class="bg-primary text-white q-mb-md">
+                                <div>
+                                    <strong>Exam Name:</strong> {{ exam.exam_name }}
+                                    <br />
+                                    <strong>Exam Date:</strong> {{ exam.exam_date }}
+                                </div>
+                            </q-banner>
+
+                            <q-card bordered class="q-pa-none">
+                                <q-card-section>
+                                    <div><strong>Subjects:</strong></div>
+                                    <q-list class="q-mt-sm">
+                                        <q-item v-for="(examMark, index) in selectedApplicant.exam_marks.filter(mark => mark.subject.exam_id === exam.id)" :key="examMark.id" class="q-mb-xs">
+                                            <q-item-section>
+                                                <div><strong>{{ examMark.subject.subject_name }}</strong></div>
+                                                <div class="text-caption">Exam Date: {{ examMark.subject.exam_date }}</div>
+                                            </q-item-section>
+                                            <q-item-section side>
+                                                <div class="text-h6">{{ examMark.marks }} Marks</div>
+                                            </q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                </q-card-section>
+                            </q-card>
+                        </div>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions>
+                    <q-btn flat label="Close" @click="marksDialogOpen = false" color="primary" />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
+
     </q-page>
 </template>
 
@@ -138,17 +205,16 @@ const approveRejectForm = useForm({
     application_ids: [],
     status: '',
 });
-
-const dialogVisible = ref(false); // Controls dialog visibility
+// Dialog state
+const marksDialogOpen = ref(false);
+const selectedApplicant = ref(null);
 
 // Open dialog and set selected application
 const selectedApplications = ref([]);
-
 const allSelected = computed(() =>
     filteredApplications.value.length > 0 &&
     filteredApplications.value.every(app => selectedApplications.value.includes(app.id))
 );
-
 const toggleSelectAll = (event) => {
     if (event.target.checked) {
         selectedApplications.value = filteredApplications.value.map(app => app.id);
@@ -158,15 +224,6 @@ const toggleSelectAll = (event) => {
 };
 // Search input value
 const searchTerm = ref('');
-
-// // Filtered applications based on the search term
-// const filteredApplications = computed(() => {
-//     return props.jobDetails.applications.filter(application => {
-//         const applicantName = application.applicant.user?.name.toLowerCase() || '';
-//         return applicantName.includes(searchTerm.value.toLowerCase());
-//     });
-// });
-
 const filteredApplications = computed(() => {
     return props.jobDetails.applications.filter((application) => {
         const applicantName =
@@ -175,10 +232,13 @@ const filteredApplications = computed(() => {
     });
 });
 
-const previewApplication = (application) => {
-    selectedApplication.value = application;
-    dialogVisible.value = true;
+// Handle "View Marks" button click
+const viewMarks = (application) => {
+    selectedApplicant.value = application.applicant;
+    marksDialogOpen.value = true;
 };
+
+
 const approveSelectedApplications = () => {
     if (selectedApplications.value.length === 0) {
         alert('Please select at least one applicant.');
@@ -194,37 +254,6 @@ const approveSelectedApplications = () => {
             selectedApplications.value = []; // Clear selection after success
         },
     });
-};
-
-
-
-// const updateStatus = (applicationId, status) => {
-//     approveRejectForm.status = status; // Update the form's status
-//     approveRejectForm.put(route('admin.applications.changeStatus', { application: applicationId }), {
-//         onSuccess: () => {
-//             approveRejectForm.reset(); // Reset the form after a successful update
-//         },
-//     });
-// };
-const updateStatus = (applicationId, status) => {
-    approveRejectForm.status = status;
-    approveRejectForm.put(
-        route('admin.applications.changeStatus', { application: applicationId }),
-        {
-            onSuccess: () => {
-                approveRejectForm.reset();
-                // Optionally remove from selected after approval
-                selectedApplications.value = selectedApplications.value.filter(
-                    (id) => id !== applicationId
-                );
-            },
-        }
-    );
-};
-// Format date utility
-const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
 </script>
