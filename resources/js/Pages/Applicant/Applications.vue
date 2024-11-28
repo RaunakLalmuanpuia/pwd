@@ -89,7 +89,7 @@
 
                                     <div class="flex items-center justify-between">
                                         <button  @click="$inertia.get(route('application.viewApplication', application.job_detail.id))" class="bg-secondary text-primary-foreground px-4 py-2 rounded-md mr-2 hover:bg-primary/80">View Details</button>
-                                        <button v-if="application.status === 'approved' && application.exam_center_id &&  application.job_detail?.exams?.some(exam => exam.subjects?.length > 0)"
+                                        <button v-if="application.status === 'approved' || application.status === 'eligible'  && application.exam_center_id &&  application.job_detail?.exams?.some(exam => exam.subjects?.length > 0)"
                                                 @click="openAdmitCard(application.job_detail.id)"
                                                 class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Download Admit Card</button>
                                     </div>
