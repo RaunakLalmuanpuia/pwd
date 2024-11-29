@@ -7,13 +7,19 @@
                         <h1 class="text-2xl font-bold mb-6">Assign Marks to Exams and Subjects : {{data.exams[0]?.exam_name }}</h1>
 
                     </div>
-
                     <div v-for="exam in data.exams" :key="exam.id" class="mb-6 p-4 border rounded-lg shadow-md bg-white">
+
                         <div class="flex justify-between items-center">
                             <h2 class="text-xl font-semibold">{{ exam?.exam_name }}</h2>
-
+                            <q-btn
+                                class="bg-yellow-500  hover:bg-yellow-600"
+                                @click="$inertia.get(route('job.showMarks', exam.job_details_id))"
+                            >
+                                Marks
+                            </q-btn>
                             <q-btn @click="$inertia.get(route('exams.assignMarks', exam.id))" class="sized-btn" color="negative" outline label="Assign Marks"/>
                         </div>
+
                         <p class="text-gray-600 mt-2">Exam Date: {{ formatDate(exam?.exam_date) }}</p>
                         <div class="mt-4">
                             <h3 class="text-lg font-semibold">Subjects</h3>
@@ -37,7 +43,8 @@
 
             </div>
         </div>
-    </div></div>
+    </div>
+    </div>
 
 </template>
 

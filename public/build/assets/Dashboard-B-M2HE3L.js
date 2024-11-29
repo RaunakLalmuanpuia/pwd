@@ -1,0 +1,1 @@
+import{A as a}from"./ApplicantLayout-B3ATsAtX.js";import{o,a as t}from"./app-Aoxauc37.js";import"./QLayout-Bk4bdxax.js";import"./_plugin-vue_export-helper-DlAUqK2U.js";const l=Object.assign({layout:a},{__name:"Dashboard",setup(r){return(e,s)=>(o(),t("h2",null,"Dashboard"))}});export{l as default};
