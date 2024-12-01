@@ -117,11 +117,8 @@ Route::middleware('auth')->group(function () {
         //Admin Job Application Show Eligible
         Route::get('/admin/applications/{jobDetails}/eligible', [ApplicationController::class, 'adminShowEligible'])->middleware('role:Admin')->name('admin.applications.show_eligible');
 
-
         // Admin route to change the status of an application (approve or reject)
         Route::put('/admin/applications/{application}', [ApplicationController::class, 'changeStatus'])->middleware('role:Admin')->name('admin.applications.changeStatus');
-
-
 
 
     });

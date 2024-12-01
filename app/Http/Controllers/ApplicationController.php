@@ -173,69 +173,153 @@ class ApplicationController extends Controller
     }
 
     // Admin view All submitted application list
+//    public function adminShowSubmitted(JobDetail $jobDetails)
+//    {
+//        // Load the necessary relationships, but filter applications by 'approved' status
+//        $jobDetails->load([
+//            'applications' => function ($query) {
+//                $query->where('status', 'pending');
+//            },
+//            'applications.applicant.user',
+//            'documents',
+//            'applications.applicationDocuments.jobDocument',
+//        ]);
+//
+//        // Return the Inertia view with the specific JobDetail
+//        return inertia('Applications/SubmittedApplication', [
+//            'jobDetails' => $jobDetails,
+//        ]);
+//    }
     public function adminShowSubmitted(JobDetail $jobDetails)
     {
-        // Load the necessary relationships, but filter applications by 'approved' status
+        $perPage = request('per_page', 10); // Number of items per page, default to 10
+        $search = request('search', ''); // Search term from the request
         $jobDetails->load([
             'applications' => function ($query) {
                 $query->where('status', 'pending');
             },
-            'applications.applicant.user',
             'documents',
             'applications.applicationDocuments.jobDocument',
         ]);
+        // Load filtered and paginated applications
+        $applications = $jobDetails->applications()
+            ->where('status', 'pending')
+            ->with(['applicant.user', 'examCenter', 'applicant.exams', 'applicant.examMarks.subject',])
+            ->whereHas('applicant.user', function ($query) use ($search) {
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            })
+            ->paginate($perPage);
 
-        // Return the Inertia view with the specific JobDetail
         return inertia('Applications/SubmittedApplication', [
             'jobDetails' => $jobDetails,
+            'applications' => $applications,
         ]);
     }
     // Admin view All Approved application list
+//    public function adminShowApproved(JobDetail $jobDetails)
+//    {
+//        // Load the necessary relationships, but filter applications by 'approved' status
+//        $jobDetails->load([
+//            'applications' => function ($query) {
+//                $query->where('status', 'approved');
+//            },
+//            'applications.applicant.user',
+//            'applications.applicant.exams',
+//            'applications.applicant.examMarks.subject',
+//            'documents',
+//            'applications.examCenter',
+//            'applications.applicationDocuments.jobDocument',
+//        ]);
+//        $examCenters = ExamCenter::all(); // Fetch all available centers
+//
+//        // Return the Inertia view with the specific JobDetail
+//        return inertia('Applications/ApprovedApplications', [
+//            'jobDetails' => $jobDetails,
+//            'examCenters' => $examCenters,
+//        ]);
+//    }
     public function adminShowApproved(JobDetail $jobDetails)
     {
-        // Load the necessary relationships, but filter applications by 'approved' status
+        $perPage = request('per_page', 10); // Number of items per page, default to 10
+        $search = request('search', ''); // Search term from the request
         $jobDetails->load([
             'applications' => function ($query) {
                 $query->where('status', 'approved');
             },
-            'applications.applicant.user',
-            'applications.applicant.exams',
-            'applications.applicant.examMarks.subject',
             'documents',
-            'applications.examCenter',
             'applications.applicationDocuments.jobDocument',
         ]);
+        // Load filtered and paginated applications
+        $applications = $jobDetails->applications()
+            ->where('status', 'approved')
+            ->with(['applicant.user', 'examCenter', 'applicant.exams', 'applicant.examMarks.subject',])
+            ->whereHas('applicant.user', function ($query) use ($search) {
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            })
+            ->paginate($perPage);
+
         $examCenters = ExamCenter::all(); // Fetch all available centers
 
         // Return the Inertia view with the specific JobDetail
         return inertia('Applications/ApprovedApplications', [
             'jobDetails' => $jobDetails,
+            'applications' => $applications,
             'examCenters' => $examCenters,
         ]);
     }
     // Admin view All Eligible application list
+//    public function adminShowEligible(JobDetail $jobDetails)
+//    {
+//        // Load the necessary relationships, but filter applications by 'approved' status
+//        $jobDetails->load([
+//            'applications' => function ($query) {
+//                $query->where('status', 'eligible');
+//            },
+//            'applications.applicant.user',
+//            'applications.applicant.exams',
+//            'applications.applicant.examMarks.subject',
+//            'documents',
+//            'applications.examCenter',
+//            'applications.applicationDocuments.jobDocument',
+//        ]);
+//        // Return the Inertia view with the specific JobDetail
+//        return inertia('Applications/EligibleApplications', [
+//            'jobDetails' => $jobDetails,
+//        ]);
+//    }
+
     public function adminShowEligible(JobDetail $jobDetails)
     {
-        // Load the necessary relationships, but filter applications by 'approved' status
+        $perPage = request('per_page', 10); // Number of items per page, default to 10
+        $search = request('search', ''); // Search term from the request
         $jobDetails->load([
             'applications' => function ($query) {
                 $query->where('status', 'eligible');
             },
-            'applications.applicant.user',
-            'applications.applicant.exams',
-            'applications.applicant.examMarks.subject',
             'documents',
-            'applications.examCenter',
             'applications.applicationDocuments.jobDocument',
         ]);
-//        dd($jobDetails);
-//        dd($jobDetails->applications->first()->applicant->examMarks);
+        // Load filtered and paginated applications
+        $applications = $jobDetails->applications()
+            ->where('status', 'eligible')
+            ->with(['applicant.user', 'examCenter', 'applicant.exams', 'applicant.examMarks.subject',])
+            ->whereHas('applicant.user', function ($query) use ($search) {
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            })
+            ->paginate($perPage);
 
-        // Return the Inertia view with the specific JobDetail
         return inertia('Applications/EligibleApplications', [
             'jobDetails' => $jobDetails,
+            'applications' => $applications,
         ]);
     }
+
 
 
     // Admin change status of applicants

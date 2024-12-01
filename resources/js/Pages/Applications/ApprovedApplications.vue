@@ -8,7 +8,7 @@
                      outlined
                      placeholder="Search"
                      style="width: 240px"
-                     @change="handleSearch">
+                     @input="fetchApplications">
                 <template v-slot:append>
                     <q-icon name="search"/>
                 </template>
@@ -65,7 +65,7 @@
                         <th class="px-4 py-2 text-left text-gray-600">
                             <input
                                 type="checkbox"
-                                @change="toggleSelectAll($event)"
+                                @change="toggleSelectAll($event.target.checked)"
                                 :checked="allSelected"
                             />
                         </th>
@@ -81,7 +81,7 @@
                     </thead>
                     <tbody>
                     <tr
-                        v-for="application in filteredApplications"
+                        v-for="application in applications.data"
                         :key="application.id"
                         class="hover:bg-gray-50 transition duration-150"
                     >
@@ -130,6 +130,36 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="flex justify-between items-center mt-4">
+                    <q-select
+                        v-model="pagination.rowsPerPage"
+                        :options="rowsPerPageOptions"
+                        label="Rows per page"
+                        dense
+                        outlined
+                        style="width: 120px"
+                        @update:model-value="updateRowsPerPage"
+                    />
+                    <div>
+                        <button
+                            @click="prevPage"
+                            :disabled="pagination.page === 1"
+                            class="bg-gray-200 text-black py-1 px-4 rounded"
+                        >
+                            Previous
+                        </button>
+                        <span>Page {{ pagination.page }} of {{ applications.last_page }}</span>
+                        <button
+                            @click="nextPage"
+                            :disabled="pagination.page === applications.last_page"
+                            class="bg-gray-200 text-black py-1 px-4 rounded"
+                        >
+                            Next
+                        </button>
+                    </div>
+
+
+                </div>
             </div>
         </div>
         <q-dialog v-model="marksDialogOpen" persistent>
@@ -207,7 +237,7 @@
 
                 <q-card-actions>
                     <q-btn flat label="Cancel" @click="assignExamCenterDialogOpen = false" color="primary" />
-                    <q-btn flat label="Assign" @click="assignExamCenterToApplicants" color="primary" />
+                    <q-btn flat :disable="!!!examCenterForm.exam_center_id" label="Assign" @click="assignExamCenterToApplicants" color="primary" />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -218,15 +248,16 @@
 <script setup>
 
 import AdminLayout from "@/Layouts/Admin.vue";
-import { ref, computed } from 'vue';
-
+import { ref, computed, watch } from 'vue';
+import { useForm, router } from '@inertiajs/vue3';
+import {useQuasar} from "quasar";
 defineOptions({
     layout:AdminLayout
 })
 
-import { useForm } from '@inertiajs/vue3';
+const q = useQuasar();
 
-const props = defineProps(['jobDetails','examCenters']);
+const props = defineProps(['jobDetails','examCenters', 'applications']);
 
 const approveRejectForm = useForm({
     application_ids: [],
@@ -241,25 +272,80 @@ const examCenterForm = useForm({
 // Dialog state
 const marksDialogOpen = ref(false);
 const assignExamCenterDialogOpen = ref(false);
+
+const searchTerm = ref('');
+const applications = ref({ data: [], last_page: 1 }); // Replace with actual API data
+const pagination = ref({ page: 1, rowsPerPage: 10 });
+const loading = ref(false);
+
+const rowsPerPageOptions = [1, 10, 20, 50, 100]; // Define available options for rows per page
+pagination.value.rowsPerPage = rowsPerPageOptions[0]; // Set the default rows per page
+
+const updateRowsPerPage = () => {
+    pagination.value.page = 1; // Reset to the first page
+    fetchApplications(); // Fetch data with the updated rows per page
+};
+
+const fetchApplications = () => {
+    loading.value = true;
+
+    const params = {
+        page: pagination.value.page,
+        per_page: pagination.value.rowsPerPage,
+        search: searchTerm.value,
+    };
+
+    router.get(route('admin.applications.show_approved', { jobDetails: props.jobDetails.id }), params, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: ({ props }) => {
+            applications.value = props.applications;
+            loading.value = false;
+
+        },
+    });
+};
+
+// Pagination Controls
+const nextPage = () => {
+    if (pagination.value.page < applications.value.last_page) {
+        pagination.value.page++;
+        fetchApplications(); // Ensure this is called after incrementing the page
+    }
+};
+
+const prevPage = () => {
+    if (pagination.value.page > 1) {
+        pagination.value.page--;
+        fetchApplications();
+    }
+};
+
+watch([pagination, searchTerm], fetchApplications, { immediate: true });
+
+
+
 const selectedApplicant = ref(null);
-const selectedExamCenter = ref(null); // Holds selected exam center
 
 // Open dialog and set selected application
 const selectedApplications = ref([]);
 
-const allSelected = computed(() =>
-    filteredApplications.value.length > 0 &&
-    filteredApplications.value.every(app => selectedApplications.value.includes(app.id))
-);
+const allSelected = computed({
+    get: () => applications.value.data.length > 0 && selectedApplications.value.length === applications.value.data.length,
+    set: (value) => toggleSelectAll(value),
+});
 
-const toggleSelectAll = (event) => {
-    if (event.target.checked) {
-        selectedApplications.value = filteredApplications.value.map(app => app.id);
-    } else {
+function toggleSelectAll(checked) {
+    selectedApplications.value = checked
+        ? applications.value.data.map((application) => application.id)
+        : [];
+}
+watch(
+    () => applications.value.data,
+    () => {
         selectedApplications.value = [];
     }
-};
-
+);
 // Handle "View Marks" button click
 const viewMarks = (application) => {
     selectedApplicant.value = application.applicant;
@@ -267,15 +353,6 @@ const viewMarks = (application) => {
 };
 
 
-// Search input value
-const searchTerm = ref('');
-const filteredApplications = computed(() => {
-    return props.jobDetails.applications.filter((application) => {
-        const applicantName =
-            application.applicant.user?.name.toLowerCase() || '';
-        return applicantName.includes(searchTerm.value.toLowerCase());
-    });
-});
 
 // Assign Exam Center Dialog
 const assignExamCenter = () => {
@@ -295,8 +372,11 @@ const assignExamCenterToApplicants = () => {
     // Submit the assignment to the server
     examCenterForm.post(route('exams.allotCenters'), {
         onSuccess: () => {
+            const message = 'Exam Center assigned for ' + selectedApplications.value?.length + ' applications'
+            q.notify({type:'positive',message})
             assignExamCenterDialogOpen.value = false;
             examCenterForm.reset(); // Clear the form
+            fetchApplications();
         },
         onError: (err) => {
             console.error(err);
@@ -314,12 +394,25 @@ const approveSelectedApplications = () => {
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'pending'; // Set the desired status
 
-    approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
-        onSuccess: () => {
-            approveRejectForm.reset();
-            selectedApplications.value = []; // Clear selection after success
-        },
-    });
+
+    q.dialog({
+        title:'Confirmation',
+        message:'Do you want to proceed with ' +selectedApplications.value?.length + ' Applications',
+        ok:'Yes',
+        cancel:'No'
+    }).onOk(()=>{
+        approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
+            onSuccess: () => {
+                const message = selectedApplications.value?.length + ' Applications marked as disqualified'
+                q.notify({type:'positive',message})
+                approveRejectForm.reset();
+                selectedApplications.value = []; // Clear selection after success
+                fetchApplications();
+            },
+        });
+    })
+
+
 };
 
 const eligibleSelectedApplications = () => {
@@ -331,13 +424,27 @@ const eligibleSelectedApplications = () => {
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'eligible'; // Set the desired status
 
-    approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
-        onSuccess: () => {
-            approveRejectForm.reset();
-            selectedApplications.value = []; // Clear selection after success
-        },
-    });
+
+
+    q.dialog({
+        title:'Confirmation',
+        message:'Do you want to proceed with ' +selectedApplications.value?.length + ' Applications',
+        ok:'Yes',
+        cancel:'No'
+    }).onOk(()=>{
+        approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
+            onSuccess: () => {
+                const message = selectedApplications.value?.length + ' Applications marked as eligible'
+                q.notify({type:'positive',message})
+                approveRejectForm.reset();
+                selectedApplications.value = []; // Clear selection after success
+                fetchApplications();
+            },
+        });
+    })
 };
+
+
 
 
 

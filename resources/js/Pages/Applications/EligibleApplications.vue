@@ -2,14 +2,16 @@
     <q-page padding>
         <p class="page-title">ELIGIBLE APPLICATIONS</p>
         <div class="flex justify-between items-center zcard q-pa-md">
-            <q-input v-model="searchTerm"
-                     dense
-                     outlined
-                     placeholder="Search"
-                     style="width: 240px"
-                     @change="handleSearch">
+            <q-input
+                v-model="searchTerm"
+                dense
+                outlined
+                placeholder="Search"
+                style="width: 240px"
+                @input="fetchApplications"
+            >
                 <template v-slot:append>
-                    <q-icon name="search"/>
+                    <q-icon name="search" />
                 </template>
             </q-input>
             <div class="flex items-center q-gutter-md">
@@ -53,19 +55,12 @@
             </div>
         </div>
         <div class="row q-mt-sm">
-
             <p class="page-title">APPLICATIONS: {{ jobDetails?.post_name}} </p>
             <div class="col-xs-12">
-                <table class="table-auto border-collapse border border-gray-300 w-full mt-6 text-sm">
+                <table class="border-collapse border border-gray-300 w-full mt-4">
                     <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-2 text-left text-gray-600">
-                            <input
-                                type="checkbox"
-                                @change="toggleSelectAll($event)"
-                                :checked="allSelected"
-                            />
-                        </th>
+                        <th class="px-4 py-2 text-left text-gray-600"><input type="checkbox" @change="toggleSelectAll($event.target.checked)" :checked="allSelected" /></th>
                         <th class="px-4 py-2 text-left text-gray-600">Applicant Name</th>
                         <th class="px-4 py-2 text-left text-gray-600">Roll No</th>
                         <th class="px-4 py-2 text-left text-gray-600">Parent Name</th>
@@ -78,56 +73,69 @@
                     </thead>
                     <tbody>
                     <tr
-                        v-for="application in filteredApplications"
+                        v-for="application in applications.data"
                         :key="application.id"
-                        class="hover:bg-gray-50 transition duration-150"
+                        class="hover:bg-gray-50"
                     >
-<!--                        {{application.exam_center.center_name}}-->
-                        <td class="px-4 py-2">
-                            <input
-                                type="checkbox"
-                                v-model="selectedApplications"
-                                :value="application.id"
-                            />
-                        </td>
+                        <td class="px-4 py-2"><input type="checkbox" v-model="selectedApplications" :value="application.id" /></td>
                         <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.application_id || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.applicant?.parents_name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>
-                        <td class="px-4 py-2">{{ application.exam_center?.center_name|| 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ application.exam_center?.center_name || 'N/A' }}</td>
                         <td class="px-4 py-2">
-                <span
-                    :class="[
-                        'px-2 py-1 rounded-full text-xs font-semibold',
-                        application.status === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : application.status === 'rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800',
-                    ]"
-                >
-                    {{ application.status || 'Pending' }}
-                </span>
+                            <span :class="statusClass(application.status)">
+                              {{ application.status || 'Pending' }}
+                            </span>
                         </td>
                         <td class="px-4 py-2">
-                            <button
-                                @click="$inertia.get(route('admin.application.show_applicant_detail', { jobDetails: jobDetails.id, application: application.id }))"
-                                class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded mr-2 transition duration-150"
-                            >
+                            <button @click="$inertia.get(route('admin.application.show_applicant_detail', { jobDetails: jobDetails.id, application: application.id }))"
+                                    class="bg-blue-500 text-white py-1 px-4 rounded">
                                 Preview
                             </button>
                         </td>
                         <td class="px-4 py-2">
-                            <button
-                                @click="viewMarks(application)"
-                                class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded mr-2 transition duration-150"
-                            >
+                            <button @click="viewMarks(application)" class="bg-blue-500 text-white py-1 px-4 rounded">
                                 View Marks
                             </button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+
+
+                <div class="flex justify-between items-center mt-4">
+                    <q-select
+                        v-model="pagination.rowsPerPage"
+                        :options="rowsPerPageOptions"
+                        label="Rows per page"
+                        dense
+                        outlined
+                        style="width: 120px"
+                        @update:model-value="updateRowsPerPage"
+                    />
+                    <div>
+                        <button
+                            @click="prevPage"
+                            :disabled="pagination.page === 1"
+                            class="bg-gray-200 text-black py-1 px-4 rounded"
+                        >
+                            Previous
+                        </button>
+                        <span>Page {{ pagination.page }} of {{ applications.last_page }}</span>
+                        <button
+                            @click="nextPage"
+                            :disabled="pagination.page === applications.last_page"
+                            class="bg-gray-200 text-black py-1 px-4 rounded"
+                        >
+                            Next
+                        </button>
+                    </div>
+
+
+                </div>
+
+
             </div>
         </div>
         <q-dialog v-model="marksDialogOpen" persistent>
@@ -185,53 +193,116 @@
             </q-card>
         </q-dialog>
 
+
     </q-page>
 </template>
 
 <script setup>
 
 import AdminLayout from "@/Layouts/Admin.vue";
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { useForm, router } from '@inertiajs/vue3';
+import {useQuasar} from "quasar";
+
 
 defineOptions({
     layout:AdminLayout
 })
 
-import { useForm } from '@inertiajs/vue3';
+const q = useQuasar();
+const props = defineProps(['jobDetails', 'applications']);
 
-const props = defineProps(['jobDetails']);
+
+const searchTerm = ref('');
+const applications = ref({ data: [], last_page: 1 }); // Replace with actual API data
+const pagination = ref({ page: 1, rowsPerPage: 10 });
+const loading = ref(false);
+
+const rowsPerPageOptions = [10, 20, 50, 100]; // Define available options for rows per page
+pagination.value.rowsPerPage = rowsPerPageOptions[0]; // Set the default rows per page
+
+const updateRowsPerPage = () => {
+    pagination.value.page = 1; // Reset to the first page
+    fetchApplications(); // Fetch data with the updated rows per page
+};
+
 
 const approveRejectForm = useForm({
     application_ids: [],
     status: '',
 });
+
+const fetchApplications = () => {
+    loading.value = true;
+
+    const params = {
+        page: pagination.value.page,
+        per_page: pagination.value.rowsPerPage,
+        search: searchTerm.value,
+    };
+
+    router.get(route('admin.applications.show_eligible', { jobDetails: props.jobDetails.id }), params, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: ({ props }) => {
+            applications.value = props.applications;
+            loading.value = false;
+
+        },
+    });
+};
+
+// Pagination Controls
+const nextPage = () => {
+    if (pagination.value.page < applications.value.last_page) {
+        pagination.value.page++;
+        fetchApplications(); // Ensure this is called after incrementing the page
+    }
+};
+
+const prevPage = () => {
+    if (pagination.value.page > 1) {
+        pagination.value.page--;
+        fetchApplications();
+    }
+};
+
+watch([pagination, searchTerm], fetchApplications, { immediate: true });
+
+
+const statusClass = (status) => {
+    return {
+        "bg-green-100 text-green-800": status === "approved",
+        "bg-red-100 text-red-800": status === "rejected",
+        "bg-yellow-100 text-yellow-800": status === "pending",
+    };
+};
 // Dialog state
 const marksDialogOpen = ref(false);
 const selectedApplicant = ref(null);
 
+
 // Open dialog and set selected application
 const selectedApplications = ref([]);
-const allSelected = computed(() =>
-    filteredApplications.value.length > 0 &&
-    filteredApplications.value.every(app => selectedApplications.value.includes(app.id))
-);
-const toggleSelectAll = (event) => {
-    if (event.target.checked) {
-        selectedApplications.value = filteredApplications.value.map(app => app.id);
-    } else {
-        selectedApplications.value = [];
-    }
-};
-// Search input value
-const searchTerm = ref('');
-const filteredApplications = computed(() => {
-    return props.jobDetails.applications.filter((application) => {
-        const applicantName =
-            application.applicant.user?.name.toLowerCase() || '';
-        return applicantName.includes(searchTerm.value.toLowerCase());
-    });
+
+const allSelected = computed({
+    get: () => applications.value.data.length > 0 && selectedApplications.value.length === applications.value.data.length,
+    set: (value) => toggleSelectAll(value),
 });
 
+
+function toggleSelectAll(checked) {
+    selectedApplications.value = checked
+        ? applications.value.data.map((application) => application.id)
+        : [];
+}
+
+watch(
+    () => applications.value.data,
+    () => {
+        selectedApplications.value = [];
+    }
+);
 // Handle "View Marks" button click
 const viewMarks = (application) => {
     selectedApplicant.value = application.applicant;
@@ -248,14 +319,25 @@ const approveSelectedApplications = () => {
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'approved'; // Set the desired status
 
-    approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
-        onSuccess: () => {
-            approveRejectForm.reset();
-            selectedApplications.value = []; // Clear selection after success
-        },
-    });
-};
+    q.dialog({
+        title:'Confirmation',
+        message:'Do you want to proceed with ' +selectedApplications.value?.length + ' Applications',
+        ok:'Yes',
+        cancel:'No'
+    }).onOk(()=>{
+        approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
+            onSuccess: () => {
+                const message = selectedApplications.value?.length + ' Applications marked as not eligible'
+                q.notify({type:'positive',message})
+                approveRejectForm.reset();
+                selectedApplications.value = []; // Clear selection after success
+                fetchApplications();
+            },
 
+        });
+    })
+
+};
 </script>
 <style scoped>
 /* Enhance button hover effects */
