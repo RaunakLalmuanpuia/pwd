@@ -58,6 +58,17 @@ class Applicants extends Model
         return $this->belongsTo(ExamCenter::class);
     }
 
+//    public function exams()
+//    {
+//        return $this->hasManyThrough(
+//            Exam::class,
+//            Applications::class,
+//            'applicant_id',      // Foreign key on Applications table
+//            'job_details_id',    // Foreign key on Exams table
+//            'id',                // Local key on Applicants table
+//            'job_details_id'     // Local key on Applications table
+//        );
+//    }
     public function exams()
     {
         return $this->hasManyThrough(
@@ -67,6 +78,7 @@ class Applicants extends Model
             'job_details_id',    // Foreign key on Exams table
             'id',                // Local key on Applicants table
             'job_details_id'     // Local key on Applications table
-        );
+        )->where('exams.job_details_id', '=', request()->route('jobDetails')->id); // Explicitly specify the table
     }
+
 }
