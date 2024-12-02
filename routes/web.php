@@ -161,6 +161,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Admin show marks
     Route::get('/exam/{model}/marks', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
+
+    Route::get('/export-job-details/{job_detail_id}', [JobDetailsController::class, 'exportJobDetails'])->name('export.job.details');
 });
 
 

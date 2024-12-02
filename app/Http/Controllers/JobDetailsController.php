@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AttendanceSheetWrittenExport;
+use App\Exports\JobDetailsExport;
 use App\Models\Applications;
 use App\Models\Documents;
 use App\Models\JobDetail;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JobDetailsController extends Controller
 {
@@ -193,6 +196,26 @@ class JobDetailsController extends Controller
             'jobDetail' => $jobDetail,
             'applicants' => $applicants,
         ]);
+    }
+
+    public function exportJobDetails(Excel $excel,$job_detail_id)
+    {
+//        dd($job_detail_id);
+        // Fetch the job detail and related data based on the ID
+        $jobDetails = JobDetail::with(['applications.applicant'])
+            ->where('id', $job_detail_id)
+            ->first();
+//        dd($jobDetails);
+        if (!$jobDetails) {
+            return response()->json(['error' => 'Job detail not found'], 404);
+        }
+
+        // Example: Replace with your logic for fetching the center
+        $center = "Sample Center Name";
+
+        $export = new JobDetailsExport($jobDetails);
+        return Excel::download($export, now()->timestamp . '.xlsx');
+//        return Excel::download(new JobDetailsExport($jobDetails), 'JobDetails.xlsx');
     }
 
 

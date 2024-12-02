@@ -24,7 +24,7 @@
                                             <q-item v-close-popup clickable  @click="$inertia.get(route('admin.applications.show_approved', item.id))">
                                                 <q-item-section><q-item-label>Detail of applications</q-item-label></q-item-section>
                                             </q-item>
-                                            <q-item v-close-popup clickable>
+                                            <q-item v-close-popup clickable @click="exportJobDetails(item.id)">
                                                 <q-item-section><q-item-label>Generate Excel</q-item-label></q-item-section>
                                             </q-item>
 
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-
+import { ref, onMounted } from 'vue';
 import AdminLayout from "@/Layouts/Admin.vue";
 
 defineOptions({
@@ -65,5 +65,11 @@ function formatDate(dateString) {
         .format(new Date(dateString))
         .replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3');
 }
+
+const exportJobDetails = (jobId) => {
+    if (typeof window !== 'undefined') {
+        window.location.href = route('export.job.details', jobId);
+    }
+};
 
 </script>
