@@ -38,33 +38,41 @@ class JobDetailsExport implements FromView, WithEvents
 
                 $currentRow = 7; // Starting row for data
                 foreach ($this->jobDetail->applications as $index => $application) {
+                    $rowStart = $currentRow + ($index * 5);
+
                     // Passport Image
                     if (filled($application->applicant->passport_photo)) {
-                        $this->addImageToSheet(
+                        $imageHeight = $this->addImageToSheet(
                             $sheet,
                             'storage/' . $application->applicant->passport_photo,
-                            'D' . ($index * 5 + $currentRow),
-                            100, // Height
+                            'D' . $rowStart,
+                            120, // Height
                             15, // Offset X
                             10  // Offset Y
                         );
+
+                        // Adjust row height based on image size
+                        $sheet->getRowDimension($rowStart)->setRowHeight(max(18, $imageHeight / 3));
                     }
 
                     // Signature Image
                     if (filled($application->applicant->signature_photo)) {
-                        $this->addImageToSheet(
+                        $imageHeight = $this->addImageToSheet(
                             $sheet,
                             'storage/' . $application->applicant->signature_photo,
-                            'E' . ($index * 5 + $currentRow),
+                            'E' . $rowStart,
                             100, // Height
                             15, // Offset X
                             10  // Offset Y
                         );
+
+                        // Adjust row height based on image size
+                        $sheet->getRowDimension($rowStart)->setRowHeight(max(18, $imageHeight / 3));
                     }
 
-                    // Adjust row heights for better visibility
-                    for ($i = 0; $i < 5; $i++) {
-                        $sheet->getRowDimension($currentRow + $i)->setRowHeight(18);
+                    // Ensure all subsequent rows in the block have the same height
+                    for ($i = 1; $i < 5; $i++) {
+                        $sheet->getRowDimension($rowStart + $i)->setRowHeight(18);
                     }
                 }
 
@@ -83,7 +91,7 @@ class JobDetailsExport implements FromView, WithEvents
      * @param int $height
      * @param int $offsetX
      * @param int $offsetY
-     * @return void
+     * @return int The height of the image
      */
     private function addImageToSheet($sheet, $imagePath, $cellCoordinates, $height, $offsetX, $offsetY)
     {
@@ -97,6 +105,11 @@ class JobDetailsExport implements FromView, WithEvents
             $drawing->setOffsetY($offsetY);
             $drawing->setCoordinates($cellCoordinates);
             $drawing->setWorksheet($sheet);
+
+            return $height;
         }
+
+        return 18; // Default row height if no image
     }
+
 }

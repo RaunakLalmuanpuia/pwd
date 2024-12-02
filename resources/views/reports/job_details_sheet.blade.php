@@ -89,7 +89,7 @@
                     Name
                 </td>
                 <td style="border-right:1px solid black">
-                    : {{ $application->applicant_name }}
+                    : {{ $application->applicant->user->name }}
                 </td>
             </tr>
             <tr>

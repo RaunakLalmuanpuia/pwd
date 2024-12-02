@@ -202,7 +202,7 @@ class JobDetailsController extends Controller
     {
 //        dd($job_detail_id);
         // Fetch the job detail and related data based on the ID
-        $jobDetails = JobDetail::with(['applications.applicant'])
+        $jobDetails = JobDetail::with(['applications.applicant.user'])
             ->where('id', $job_detail_id)
             ->first();
 //        dd($jobDetails);
