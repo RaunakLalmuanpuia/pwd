@@ -45,12 +45,19 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+
 import AdminLayout from "@/Layouts/Admin.vue";
+import {useQuasar} from "quasar";
+import {router} from "@inertiajs/vue3";
+// import {api} from 'axios'
+
+import axios from 'axios'; // Import Axios
 
 defineOptions({
     layout:AdminLayout
 })
 
+const q = useQuasar();
 const props = defineProps(['jobDetails']);
 
 function formatDate(dateString) {
@@ -66,10 +73,38 @@ function formatDate(dateString) {
         .replace(/(\d{2})\/(\d{2})\/(\d{4}),/, '$1/$2/$3');
 }
 
+// const exportJobDetails = (jobId) => {
+//     if (typeof window !== 'undefined') {
+//         window.location.href = route('export.job.details', jobId);
+//     }
+// };
+
 const exportJobDetails = (jobId) => {
-    if (typeof window !== 'undefined') {
-        window.location.href = route('export.job.details', jobId);
-    }
+    q.loading.show(); // Show loading indicator (assuming you're using Quasar's loading plugin)
+
+    // Generate the URL using Inertia's route helper
+    const url = route('export.job.details', jobId);
+
+    // Make a GET request to the URL with responseType as 'blob'
+    axios.get(url, { responseType: 'blob' })
+        .then((res) => {
+            // Create an object URL from the response data and trigger a download
+            const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.setAttribute('download', Date.now() + '.xlsx'); // Set a dynamic file name
+            link.click();
+        })
+        .catch((err) => {
+            // Show an error notification if something goes wrong
+            q.notify({
+                type: 'negative',
+                message: err.response?.data?.message || 'Failed to download file',
+            });
+        })
+        .finally(() => {
+            q.loading.hide(); // Hide loading indicator
+        });
 };
 
 </script>

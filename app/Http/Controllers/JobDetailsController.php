@@ -198,25 +198,22 @@ class JobDetailsController extends Controller
         ]);
     }
 
-    public function exportJobDetails(Excel $excel,$job_detail_id)
+    // Download Approved Excel
+    public function exportJobDetails($job_detail_id)
     {
-//        dd($job_detail_id);
         // Fetch the job detail and related data based on the ID
-        $jobDetails = JobDetail::with(['applications.applicant.user'])
-            ->where('id', $job_detail_id)
-            ->first();
-//        dd($jobDetails);
+        $jobDetails = JobDetail::with(['applications' => function($query) {
+            // Filter applications to get only those with 'approved' status
+            $query->where('status', 'approved')
+                ->with('applicant.user');  // Also eager load related user data for applicants
+        }])->where('id', $job_detail_id)->first();
+
         if (!$jobDetails) {
             return response()->json(['error' => 'Job detail not found'], 404);
         }
 
-        // Example: Replace with your logic for fetching the center
-        $center = "Sample Center Name";
-
         $export = new JobDetailsExport($jobDetails);
         return Excel::download($export, now()->timestamp . '.xlsx');
-//        return Excel::download(new JobDetailsExport($jobDetails), 'JobDetails.xlsx');
     }
-
 
 }

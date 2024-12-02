@@ -2,9 +2,9 @@
     <table>
         <thead>
         <tr>
-            <td rowspan="3" style="align-content: center; padding: 5px; border:1px solid black">
+{{--            <td rowspan="3" style="align-content: center; padding: 5px; border:1px solid black">--}}
 {{--                <img width="70" height="70" src="{{ public_path('assets/images/pwd_logo.png') }}" />--}}
-            </td>
+{{--            </td>--}}
             <td colspan="6" style="text-align: center; border:1px solid black; vertical-align:center; font-size: 15px">
                 <b>
                     PWD RECRUITMENT 2024
