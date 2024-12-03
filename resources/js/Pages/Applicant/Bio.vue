@@ -1,4 +1,5 @@
 <template>
+    <Head title="Bio" />
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -377,125 +378,127 @@
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-6"></div>
-                        <div v-if="!existingData">
-                            <!--Passport photo-->
-                            <div class="col-xs-12 col-sm-6">
+
+                        <!--Passport photo-->
+                        <div v-if="!existingData" class="col-xs-12 col-sm-6">
+                            <q-file
+                                v-model="form.passport_attachment"
+                                label="Passport Photo"
+                                filled
+                                :error="!!form.errors?.passport_attachment"
+                                :error-message="form.errors?.passport_attachment?.toString()"
+                                accept=".jpg, .jpeg, .png"
+                                class="col-xs-12"
+                                color="grey"
+                                hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 3:4"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="attach_file" />
+                                </template>
+                            </q-file>
+                        </div>
+                        <!--Signature-->
+                        <div v-if="!existingData" class="col-xs-12 col-sm-6">
+                            <q-file
+                                v-model="form.signature_attachment"
+                                label="Signature"
+                                filled
+                                :error="!!form.errors?.signature_attachment"
+                                :error-message="form.errors?.signature_attachment?.toString()"
+                                accept=".jpg, .jpeg, .png"
+                                class="col-xs-12"
+                                color="grey"
+                                hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 16:9"
+                            >
+                                <template v-slot:prepend>
+                                    <q-icon name="attach_file" />
+                                </template>
+                            </q-file>
+                        </div>
+
+
+                        <!-- Uploaded Passport photo-->
+                        <div v-if="existingData" class="col-xs-12 col-sm-6">
+                            <p>Passport Photo:</p>
+                            <q-img
+                                :src="`/storage/${existingData.passport_photo}`"
+                                alt="Passport Photo"
+                                width="300px"
+                                height="400px"
+                                fit="fill"
+                                :ratio="3/4"
+                                :error="!!form.errors?.passport_attachment"
+                                :error-message="form.errors?.passport_attachment?.toString()"
+                            />
+                            <br>
+                            <q-btn
+                                icon="edit"
+                                color="primary"
+                                class="mt-2"
+                                @click="showEditPassport = !showEditPassport"
+                            />
+                            <!-- File Input for Editing Passport Photo -->
+                            <div v-if="showEditPassport" class="mt-4">
+                                <p>Upload New Passport Photo:</p>
+
                                 <q-file
                                     v-model="form.passport_attachment"
-                                    label="Passport Photo"
+                                    label="Upload Passport Photo"
+                                    style="width: 300px"
                                     filled
+                                    accept="image/*"
                                     :error="!!form.errors?.passport_attachment"
                                     :error-message="form.errors?.passport_attachment?.toString()"
-                                    accept=".jpg, .jpeg, .png"
-                                    class="col-xs-12"
-                                    color="grey"
-                                    hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 3:4"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="attach_file" />
-                                    </template>
-                                </q-file>
-                            </div>
-                            <!--Signature-->
-                            <div class="col-xs-12 col-sm-6">
-                                <q-file
-                                    v-model="form.signature_attachment"
-                                    label="Signature"
-                                    filled
-                                    :error="!!form.errors?.signature_attachment"
-                                    :error-message="form.errors?.signature_attachment?.toString()"
-                                    accept=".jpg, .jpeg, .png"
-                                    class="col-xs-12"
-                                    color="grey"
-                                    hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 16:9"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="attach_file" />
-                                    </template>
-                                </q-file>
+                                    @added="handleFileChange($event, 'passport_attachment')"
+
+                                />
+
                             </div>
                         </div>
 
-                        <div v-if="existingData">
-                            <!-- Display Passport and Signature Photo Section -->
-                            <div class="flex gap-20 items-start">
-                                <!-- Passport Photo Section -->
-                                <div class="flex flex-col items-center">
-                                    <p>Passport Photo:</p>
-                                    <div v-if="existingData.passport_photo" class="flex flex-col items-center gap-4">
-                                        <!-- Show Image -->
-                                        <q-img
-                                            :src="`/storage/${existingData.passport_photo}`"
-                                            alt="Passport Photo"
-                                            class="w-32 h-32 object-cover rounded border"
-                                            width="150px"
-                                            height="150px"
-                                            fit="fill"
-                                            :error="!!form.errors?.passport_attachment"
-                                            :error-message="form.errors?.passport_attachment?.toString()"
-                                        />
-                                        <!-- Edit Button -->
-                                        <q-btn
-                                            icon="edit"
-                                            label="Edit"
-                                            color="primary"
-                                            class="mt-2"
-                                            @click="showEditPassport = !showEditPassport"
-                                        />
-                                        <!-- File Input for Editing Passport Photo -->
-                                        <div v-if="showEditPassport" class="mt-4">
-                                            <p>Upload New Passport Photo:</p>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                @change="handleFileChange($event, 'passport_attachment')"
-                                            />
-                                        </div>
-                                    </div>
-                                    <p v-else>No passport photo uploaded</p>
-                                </div>
+                        <!-- Uploaded Signature-->
+                        <div v-if="existingData" class="col-xs-12 col-sm-6 ">
+                            <p>Signature:</p>
+                            <q-img
+                                :src="`/storage/${existingData.signature_photo}`"
+                                alt="Signature Photo"
+                                style="display:inline-block; vertical-align: middle"
+                                class="inline-block vertical-middle"
+                                width="320px"
+                                height="180px"
+                                fit="fill"
+                                :ratio="16/9"
+                                :error="!!form.errors?.passport_attachment"
+                                :error-message="form.errors?.passport_attachment?.toString()"
+                            />
+                            <br>
+                            <q-btn
+                                icon="edit"
+                                color="primary"
+                                class="mt-2"
+                                @click="showEditSignature = !showEditSignature"
+                            />
+                            <!-- File Input for Editing Signature Photo -->
+                            <div v-if="showEditSignature" class="mt-4">
+                                <p>Upload New Signature Photo:</p>
 
-                                <!-- Signature Photo Section -->
-                                <div class="flex flex-col items-center">
-                                    <p>Signature Photo:</p>
-                                    <div v-if="existingData.signature_photo" class="flex flex-col items-center gap-4">
-                                        <!-- Show Image -->
-                                        <q-img
-                                            :src="`/storage/${existingData.signature_photo}`"
-                                            alt="Signature Photo"
-                                            class="w-32 h-32 object-cover rounded border"
-                                            width="150px"
-                                            height="150px"
-                                            fit="fill"
-                                            :error="!!form.errors?.passport_attachment"
-                                            :error-message="form.errors?.passport_attachment?.toString()"
-                                        />
-                                        <!-- Edit Button -->
-                                        <q-btn
-                                            icon="edit"
-                                            label="Edit"
-                                            color="primary"
-                                            class="mt-2"
-                                            @click="showEditSignature = !showEditSignature"
-                                        />
-                                        <!-- File Input for Editing Signature Photo -->
-                                        <div v-if="showEditSignature" class="mt-4">
-                                            <p>Upload New Signature Photo:</p>
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                @change="handleFileChange($event, 'signature_attachment')"
-                                            />
-                                        </div>
-                                    </div>
-                                    <p v-else>No signature photo uploaded</p>
-                                </div>
+                                <q-file
+                                    v-model="form.signature_attachment"
+                                    label="Upload Signature Photo"
+                                    filled
+                                    style="width: 320px"
+                                    accept="image/*"
+                                    :error="!!form.errors?.signature_attachment"
+                                    :error-message="form.errors?.signature_attachment?.toString()"
+                                    @added="handleFileChange($event, 'signature_attachment')"
+                                    class="q-mb-md"
+                                />
                             </div>
                         </div>
 
                         <!--Submit-->
                         <div class="col-xs-12 flex justify-center q-mt-lg">
-                            <q-btn  class="q-px-xl" color="primary" label="Save" rounded type="submit"/>
+                            <q-btn  class="q-px-xl" color="primary" :label="submitButtonLabel" rounded type="submit"/>
                         </div>
                     </q-form>
                 </div>
@@ -509,7 +512,7 @@
 <script setup>
 
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import { useForm, usePage, Head } from "@inertiajs/vue3";
 import { ref, computed, watch } from "vue";
 
 defineOptions({
@@ -631,5 +634,13 @@ const submit = () => {
     right: inherit;
     padding: 0 5px;
     z-index: 10;
+}
+.center-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    //height: 100vh; /* Full viewport height */
+    //margin: 0 auto; /* Ensure horizontal centering */
 }
 </style>

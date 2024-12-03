@@ -1,18 +1,20 @@
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 import AdminLayout from '@/Layouts/Admin.vue';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
+import DeleteUserForm from '.@/Partials/DeleteUserForm.vue';
+import UpdatePasswordForm from '.@/Partials/UpdatePasswordForm.vue';
+import UpdateProfileInformationForm from '.@/Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
-import {computed} from "vue";
 import { usePage } from '@inertiajs/vue3';
 
 // Fetch the user's role (assuming it's passed from the backend)
 // Access user roles from the prop
-const page = usePage();
-const user = page.props.auth.user;
+const { user } = usePage().props;
+// console.log(user)
+// Define the role based on the prop
+const isApplicant = user?.roles?.some(role => role.name === 'Applicant');
+const isAdmin = user?.roles?.some(role => role.name === 'Admin');  // You can check for other roles here
+
 
 defineProps({
     mustVerifyEmail: {
@@ -21,25 +23,29 @@ defineProps({
     status: {
         type: String,
     },
+    user: {
+        type: Object,
+        required: true,
+    },
 });
-// Determine layout based on user roles
-const layout = computed(() => {
-    if (!user || !user.roles) return AuthenticatedLayout; // Default layout
-    const roles = user.roles.map(role => role.name);
 
-    if (roles.includes("Admin")) {
-        return AdminLayout;
-    } else if (roles.includes("Applicant")) {
-        return ApplicantLayout;
-    }
-    return AuthenticatedLayout; // Fallback layout
+const isApplicant = computed(() => {
+    return user?.roles?.some(role => role.name === 'Applicant');
+});
+
+const isAdmin = computed(() => {
+    return user?.roles?.some(role => role.name === 'Admin');
+});
+
+defineOptions({
+    layout: isAdmin.value ? AdminLayout : (isApplicant.value ? AuthenticatedLayout : null),
 });
 </script>
 
 <template>
     <Head title="Profile" />
-    <component :is="layout">
-<!--    <AuthenticatedLayout>-->
+
+
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Profile</h2>
         </template>
@@ -52,6 +58,7 @@ const layout = computed(() => {
                         :status="status"
                         class="max-w-xl"
                     />
+                    {{user}}
                 </div>
 
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
@@ -64,6 +71,4 @@ const layout = computed(() => {
             </div>
         </div>
 
-<!--    </AuthenticatedLayout>-->
-    </component>
 </template>

@@ -27,7 +27,7 @@
                             :active="route().current()==='dashboard.admin'"
                             @click="$inertia.get(route('dashboard'))">
                         <q-item-section avatar>
-                            <q-icon name="inbox" />
+                            <q-icon name="dashboard" />
                         </q-item-section>
                         <q-item-section>
                             <q-item-label>Dashboard</q-item-label>
@@ -40,7 +40,7 @@
                                 :active="route().current()==='admin.applications.index_submission'"
                                 @click="$inertia.get(route('admin.applications.index_submission'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px"/>
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Submission</q-item-label>
@@ -51,7 +51,7 @@
                                 :active="route().current()==='admin.applications.index_approved'"
                                 @click="$inertia.get(route('admin.applications.index_approved'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px"/>
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Qualified</q-item-label>
@@ -62,7 +62,7 @@
                                 :active="route().current()==='admin.applications.index_eligible'"
                                 @click="$inertia.get(route('admin.applications.index_eligible'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px"/>
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Eligible</q-item-label>
@@ -71,12 +71,12 @@
 
                     </q-expansion-item>
 
-                    <q-expansion-item label="Job Management" group="menu" icon="manage_accounts">
+                    <q-expansion-item label="Job Management" group="menu" icon="business_center">
                         <q-item clickable v-ripple active-class="active-menu"
                                 :active="route().current()==='job.index'"
                                 @click="$inertia.get(route('job.index'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 6px"/>
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Jobs</q-item-label>
@@ -87,7 +87,7 @@
                                 :active="route().current()==='exams.index'"
                                 @click="$inertia.get(route('exams.index'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 6px"/>
                             </q-item-section>
                             <q-item-section>
                                 Exams
@@ -98,7 +98,7 @@
                                 :active="route().current()==='exams.marks.index'"
                                 @click="$inertia.get(route('exams.marks.index'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 6px"/>
                             </q-item-section>
                             <q-item-section>
                                 Marks
@@ -116,12 +116,12 @@
 
                     </q-expansion-item>
 
-                    <q-expansion-item label="Administration" group="menu" icon="manage_accounts">
+                    <q-expansion-item label="Administration" group="menu" icon="admin_panel_settings">
                         <q-item clickable v-ripple active-class="active-menu"
                                 :active="route().current()==='job.index'"
                                 @click="$inertia.get(route('job.index'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" size="sm" style="font-size: 8px; padding-left: 8px" class="my-custom-icon" />
                             </q-item-section>
                             <q-item-section>
                                 <q-item-label>Exam Center</q-item-label>
@@ -132,7 +132,7 @@
                                 :active="route().current()==='exams.index'"
                                 @click="$inertia.get(route('exams.index'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
                             </q-item-section>
                             <q-item-section>
                                 Users
@@ -143,7 +143,7 @@
                                 :active="route().current()==='exams.marks.index'"
                                 @click="$inertia.get(route('exams.marks.index'))">
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
                             </q-item-section>
                             <q-item-section>
                                 Payments
@@ -152,7 +152,7 @@
 
                         <q-item clickable v-ripple>
                             <q-item-section avatar>
-                                <q-icon name="circle" />
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
                             </q-item-section>
                             <q-item-section>
                                Report
@@ -164,7 +164,7 @@
 
                     <q-item clickable v-ripple @click="$inertia.get(route('profile.edit'))">
                         <q-item-section avatar>
-                            <q-icon name="drafts" />
+                            <q-icon name="manage_accounts" />
                         </q-item-section>
 
                         <q-item-section>
@@ -174,7 +174,7 @@
 
                     <q-item clickable v-ripple @click="$inertia.post(route('logout'))">
                         <q-item-section avatar>
-                            <q-icon name="drafts" />
+                            <q-icon name="logout" />
                         </q-item-section>
                         <q-item-section>
                             Logout
@@ -278,5 +278,9 @@ const toggleLeftDrawer = () => {
     margin: 0;
     font-size: 0.875rem;
     font-weight: 400;
+}
+
+.my-custom-icon {
+    font-size: 6px; /* Set your desired size */
 }
 </style>

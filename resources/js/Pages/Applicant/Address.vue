@@ -126,6 +126,9 @@
 
                             <div class="col-xs-12 col-sm-6">
                                 <q-checkbox
+                                    class="my-input p-5"
+                                    dense
+
                                     v-model="sameAsPermanent"
                                     label="Same as Permanent Address"
                                 />
@@ -253,17 +256,12 @@
 
 
 
-
-
-
-                            <!-- Submit Button -->
-                            <div>
-                                <q-btn
-                                    color="primary"
-                                    :label="submitButtonLabel"
-                                    @click="submit"
-                                />
+                            <div class="col-xs-12 flex justify-center q-mt-lg">
+                                <q-btn  class="q-px-xl" color="primary" :label="submitButtonLabel" rounded @click="submit" type="submit"/>
                             </div>
+
+
+
                         </q-form>
 
 

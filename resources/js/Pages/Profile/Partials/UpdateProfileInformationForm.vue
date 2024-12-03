@@ -15,10 +15,12 @@ defineProps({
 });
 
 const user = usePage().props.auth.user;
-
+console.log(user)
 const form = useForm({
     name: user.name,
     email: user.email,
+    phone: user.phone,
+
 });
 </script>
 
@@ -26,7 +28,6 @@ const form = useForm({
     <section>
         <header>
             <h2 class="text-lg font-medium text-gray-900">Profile Information</h2>
-
             <p class="mt-1 text-sm text-gray-600">
                 Update your account's profile information and email address.
             </p>
@@ -62,6 +63,22 @@ const form = useForm({
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
+            </div>
+
+            <div>
+                <InputLabel for="phone" value="Phone" />
+
+                <TextInput
+                    id="phone"
+                    class="mt-1 block w-full"
+                    v-model="form.phone"
+                    required
+                    autofocus
+                    maxlength="10"
+                    autocomplete="name"
+                />
+
+                <InputError class="mt-2" :message="form.errors.phone" />
             </div>
 
             <div v-if="mustVerifyEmail && user.email_verified_at === null">
