@@ -161,8 +161,14 @@ Route::middleware(['auth'])->group(function () {
 
     //Admin show marks
     Route::get('/exam/{model}/marks', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
+    // Download Job Approved/Qualified List
+    Route::get('/export-job-qualified/{job_detail_id}', [JobDetailsController::class, 'exportJobDetails'])->name('export.job.details');
 
-    Route::get('/export-job-details/{job_detail_id}', [JobDetailsController::class, 'exportJobDetails'])->name('export.job.details');
+    // Download Job Eligible List
+    Route::get('/export-job-eligible/{job_detail_id}', [JobDetailsController::class, 'exportEligibleJobDetails'])->name('export.job.eligible.details');
+
+    // Download Job Submitted List
+    Route::get('/export-job-submitted/{job_detail_id}', [JobDetailsController::class, 'exportSubmittedJobDetails'])->name('export.job.submitted.details');
 });
 
 
