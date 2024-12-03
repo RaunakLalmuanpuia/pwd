@@ -135,8 +135,8 @@ class ApplicantController extends Controller
             'disability' => 'required|boolean',
             'disability_type' => 'nullable|string|max:255',
             'community_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
-            'passport_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
-            'signature_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
+            'passport_attachment' => 'required|image|mimes:jpeg,png,jpg|max:512|dimensions:ratio=3/4',
+            'signature_attachment' => 'nullable|image|mimes:jpeg,png,jpg|max:512|dimensions:ratio=16/9',
         ]);
     }
 

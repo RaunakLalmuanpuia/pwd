@@ -315,6 +315,8 @@
                                                 width="150px"
                                                 height="150px"
                                                 fit="fill"
+                                                :error="!!form.errors?.passport_attachment"
+                                                :error-message="form.errors?.passport_attachment?.toString()"
                                             />
                                             <!-- Edit Button -->
                                             <q-btn
@@ -349,6 +351,8 @@
                                                 width="150px"
                                                 height="150px"
                                                 fit="fill"
+                                                :error="!!form.errors?.passport_attachment"
+                                                :error-message="form.errors?.passport_attachment?.toString()"
                                             />
                                             <!-- Edit Button -->
                                             <q-btn
