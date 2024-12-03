@@ -19,7 +19,7 @@ class SubmittedSheetExport implements FromView, WithEvents
 
     public function view(): View
     {
-        return view('reports.job_details_sheet', [
+        return view('reports.job_submitted_sheet', [
             'jobDetail' => $this->jobDetail,
             'applications' => $this->jobDetail->applications, // Pass related applications
         ]);
@@ -38,41 +38,33 @@ class SubmittedSheetExport implements FromView, WithEvents
 
                 $currentRow = 7; // Starting row for data
                 foreach ($this->jobDetail->applications as $index => $application) {
-                    $rowStart = $currentRow + ($index * 5);
-
                     // Passport Image
                     if (filled($application->applicant->passport_photo)) {
-                        $imageHeight = $this->addImageToSheet(
+                        $this->addImageToSheet(
                             $sheet,
                             'storage/' . $application->applicant->passport_photo,
-                            'D' . $rowStart,
-                            120, // Height
-                            15, // Offset X
-                            10  // Offset Y
-                        );
-
-                        // Adjust row height based on image size
-                        $sheet->getRowDimension($rowStart)->setRowHeight(max(18, $imageHeight / 3));
-                    }
-
-                    // Signature Image
-                    if (filled($application->applicant->signature_photo)) {
-                        $imageHeight = $this->addImageToSheet(
-                            $sheet,
-                            'storage/' . $application->applicant->signature_photo,
-                            'E' . $rowStart,
+                            'D' . ($index * 5 + $currentRow),
                             100, // Height
                             15, // Offset X
                             10  // Offset Y
                         );
-
-                        // Adjust row height based on image size
-                        $sheet->getRowDimension($rowStart)->setRowHeight(max(18, $imageHeight / 3));
                     }
 
-                    // Ensure all subsequent rows in the block have the same height
-                    for ($i = 1; $i < 5; $i++) {
-                        $sheet->getRowDimension($rowStart + $i)->setRowHeight(18);
+                    // Signature Image
+                    if (filled($application->applicant->signature_photo)) {
+                        $this->addImageToSheet(
+                            $sheet,
+                            'storage/' . $application->applicant->signature_photo,
+                            'E' . ($index * 5 + $currentRow),
+                            100, // Height
+                            15, // Offset X
+                            10  // Offset Y
+                        );
+                    }
+
+                    // Adjust row heights for better visibility
+                    for ($i = 0; $i < 5; $i++) {
+                        $sheet->getRowDimension($currentRow + $i)->setRowHeight(18);
                     }
                 }
 
@@ -91,7 +83,7 @@ class SubmittedSheetExport implements FromView, WithEvents
      * @param int $height
      * @param int $offsetX
      * @param int $offsetY
-     * @return int The height of the image
+     * @return void
      */
     private function addImageToSheet($sheet, $imagePath, $cellCoordinates, $height, $offsetX, $offsetY)
     {
@@ -105,11 +97,7 @@ class SubmittedSheetExport implements FromView, WithEvents
             $drawing->setOffsetY($offsetY);
             $drawing->setCoordinates($cellCoordinates);
             $drawing->setWorksheet($sheet);
-
-            return $height;
         }
-
-        return 18; // Default row height if no image
     }
 
 }

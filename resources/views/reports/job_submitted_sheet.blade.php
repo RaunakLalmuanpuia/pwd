@@ -2,6 +2,9 @@
     <table>
         <thead>
         <tr>
+            <td rowspan="3" style="align-content: center; padding: 5px; border:1px solid black">
+                {{--                <img width="70" height="70" src="{{ public_path('assets/images/pwd_logo.png') }}" />--}}
+            </td>
             <td colspan="6" style="text-align: center; border:1px solid black; vertical-align:center; font-size: 15px">
                 <b>
                     PWD RECRUITMENT 2024
@@ -10,12 +13,28 @@
         </tr>
         <tr>
             <td colspan="6" style="text-align:center; border-top:1px solid black; border-left:1px solid black; border-right:1px solid black">
-                <b> <u>SUBMITTED ATTENDANCE SHEET</u> </b>
+                <b> <u> SUBMITTED ATTENDANCE SHEET </u> </b>
             </td>
         </tr>
         <tr>
             <td colspan="6" style="text-align:center; font-size: 9px; border-bottom:1px solid black; border-left:1px solid black; border-right:1px solid black">
-                For the post of: {{$jobDetail->post_name}}
+                {{$jobDetail->post_name}}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="border-top:1px solid black; border-left:1px solid black; border-bottom:1px solid black">
+                Centre for Physical Measurement &amp; Endurance Test
+            </td>
+            <td colspan="3" style="border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black">
+                : Center
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4" style="border-top:1px solid black; border-left:1px solid black; border-bottom:1px solid black">
+                Date &amp; Time of Physical Measurement &amp; Endurance Test
+            </td>
+            <td colspan="3" style="border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black">
+                :
             </td>
         </tr>
         <tr>
@@ -35,7 +54,9 @@
             <td style="border:1px solid black">
                 <b>Qualified/Disqualified</b>
             </td>
-
+            <td style="border:1px solid black">
+                <b>Signature &amp; Seal of Team Leader</b>
+            </td>
         </tr>
         </thead>
         <tbody>
@@ -61,7 +82,7 @@
                     @endif
                 </td>
                 <td rowspan="5" style="border: 1px solid black"></td>
-
+                <td rowspan="5" style="border: 1px solid black"></td>
             </tr>
             <tr>
                 <td style="border-left:1px solid black;">
