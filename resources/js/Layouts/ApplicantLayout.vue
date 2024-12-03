@@ -28,7 +28,7 @@
                             :active="route().current()==='dashboard.citizen'"
                             @click="$inertia.get(route('dashboard'))">
                         <q-item-section avatar>
-                            <q-icon name="inbox" />
+                            <q-icon name="dashboard" />
                         </q-item-section>
                         <q-item-section>
                             Dashboard
@@ -40,7 +40,7 @@
                             :active="route().current()==='applicant.bio'"
                             @click="$inertia.get(route('applicant.bio'))">
                         <q-item-section avatar>
-                            <q-icon name="star" />
+                            <q-icon name="account_circle" />
                         </q-item-section>
 
                         <q-item-section>
@@ -56,7 +56,7 @@
                             :active="route().current()==='applicant.address'"
                             @click="$inertia.get(route('applicant.address'))">
                         <q-item-section avatar>
-                            <q-icon name="inbox" />
+                            <q-icon name="location_on" />
                         </q-item-section>
                         <q-item-section>
                             <q-item-label>Address</q-item-label>
@@ -67,7 +67,7 @@
                             :active="route().current()==='applications.index'"
                             @click="$inertia.get(route('applications.index'))">
                         <q-item-section avatar>
-                            <q-icon name="inbox" />
+                            <q-icon name="drafts" />
                         </q-item-section>
                         <q-item-section>
                             <q-item-label>Applications</q-item-label>
@@ -79,7 +79,7 @@
                             :active="route().current()==='profile.edit'"
                             @click="$inertia.get(route('profile.edit'))">
                         <q-item-section avatar>
-                            <q-icon name="inbox" />
+                            <q-icon name="manage_accounts" />
                         </q-item-section>
                         <q-item-section>
                             <q-item-label>Profile</q-item-label>
@@ -91,7 +91,7 @@
                             :active="route().current()==='logout'"
                             @click="$inertia.post(route('logout'))">
                         <q-item-section avatar>
-                            <q-icon name="inbox" />
+                            <q-icon name="logout" />
                         </q-item-section>
                         <q-item-section>
                             <q-item-label>Logout</q-item-label>

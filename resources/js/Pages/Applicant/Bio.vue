@@ -3,409 +3,501 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="container mx-auto p-4">
-                    <h3 class="text-h5 q-mb-md py-4">Personal Details</h3>
-                    <q-page>
-                        <q-form @submit="submit" @reset="onReset">
-                            <q-input
-                                filled
-                                v-model.trim="form.name"
-                                label="Your Name *"
-                                lazy-rules
-                                :error="!!form.errors?.name"
-                                :error-message="form.errors?.name?.toString()"
-                                :rules="[(val) => !!val || 'Name is required']"
-                            />
-                            <q-input
-                                filled
-                                v-model.trim="form.phone"
-                                label="Phone Number *"
-                                type="tel"
-                                maxlength="10"
-                                lazy-rules
-                                :error="!!form.errors?.phone"
-                                :error-message="form.errors?.phone?.toString()"
-                                :rules="[(val) => (val && val.length <= 10) || 'Phone number is required']"
-                            />
-                            <q-input
-                                filled
-                                v-model="form.email"
-                                label="Email *"
-                                lazy-rules
-                                :error="!!form.errors?.email"
-                                :error-message="form.errors?.email?.toString()"
-                                :rules="[(val) => (val && val.length > 0) || 'Email is required']"
-                            />
-                            <q-input
-                                filled
-                                v-model="form.parents_name"
-                                label="Parents Name *"
-                                lazy-rules
-                                :error="!!form.errors?.parents_name"
-                                :error-message="form.errors?.parents_name?.toString()"
-                                :rules="[(val) => (val && val.length > 0) || 'Parents Name is required']"
-                            />
-                            <q-select
-                                filled
-                                v-model="form.sex"
-                                label="Sex *"
-                                lazy-rules
-                                :error="!!form.errors?.sex"
-                                :error-message="form.errors?.sex?.toString()"
-                                :rules="[(val) => (val && val.length > 0) || 'Sex is required']"
-                                :options="['Male', 'Female', 'Others']"
-                            />
-                            <q-select
-                                filled
-                                v-model="form.marital_status"
-                                label="Marital Status *"
-                                :error="!!form.errors?.marital_status"
-                                :error-message="form.errors?.marital_status?.toString()"
-                                :rules="[(val) => (val && val.length > 0) || 'Marital Status is required']"
-                                :options="['Single', 'Married', 'Divorced', 'Widowed']"
-                            />
-                            <q-input
-                                label="Date Of Birth"
-                                filled
-                                v-model="form.date_of_birth"
-                                :error="!!form.errors?.date_of_birth"
-                                :error-message="form.errors?.date_of_birth?.toString()"
-                                mask="date"
-                                :rules="['date']"
-                            >
-                                <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date v-model="form.date_of_birth" today-btn>
-                                                <div class="row items-center justify-end">
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-                            </q-input>
-                            <q-select
-                                filled
-                                v-model="form.community"
-                                label="Community"
-                                lazy-rules
-                                :error="!!form.errors?.community"
-                                :error-message="form.errors?.community?.toString()"
-                                :rules="[(val) => (val !== null && val !== '') || 'Please select your community']"
-                                :options="[
-                    { label: 'Scheduled Tribe', value: 'Scheduled Tribe' },
-                    { label: 'Scheduled Caste', value: 'Scheduled Caste' },
-                    { label: 'Other Backward Class', value: 'Other Backward Class' },
-                    { label: 'General', value: 'General' }
-                ]"
-                            />
-                            <q-select
-                                filled
-                                v-model="form.religion"
-                                label="Religion"
-                                lazy-rules
-                                :error="!!form.errors?.religion"
-                                :error-message="form.errors?.religion?.toString()"
-                                :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Religion']"
-                                :options="[
-                    { label: 'Hindu', value: 'Hindu' },
-                    { label: 'Muslim', value: 'Muslim' },
-                    { label: 'Sikh', value: 'Sikh' },
-                    { label: 'Christian', value: 'Christian' },
-                    { label: 'Buddhist', value: 'Buddhist' },
-                    { label: 'Others', value: 'Others' },
-                ]"
-                            />
-                            <q-select
-                                filled
-                                v-model="form.nationality"
-                                label="Nationality"
-                                lazy-rules
-                                :error="!!form.errors?.nationality"
-                                :error-message="form.errors?.nationality?.toString()"
-                                :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Nationality']"
-                                :options="[
-                    { label: 'Indian', value: 'Indian' },
-                    { label: 'Others', value: 'Others' },
+<!--                    <h3 class="text-h5 q-mb-md py-4">Personal Details</h3>-->
 
-                ]"
+                    <q-form class="row q-col-gutter-sm" @submit="submit">
+                        <div class="col-xs-12 primary-title">Applicant details</div>
+                        <div class="col-xs-12">Applicant Information</div>
+                        <!--  Name-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-input v-model="form.name"
+                                     :error="form.errors.hasOwnProperty('name')"
+                                     :error-message="form.errors?.name?.toString()"
+                                     :rules="[
+                                         val=>!!val?.trim() || 'Applicant name is required'
+                                       ]"
+                                     class="my-input"
+                                     dense
+                                     disable
+                                     input-class="test"
+                                     item-aligned
+                                     label="Applicant's Name"
+                                     outlined
+                                     @blur="delete form.errors['name']"
                             />
-
-                            <q-select
-                                filled
-                                v-model="form.qualification"
-                                label="Qualification"
-                                lazy-rules
-                                :error="!!form.errors?.qualification"
-                                :error-message="form.errors?.qualification?.toString()"
-                                :rules="[(val) => (val !== null && val !== '') || 'Please Select your qualification']"
-                                :options="['Non Graduate', 'Graduate', 'Post Graduate', 'Doctorate']"
+                        </div>
+                        <!--Email-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-input v-model="form.email"
+                                     :error="form.errors.hasOwnProperty('email')"
+                                     :error-message="form.errors?.email?.toString()"
+                                     :rules="[
+                                         val=>!!val?.trim() || 'Email is required'
+                                       ]"
+                                     disable
+                                     class="my-input"
+                                     dense
+                                     item-aligned
+                                     label="Email"
+                                     outlined
+                                     @blur="delete form.errors['email']"
                             />
+                        </div>
+                        <!--phone-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-input v-model="form.phone"
+                                     disable
+                                     :rules="[
+                                         val=>!!val || 'Mobile No is required',
+                                         val=>val.length===10 || 'Mobile No must be 10 digit No',
+                                       ]"
+                                     class="my-input"
+                                     dense
+                                     item-aligned
+                                     label="Mobile No"
+                                     mask="##########"
+                                     outlined
+                                     :error="!!form.errors?.phone"
+                                     :error-message="form.errors?.phone?.toString()"
+                            />
+                        </div>
+                        <!--parent name-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-input v-model="form.parents_name"
+                                     :error="form.errors.hasOwnProperty('parents_name')"
+                                     :error-message="form.errors?.parents_name?.toString()"
+                                     :rules="[
+                                         val=>!!val || 'Parent name is required'
+                                       ]"
+                                     class="my-input"
+                                     dense
+                                     item-aligned
+                                     label="Parent Name"
+                                     outlined
+                                     @blur="delete form.errors['parents_name']"
+                            />
+                        </div>
+                        <!--gender-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.sex"
+                                      :options="['Male', 'Female', 'Others']"
+                                      :rules="[
+                                         val=>!!val || 'Gender is required'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Gender"
+                                      outlined
+                                      :error="!!form.errors?.phone"
+                                      :error-message="form.errors?.phone?.toString()"
+                            />
+                        </div>
+                        <!--DOB-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-input v-model="form.date_of_birth"
+                                     :rules="[
+                                     val=>!!val || 'DOB is required',
+                                     ]"
+                                     class="my-input"
+                                     dense
+                                     item-aligned
+                                     label="Date of Birth"
+                                     outlined
+                                     stack-label
+                                     type="date"
+                                     :error="form.errors.hasOwnProperty('date_of_birth')"
+                                     :error-message="form.errors?.date_of_birth?.toString()"
+                            />
+                        </div>
+                        <!--Category-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.community"
+                                      :options="categories"
+                                      :rules="[
+                                         val=>!!val || 'Category is required'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Category"
+                                      outlined
+                            />
+                        </div>
+                        <!--Religion-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.religion"
+                                      :options="religions"
+                                      :rules="[
+                                         val=>!!val || 'Religion is required'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Religion"
+                                      outlined
+                            />
+                        </div>
+                        <!--Nationality-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.nationality"
+                                      :options="[
+                                            { label: 'Indian', value: 'Indian' },
+                                            { label: 'Others', value: 'Others' },
 
-                            <div v-if="form.qualification === 'Graduate' || form.qualification === 'Post Graduate' || form.qualification === 'Doctorate'">
-                                <q-input
-                                    filled
-                                    v-model="form.graduateDegree"
-                                    label="Graduate Degree"
-                                    lazy-rules
-                                    :error="!!form.errors?.graduateDegree"
-                                    :error-message="form.errors?.graduateDegree?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your graduate degree']"
-                                />
-                                <q-input
-                                    filled
-                                    v-model="form.graduateStream"
-                                    label="Graduate Stream"
-                                    lazy-rules
-                                    :error="!!form.errors?.graduateStream"
-                                    :error-message="form.errors?.graduateStream?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your graduate stream']"
-                                />
+                                        ]"
+                                      :rules="[
+                                         val=>!!val || 'Nationality is required'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Nationality"
+                                      outlined
+                            />
+                        </div>
+                        <!--Maritial Status-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.marital_status"
+                                      :options="['Single', 'Married', 'Divorced', 'Widowed']"
+                                      :rules="[
+                                         val=>!!val || 'Marital Status is required'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Marital Status"
+                                      outlined
+                            />
+                        </div>
+                        <!--PWD-->
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.disability"
+                                      :options="[
+                                          { label: 'Yes', value: 1 },
+                                          { label: 'No', value: 0 }
+                                        ]"
+                                      :rules="[
+                                         val=>!!val || 'Please select an option'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Person With Disability"
+                                      outlined
+                            />
+                        </div>
+                        <!-- if pwd-->
+                        <div class="col-xs-12 col-sm-6" v-if="form.disability.value === 1 || form.disability === 'Yes'">
+                            <q-select v-model="form.disability_type"
+                                      :options="[
+                                          'Hearing',
+                                          'Locomotor',
+                                          'Vision',
+                                          'Autism, Intellectual & Learning Disability, Mental Illness',
+                                          'Multiple Disability (Amongst Above)'
+                                        ]"
+                                      :rules="[
+                                         val=>!!val || 'Please Select your disability type'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Disability Type"
+                                      outlined
+                            />
+                        </div>
+
+                        <div class="col-xs-12 col-sm-12"></div>
+                        <div class="col-xs-12">
+                            <q-separator/>
+                        </div>
+
+                        <!--Education Detail-->
+                        <div class="col-xs-12">
+                            Education Detail
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <q-select v-model="form.qualification"
+                                      :options="['Non Graduate', 'Graduate', 'Post Graduate', 'Doctorate']"
+                                      :rules="[
+                                         val=>!!val || 'Qualification is required'
+                                       ]"
+                                      class="my-input"
+                                      dense
+                                      item-aligned
+                                      label="Qualification"
+                                      outlined
+                            />
+                        </div>
+                        <div class="col-xs-12 col-sm-6"></div>
+                        <div class="col-xs-12 col-sm-6" v-if="form.qualification === 'Graduate' || form.qualification === 'Post Graduate' || form.qualification === 'Doctorate'">
+                            <div style="display: flex; width: 203%; gap: 1rem;">
+                                <div style="flex: 1; max-width: calc(50% - 0.5rem);">
+                                    <q-input v-model="form.graduateDegree"
+                                             :error="form.errors.hasOwnProperty('graduateDegree')"
+                                             :error-message="form.errors?.graduateDegree?.toString()"
+                                             :rules="[
+                                                 val => !!val || 'Graduate Degree is required'
+                                               ]"
+                                             class="my-input"
+                                             dense
+                                             item-aligned
+                                             label="Graduate Degree"
+                                             outlined
+                                             @blur="delete form.errors['graduateDegree']"
+                                    />
+                                </div>
+                                <div style="flex: 1; max-width: calc(50% - 0.5rem);">
+                                    <q-input v-model="form.graduateStream"
+                                             :error="form.errors.hasOwnProperty('graduateStream')"
+                                             :error-message="form.errors?.graduateStream?.toString()"
+                                             :rules="[
+                                                 val => !!val || 'Graduate Stream is required'
+                                               ]"
+                                             class="my-input"
+                                             dense
+                                             item-aligned
+                                             label="Graduate Stream"
+                                             outlined
+                                             @blur="delete form.errors['graduateStream']"
+                                    />
+                                </div>
                             </div>
-
-                            <!-- Post Graduate Degree and Stream -->
-                            <div v-if="form.qualification === 'Post Graduate' || form.qualification === 'Doctorate'">
-                                <q-input
-                                    filled
-                                    v-model="form.postGraduateDegree"
-                                    label="Post Graduate Degree"
-                                    lazy-rules
-                                    :error="!!form.errors?.postGraduateDegree"
-                                    :error-message="form.errors?.postGraduateDegree?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your post graduate degree']"
-                                />
-                                <q-input
-                                    filled
-                                    v-model="form.postGraduateStream"
-                                    label="Post Graduate Stream"
-                                    lazy-rules
-                                    :error="!!form.errors?.postGraduateStream"
-                                    :error-message="form.errors?.postGraduateStream?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your post graduate stream']"
-                                />
-                            </div>
-
-                            <!-- Doctorate Degree and Stream -->
-                            <div v-if="form.qualification === 'Doctorate'">
-                                <q-input
-                                    filled
-                                    v-model="form.doctorateDegree"
-                                    label="Doctorate Degree"
-                                    lazy-rules
-                                    :error="!!form.errors?.doctorateDegree"
-                                    :error-message="form.errors?.doctorateDegree?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your doctorate degree']"
-                                />
-                                <q-input
-                                    filled
-                                    v-model="form.doctorateStream"
-                                    label="Doctorate Stream"
-                                    lazy-rules
-                                    :error="!!form.errors?.doctorateStream"
-                                    :error-message="form.errors?.doctorateStream?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please enter your doctorate stream']"
-                                />
-                            </div>
-
-                            <q-select
-                                filled
-                                v-model="form.mizo_proficiency"
-                                label="Knowledge Of Mizo Language"
-                                lazy-rules
-                                :error="!!form.errors?.mizo_proficiency"
-                                :error-message="form.errors?.mizo_proficiency?.toString()"
-                                :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Mizo Proficiency']"
-                                :options="[
-                    { label: 'Yes', value: 'Yes' },
-                    { label: 'No', value: 'No' }
-                  ]"
-                            />
-
-                            <q-select
-                                filled
-                                v-model="form.disability"
-                                label="Person With Disability"
-                                lazy-rules
-                                :error="!!form.errors?.disability"
-                                :error-message="form.errors?.disability?.toString()"
-                                :rules="[(val) => (val !== null && val !== '') || 'Please Enter your Nationality']"
-                                :options="[
-                    { label: 'Yes', value: '1' },
-                    { label: 'No', value: '0' }
-                  ]"
-                            />
-
-                            <!--    {{form.disability}}-->
-                            <div v-if="form.disability === 'Yes'|| form.disability.value === '1'">
-                                <q-select
-                                    filled
-                                    v-model="form.disability_type"
-                                    label="Disability Type"
-                                    lazy-rules
-                                    :error="!!form.errors?.disability_type"
-                                    :error-message="form.errors?.disability_type?.toString()"
-                                    :rules="[(val) => (val !== null && val !== '') || 'Please Select your disability type']"
-                                    :options="[
-                      'Hearing',
-                      'Locomotor',
-                      'Vision',
-                      'Autism, Intellectual & Learning Disability, Mental Illness',
-                      'Multiple Disability (Amongst Above)'
-                    ]"
-                                />
-                            </div>
-
-                            <div v-if="!existingData">
-                                <q-file
-                                    v-model="form.passport_attachment"
-                                    label="Passport Photo"
-                                    filled
-                                    counter
-                                    :error="!!form.errors?.passport_attachment"
-                                    :error-message="form.errors?.passport_attachment?.toString()"
-                                    accept=".jpg, .jpeg, .png"
-                                    :counter-label="counterLabelFn"
-                                    style="max-width: 300px"
-                                    hint="Max file size: 2 MB / only .jpeg, .png, .jpg"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="attach_file" />
-                                    </template>
-                                </q-file>
-                                <q-file
-                                    v-model="form.signature_attachment"
-                                    label="Signature"
-                                    filled
-                                    counter
-                                    :error="!!form.errors?.signature_attachment"
-                                    :error-message="form.errors?.signature_attachment?.toString()"
-                                    accept=".jpg, .jpeg, .png"
-                                    :counter-label="counterLabelFn"
-                                    style="max-width: 300px"
-                                    hint="Max file size: 2 MB / only .jpeg, .png, .jpg"
-                                >
-                                    <template v-slot:prepend>
-                                        <q-icon name="attach_file" />
-                                    </template>
-                                </q-file>
-                            </div>
-
-
-                            <div v-if="existingData">
-                                <!-- Display Passport and Signature Photo Section -->
-                                <div class="flex gap-20 items-start">
-                                    <!-- Passport Photo Section -->
-                                    <div class="flex flex-col items-center">
-                                        <p>Passport Photo:</p>
-                                        <div v-if="existingData.passport_photo" class="flex flex-col items-center gap-4">
-                                            <!-- Show Image -->
-                                            <q-img
-                                                :src="`/storage/${existingData.passport_photo}`"
-                                                alt="Passport Photo"
-                                                class="w-32 h-32 object-cover rounded border"
-                                                width="150px"
-                                                height="150px"
-                                                fit="fill"
-                                                :error="!!form.errors?.passport_attachment"
-                                                :error-message="form.errors?.passport_attachment?.toString()"
-                                            />
-                                            <!-- Edit Button -->
-                                            <q-btn
-                                                icon="edit"
-                                                label="Edit"
-                                                color="primary"
-                                                class="mt-2"
-                                                @click="showEditPassport = !showEditPassport"
-                                            />
-                                            <!-- File Input for Editing Passport Photo -->
-                                            <div v-if="showEditPassport" class="mt-4">
-                                                <p>Upload New Passport Photo:</p>
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    @change="handleFileChange($event, 'passport_attachment')"
-                                                />
-                                            </div>
-                                        </div>
-                                        <p v-else>No passport photo uploaded</p>
-                                    </div>
-
-                                    <!-- Signature Photo Section -->
-                                    <div class="flex flex-col items-center">
-                                        <p>Signature Photo:</p>
-                                        <div v-if="existingData.signature_photo" class="flex flex-col items-center gap-4">
-                                            <!-- Show Image -->
-                                            <q-img
-                                                :src="`/storage/${existingData.signature_photo}`"
-                                                alt="Signature Photo"
-                                                class="w-32 h-32 object-cover rounded border"
-                                                width="150px"
-                                                height="150px"
-                                                fit="fill"
-                                                :error="!!form.errors?.passport_attachment"
-                                                :error-message="form.errors?.passport_attachment?.toString()"
-                                            />
-                                            <!-- Edit Button -->
-                                            <q-btn
-                                                icon="edit"
-                                                label="Edit"
-                                                color="primary"
-                                                class="mt-2"
-                                                @click="showEditSignature = !showEditSignature"
-                                            />
-                                            <!-- File Input for Editing Signature Photo -->
-                                            <div v-if="showEditSignature" class="mt-4">
-                                                <p>Upload New Signature Photo:</p>
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    @change="handleFileChange($event, 'signature_attachment')"
-                                                />
-                                            </div>
-                                        </div>
-                                        <p v-else>No signature photo uploaded</p>
-                                    </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6"></div>
+                        <div class="col-xs-12 col-sm-6" v-if="form.qualification === 'Post Graduate' || form.qualification === 'Doctorate'">
+                            <div style="display: flex; width: 203%; gap: 1rem;">
+                                <div style="flex: 1; max-width: calc(50% - 0.5rem);">
+                                    <q-input v-model="form.postGraduateDegree"
+                                             :error="form.errors.hasOwnProperty('postGraduateDegree')"
+                                             :error-message="form.errors?.postGraduateDegree?.toString()"
+                                             :rules="[
+                                                 val=>!!val || 'Post Graduate Degree is required'
+                                               ]"
+                                             class="my-input"
+                                             dense
+                                             item-aligned
+                                             label="Post Graduate Degree"
+                                             outlined
+                                             @blur="delete form.errors['postGraduateDegree']"
+                                    />
+                                </div>
+                                <div style="flex: 1; max-width: calc(50% - 0.5rem);">
+                                    <q-input v-model="form.postGraduateStream"
+                                             :error="form.errors.hasOwnProperty('postGraduateStream')"
+                                             :error-message="form.errors?.postGraduateStream?.toString()"
+                                             :rules="[
+                                                 val=>!!val || 'Post Graduate Stream is required'
+                                               ]"
+                                             class="my-input"
+                                             dense
+                                             item-aligned
+                                             label="Post Graduate Stream"
+                                             outlined
+                                             @blur="delete form.errors['postGraduateStream']"
+                                    />
                                 </div>
                             </div>
 
 
-                            <div class="q-pa-md">
-                                <q-toggle
-                                    v-model="third"
-                                    checked-icon="check"
-                                    color="green"
-                                    unchecked-icon="clear"
-                                    label="I hereby declare that the information given above and in the enclosed documents is true to the best of my knowledge and belief and nothing has been concealed therein. I understand that if the information given by me is proved false/not true, I will have to face the punishment as per the law. Also, all the benefits availed by me shall be summarily withdrawn."
-                                />
-                            </div>
-                            <div>
-                                <!--                <q-btn @click="submit" label="Submit" type="submit" color="primary" />-->
 
-                                <q-btn
-                                    @click="submit"
-                                    :label="submitButtonLabel"
-                                    type="submit"
-                                    color="primary"
-                                />
-                                <q-btn
-                                    label="Reset"
-                                    type="reset"
-                                    color="primary"
-                                    flat
-                                    class="q-ml-sm"
-                                />
+
+                        </div>
+                        <div class="col-xs-12 col-sm-6"></div>
+                        <div class="col-xs-12 col-sm-6" v-if="form.qualification === 'Doctorate'">
+                            <div style="display: flex; width: 203%; gap: 1rem;">
+
+                                <div style="flex: 1; max-width: calc(50% - 0.5rem);">
+                                    <q-input v-model="form.doctorateDegree"
+                                             :error="form.errors.hasOwnProperty('doctorateDegree')"
+                                             :error-message="form.errors?.doctorateDegree?.toString()"
+                                             :rules="[
+                                                 val=>!!val || 'Doctorate Degree is required'
+                                               ]"
+                                             class="my-input"
+                                             dense
+                                             item-aligned
+                                             label="Doctorate Degree"
+                                             outlined
+                                             @blur="delete form.errors['doctorateDegree']"
+                                    />
+                                </div>
+                                <div style="flex: 1; max-width: calc(50% - 0.5rem);">
+                                    <q-input v-model="form.doctorateStream"
+                                             :error="form.errors.hasOwnProperty('doctorateStream')"
+                                             :error-message="form.errors?.doctorateStream?.toString()"
+                                             :rules="[
+                                                 val=>!!val || 'Doctorate Stream is required'
+                                               ]"
+                                             class="my-input"
+                                             dense
+                                             item-aligned
+                                             label="Doctorate Stream"
+                                             outlined
+                                             @blur="delete form.errors['parents_name']"
+                                    />
+                                </div>
                             </div>
-                        </q-form>
-                    </q-page>
+                        </div>
+                        <div class="col-xs-12 col-sm-12"></div>
+                        <div class="col-xs-12">
+                            <q-separator/>
+                        </div>
+                        <!--Mizo Proficiency-->
+                        <div class="col-xs-12">
+                            Mizo Language Proficiency
+                        </div>
+                        <div class="col-xs-12 col-sm-12">
+                            <div class="flex justify-between items-center">
+                                <div class="text-grey-6">Did you study MIZO language in HSLC or HIGHER</div>
+                                <div class="flex q-gutter-md">
+                                    <q-radio  v-model="form.mizo_proficiency" dense :val="1" label="Yes" />
+                                    <q-radio  v-model="form.mizo_proficiency" dense :val="0" label="No" />
+                                    <div v-if="form.errors.mizo_proficiency" class="input-error">
+                                        {{ form.errors.mizo_proficiency }}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <p> Mizo Language Test will be conducted later</p> -->
+                        </div>
+                        <div class="col-xs-12">
+                            <q-separator/>
+                        </div>
+                        <div class="col-xs-12">
+                            Document
+                        </div>
+                        <div class="row q-col-gutter-sm">
+                            <div class="col-xs-12 text-grey-5">
+                                <div>
+                                    <div> Please upload relevant documents (Upload ngai te)</div>
+                                    <div class="text-red-5"> All Applicants are requested to upload true and authentic documents</div>
+                                </div>
+                                <br/>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6"></div>
+                        <div v-if="!existingData">
+                            <!--Passport photo-->
+                            <div class="col-xs-12 col-sm-6">
+                                <q-file
+                                    v-model="form.passport_attachment"
+                                    label="Passport Photo"
+                                    filled
+                                    :error="!!form.errors?.passport_attachment"
+                                    :error-message="form.errors?.passport_attachment?.toString()"
+                                    accept=".jpg, .jpeg, .png"
+                                    class="col-xs-12"
+                                    color="grey"
+                                    hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 3:4"
+                                >
+                                    <template v-slot:prepend>
+                                        <q-icon name="attach_file" />
+                                    </template>
+                                </q-file>
+                            </div>
+                            <!--Signature-->
+                            <div class="col-xs-12 col-sm-6">
+                                <q-file
+                                    v-model="form.signature_attachment"
+                                    label="Signature"
+                                    filled
+                                    :error="!!form.errors?.signature_attachment"
+                                    :error-message="form.errors?.signature_attachment?.toString()"
+                                    accept=".jpg, .jpeg, .png"
+                                    class="col-xs-12"
+                                    color="grey"
+                                    hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 16:9"
+                                >
+                                    <template v-slot:prepend>
+                                        <q-icon name="attach_file" />
+                                    </template>
+                                </q-file>
+                            </div>
+                        </div>
+
+                        <div v-if="existingData">
+                            <!-- Display Passport and Signature Photo Section -->
+                            <div class="flex gap-20 items-start">
+                                <!-- Passport Photo Section -->
+                                <div class="flex flex-col items-center">
+                                    <p>Passport Photo:</p>
+                                    <div v-if="existingData.passport_photo" class="flex flex-col items-center gap-4">
+                                        <!-- Show Image -->
+                                        <q-img
+                                            :src="`/storage/${existingData.passport_photo}`"
+                                            alt="Passport Photo"
+                                            class="w-32 h-32 object-cover rounded border"
+                                            width="150px"
+                                            height="150px"
+                                            fit="fill"
+                                            :error="!!form.errors?.passport_attachment"
+                                            :error-message="form.errors?.passport_attachment?.toString()"
+                                        />
+                                        <!-- Edit Button -->
+                                        <q-btn
+                                            icon="edit"
+                                            label="Edit"
+                                            color="primary"
+                                            class="mt-2"
+                                            @click="showEditPassport = !showEditPassport"
+                                        />
+                                        <!-- File Input for Editing Passport Photo -->
+                                        <div v-if="showEditPassport" class="mt-4">
+                                            <p>Upload New Passport Photo:</p>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                @change="handleFileChange($event, 'passport_attachment')"
+                                            />
+                                        </div>
+                                    </div>
+                                    <p v-else>No passport photo uploaded</p>
+                                </div>
+
+                                <!-- Signature Photo Section -->
+                                <div class="flex flex-col items-center">
+                                    <p>Signature Photo:</p>
+                                    <div v-if="existingData.signature_photo" class="flex flex-col items-center gap-4">
+                                        <!-- Show Image -->
+                                        <q-img
+                                            :src="`/storage/${existingData.signature_photo}`"
+                                            alt="Signature Photo"
+                                            class="w-32 h-32 object-cover rounded border"
+                                            width="150px"
+                                            height="150px"
+                                            fit="fill"
+                                            :error="!!form.errors?.passport_attachment"
+                                            :error-message="form.errors?.passport_attachment?.toString()"
+                                        />
+                                        <!-- Edit Button -->
+                                        <q-btn
+                                            icon="edit"
+                                            label="Edit"
+                                            color="primary"
+                                            class="mt-2"
+                                            @click="showEditSignature = !showEditSignature"
+                                        />
+                                        <!-- File Input for Editing Signature Photo -->
+                                        <div v-if="showEditSignature" class="mt-4">
+                                            <p>Upload New Signature Photo:</p>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                @change="handleFileChange($event, 'signature_attachment')"
+                                            />
+                                        </div>
+                                    </div>
+                                    <p v-else>No signature photo uploaded</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Submit-->
+                        <div class="col-xs-12 flex justify-center q-mt-lg">
+                            <q-btn  class="q-px-xl" color="primary" label="Save" rounded type="submit"/>
+                        </div>
+                    </q-form>
                 </div>
             </div>
         </div>
@@ -481,6 +573,26 @@ const submitButtonLabel = computed(() => {
     return props.existingData ? "Update" : "Submit";
 });
 
+const  genders = [
+    {value:'Male',label:'Male'},
+    {value:'Female',label:'Female'},
+]
+
+const categories =  [
+    {value:'Schedule Caste',label:'Schedule Caste'},
+    {value:'Schedule Tribe',label:'Schedule Tribe'},
+    {value:'General',label:'General'},
+    {value:'OBC',label:'OBC'},
+]
+
+const religions =  [
+    {value:'Hindu',label:'Hindu'},
+    {value:'Muslim',label:'Muslim'},
+    {value:'Sikh',label:'Sikh'},
+    {value:'Christian',label:'Christian'},
+    {value: 'Buddhist',label: 'Buddhist' },
+    {value: 'Others', label: 'Others' },
+]
 
 const submit = () => {
     form.mizo_proficiency = !!form.mizo_proficiency; // Ensure boolean
@@ -503,3 +615,21 @@ const submit = () => {
 };
 
 </script>
+
+<style scoped>
+
+.primary-title {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: normal;
+    color: $primary;
+}
+.my-input.q-field--float .q-field__label {
+    transform: translateY(-120%) translateX(-5px) scale(0.75);
+    background: #fff;
+    right: inherit;
+    padding: 0 5px;
+    z-index: 10;
+}
+</style>
