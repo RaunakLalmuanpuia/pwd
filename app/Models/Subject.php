@@ -16,6 +16,8 @@ class Subject extends Model
         'subject_name',
         'exam_date',
         'exam_time',
+        'start_time',
+        'end_time',
     ];
 
     public function exam(): BelongsTo

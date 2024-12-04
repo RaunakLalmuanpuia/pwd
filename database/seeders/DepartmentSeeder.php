@@ -13,7 +13,11 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        Departments::truncate();
+
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        \App\Models\Departments::truncate();
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+//        Departments::truncate();
         $departments = [
             ['name' => 'Finance'],
             ['name' => 'Political & Cabinet'],

@@ -1,271 +1,272 @@
 <template>
-    <div class="py-12 bg-gray-50">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-6">Edit Job Details</h3>
 
-                    <form @submit.prevent="submit">
-
-                        <div class="mb-3">
-                            <label for="post_name" class="block text-sm font-medium text-gray-700">Post Name</label>
-                            <input
-                                type="text"
-                                id="post_name"
-                                v-model="form.post_name"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': errors.post_name }"
-                                required
-                            />
-                            <div v-if="form.errors.post_name" class="input-error">
-                                {{ form.errors.post_name }}
-                            </div>
-                        </div>
-
-
-
-                        <div class="mb-3">
-                            <label for="no_of_post" class="block text-sm font-medium text-gray-700">Number of Posts</label>
-                            <input
-                                type="text"
-                                id="no_of_post"
-                                v-model="form.no_of_post"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': form.errors.no_of_post }"
-                                required
-                            />
-                            <div v-if="form.errors.no_of_post" class="input-error">
-                                {{ form.errors.no_of_post }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="salary" class="block text-sm font-medium text-gray-700">Salary</label>
-                            <input
-                                type="text"
-                                id="salary"
-                                v-model="form.salary"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': errors.salary }"
-                                required
-                            />
-                            <div v-if="form.errors.salary" class="input-error">
-                                {{ form.errors.salary }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="age_limit" class="block text-sm font-medium text-gray-700">Age Limit</label>
-                            <input
-                                type="text"
-                                id="age_limit"
-                                v-model="form.age_limit"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': errors.age_limit }"
-                                required
-                            />
-                            <div v-if="form.errors.age_limit" class="input-error">
-                                {{ form.errors.age_limit }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="qualification" class="block text-sm font-medium text-gray-700">Qualification</label>
-                            <input
-                                type="text"
-                                id="qualification"
-                                v-model="form.qualification"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': form.errors.qualification }"
-                                required
-                            />
-                            <div v-if="form.errors.qualification" class="input-error">
-                                {{ form.errors.qualification }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="application_deadline" class="block text-sm font-medium text-gray-700">Application Deadline</label>
-                            <input
-                                type="date"
-                                id="application_deadline"
-                                v-model="form.application_deadline"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': form.errors.application_deadline }"
-                                required
-                            />
-                            <div v-if="form.errors.application_deadline" class="input-error">
-                                {{ form.errors.application_deadline }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="application_fee" class="block text-sm font-medium text-gray-700">Application Fee</label>
-                            <input
-                                type="text"
-                                id="application_fee"
-                                v-model="form.application_fee"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': form.errors.application_fee }"
-                                required
-                            />
-                            <div v-if="form.errors.application_fee" class="input-error">
-                                {{ form.errors.application_fee }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                            <textarea
-                                id="description"
-                                v-model="form.description"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                :class="{ 'is-invalid': errors.description }"
-                            ></textarea>
-                            <div v-if="form.errors.description" class="input-error">
-                                {{ form.errors.description }}
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="text-sm font-medium text-gray-700 mb-3">Required Documents</h4>
-                            <div
-                                v-for="(document, index) in form.documents"
-                                :key="index"
-                                class="flex space-x-4 items-center mb-3"
-                            >
-                                <input
-                                    type="hidden"
-                                    v-model="document.id"
-                                />
-                                <input
-                                    type="text"
-                                    v-model="document.name"
-                                    placeholder="Document Name"
-                                    class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    required
-                                />
-                                <input
-                                    type="text"
-                                    v-model="document.description"
-                                    placeholder="Document Description"
-                                    class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    required
-                                />
-                                <select
-                                    v-model="document.is_mandatory"
-                                    class="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                >
-                                    <option value="1">Mandatory</option>
-                                    <option value="0">Optional</option>
-                                </select>
-                                <button
-                                    type="button"
-                                    class="text-red-600 hover:text-red-800"
-                                    @click="removeDocument(index)"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                            <button
-                                type="button"
-                                class="text-indigo-600 hover:text-indigo-800"
-                                @click="addDocument"
-                            >
-                                Add Document
-                            </button>
-                        </div>
-
-
-
-
-
-                        <!--                        <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">-->
-                        <!--                            Create Job Posting-->
-                        <!--                        </button>-->
-                        <div class="col-xs-12">
-                            <div class="flex q-gutter-sm">
-                                <q-btn class="sized-btn" color="primary" label="Update" type="submit"/>
-                                <q-btn class="sized-btn" color="negative" label="Cancel" outline
-                                       @click="$inertia.replace(route('job.index'))"/>
-                                <div>
-                                    <q-btn @click="handleDelete" class="sized-btn" color="negative" outline label="Delete"/>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-
-
+    <q-page padding>
+        <div class="flex flex-inline items-center">
+            <p class='page-title'>Edit Job profile</p>
+            <q-space/>
+            <q-breadcrumbs align="right" gutter="xs">
+                <q-breadcrumbs-el :to="{name:'job-profile:read'}" label="Jobs"/>
+                <q-breadcrumbs-el label="Edit "/>
+            </q-breadcrumbs>
         </div>
-    </div>
+        <q-form class="zcard q-pa-md"  @reset="resetForm" @submit="submit">
+            <div class="row q-col-gutter-sm">
+                <div class="col-xs-12 primary-title q-my-md">Job  profile</div>
+                <div class="col-xs-12">
+                    <q-input v-model="form.code"
+                             class="my-input"
+                             dense
+                             label="Code"
+                             outlined
+                             :error="form.errors.hasOwnProperty('code')"
+                             :error-message="form.errors?.code?.toString()"
+                             @blur="delete form.errors['code']"
+                             :rules="[
+                                 val=>!!val || 'Code is required'
+                               ]"
+                    />
+                </div>
+                <div class="col-xs-12">
+                    <q-input v-model="form.post_name"
+                             class="my-input"
+                             dense
+                             label="Name"
+                             outlined
+                             :error="form.errors.hasOwnProperty('post_name')"
+                             :error-message="form.errors?.post_name?.toString()"
+                             @blur="delete form.errors['post_name']"
+                             :rules="[
+                 val=>!!val || 'Name is required'
+               ]"
+                    />
+                </div>
+                <div class="col-xs-12">
+                    <q-select v-model="form.category"
+                              class="my-input"
+                              :options="['A','B', 'C', 'D']"
+                              dense
+                              label="Group"
+                              outlined
+                              :error="form.errors.hasOwnProperty('category')"
+                              :error-message="form.errors?.category?.toString()"
+                              @blur="delete form.errors['category']"
+                              :rules="[
+                                 val=>!!val || 'Group is required'
+                               ]"
+                    />
+                </div>
+                <div class="col-xs-12">
+                    <q-input v-model="form.description"
+                             class="my-input"
+                             dense
+                             label="Description"
+                             outlined
+                             :error="form.errors.hasOwnProperty('description')"
+                             :error-message="form.errors?.description?.toString()"
+                             @blur="delete form.errors['description']"
+                             :rules="[
+                                 val=>!!val || 'Description is required'
+                               ]"
+                    />
+                </div>
 
-    <div class="bg-gray-50">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow sm:rounded-lg">
-                <div class="container mx-auto p-4">
-                    <div class="flex justify-between items-center mb-6">
-                        <h1 class="text-2xl font-bold mb-6">Exams and Subjects</h1>
 
-                        <button
-                            class="px-4 py-2 text-sm font-medium bg-blue-500 rounded hover:bg-blue-600 transition"
-                            @click="$inertia.get(route('exams.create', data.id ))"
-                        >
-                            Create Exam
-                        </button>
-                    </div>
+                <div class="col-xs-12">
+                    <q-input v-model="form.salary"
+                             class="my-input"
+                             dense
+                             label="Salary"
+                             outlined
+                             :error="form.errors.hasOwnProperty('salary')"
+                             :error-message="form.errors?.salary?.toString()"
+                             @blur="delete form.errors['salary']"
+                             :rules="[
+                                 val=>!!val || 'Salary is required'
+                               ]"
+                    />
+                </div>
 
-                    <div v-for="exam in data.exams" :key="exam.id" class="mb-6 p-4 border rounded-lg shadow-md bg-white">
-                        <div class="flex justify-between items-center">
-                            <h2 class="text-xl font-semibold">{{ exam.exam_name }}</h2>
+                <div class="col-xs-12">
+                    <q-input v-model="form.no_of_post"
+                             class="my-input"
+                             dense
+                             label="POST"
+                             outlined
+                             :error="form.errors.hasOwnProperty('no_of_post')"
+                             :error-message="form.errors?.no_of_post?.toString()"
+                             @blur="delete form.errors['no_of_post']"
+                             :rules="[
+                                 val=>Number(val) || 'Post must be number'
+                               ]"
+                    />
+                </div>
 
-                            <q-btn
-                                class="bg-yellow-500  hover:bg-yellow-600"
-                                @click="$inertia.get(route('exams.assignMarks', exam.id))"
-                            >
-                                Assign Marks
-                            </q-btn>
-                            <q-btn
-                                class="bg-yellow-500  hover:bg-yellow-600"
-                                @click="$inertia.get(route('exams.assignCenters', exam.id))"
-                            >
-                                Assign Exam Center
-                            </q-btn>
-                            <q-btn
-                                class="bg-yellow-500  hover:bg-yellow-600"
-                                @click="$inertia.get(route('exams.edit', exam.id))"
-                            >
-                                Edit
-                            </q-btn>
-                            <q-btn @click="deleteExam(exam.id)" class="sized-btn" color="negative" outline label="Delete"/>
-                        </div>
-                        <p class="text-gray-600 mt-2">Exam Date: {{ formatDate(exam.exam_date) }}</p>
-                        <div class="mt-4">
-                            <h3 class="text-lg font-semibold">Subjects</h3>
-                            <ul class="mt-2 space-y-2">
-                                <li
-                                    v-for="subject in exam.subjects"
-                                    :key="subject.id"
-                                    class="p-3 border rounded-lg bg-gray-50"
-                                >
-                                    <div class="flex justify-between">
-                                        <span>{{ subject.subject_name }}</span>
-                                        <span class="text-gray-500 text-sm">
-                                            {{ formatDate(subject.exam_date) }} - {{ formatTime(subject.exam_time) }}
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="col-xs-12">
+                    <q-input v-model="form.application_deadline"
+                             class="my-input"
+                             dense
+                             type="date"
+                             label="Application Deadline"
+                             outlined
+                             :error="form.errors.hasOwnProperty('application_deadline')"
+                             :error-message="form.errors?.application_deadline?.toString()"
+                             @blur="delete form.errors['application_deadline']"
+                             :rules="[
+                                 val=>!!val || 'Deadline is required'
+                               ]"
+                    />
+                </div>
+
+                <div class="col-xs-12">
+                    <q-input v-model="form.upper_age_limit"
+                             class="my-input"
+                             dense
+                             label="Upper Age Limit"
+                             outlined
+                             :error="form.errors.hasOwnProperty('upper_age_limit')"
+                             :error-message="form.errors?.upper_age_limit?.toString()"
+                             @blur="delete form.errors['upper_age_limit']"
+                             :rules="[
+                                 val=>Number(val) || 'Age must be number'
+                               ]"
+                    />
+                </div>
+
+                <div class="col-xs-12">
+                    <q-input v-model="form.lower_age_limit"
+                             class="my-input"
+                             dense
+                             label="Lower Age Limit"
+                             outlined
+                             :error="form.errors.hasOwnProperty('lower_age_limit')"
+                             :error-message="form.errors?.lower_age_limit?.toString()"
+                             @blur="delete form.errors['lower_age_limit']"
+                             :rules="[
+                                 val=>Number(val) || 'Age must be number'
+                               ]"
+                    />
+                </div>
+
+                <div class="col-xs-12">
+                    <q-input v-model="form.age_relaxation"
+                             class="my-input"
+                             dense
+                             label="Age Relaxation"
+                             outlined
+                             :error="form.errors.hasOwnProperty('age_relaxation')"
+                             :error-message="form.errors?.age_relaxation?.toString()"
+                             @blur="delete form.errors['age_relaxation']"
+                             :rules="[
+                                 val=>Number(val) || 'Age must be number'
+                               ]"
+                    />
+                </div>
+
+                <div class="col-xs-12">
+                    <q-input v-model="form.application_fee_other"
+                             class="my-input"
+                             dense
+                             label="Fee for SC/ST/OBC"
+                             outlined
+                             :error="form.errors.hasOwnProperty('application_fee_other')"
+                             :error-message="form.errors?.application_fee_other?.toString()"
+                             @blur="delete form.errors['application_fee_other']"
+                             :rules="[
+                             val=>Number(val) || 'Fee must be number'
+                           ]"
+                    />
+                </div>
+                <div class="col-xs-12">
+                    <q-input v-model="form.application_fee_general"
+                             class="my-input"
+                             dense
+                             label="Fee for General"
+                             outlined
+                             :error="form.errors.hasOwnProperty('application_fee_general')"
+                             :error-message="form.errors?.application_fee_general?.toString()"
+                             @blur="delete form.errors['application_fee_general']"
+                             :rules="[
+                             val=>Number(val) || 'Fee must be number'
+                           ]"
+                    />
+                </div>
+                <div class="col-xs-12">
+                    <q-select v-model="form.qualification"
+                              class="my-input"
+                              :options="['HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
+                              dense
+                              label="Minimum Qualification"
+                              outlined
+                              :error="form.errors.hasOwnProperty('qualification')"
+                              :error-message="form.errors?.qualification?.toString()"
+                              @blur="delete form.errors['qualification']"
+                              :rules="[
+                                     val=>!!val || 'Please select Qualification'
+                                   ]"
+                    />
+                </div>
+
+                <div class=col-xs-12>
+                    <q-separator class="q-my-md"/>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-medium text-gray-700 mb-3">Required Documents</h4>
+                    <div
+                        v-for="(document, index) in form.documents"
+                        :key="index"
+                        class="flex space-x-4 items-center mb-3"
+                    >
+
+                        <input
+                            type="text"
+                            v-model="document.name"
+                            placeholder="Document Name"
+                            class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            required
+                        />
+                        <input
+                            type="text"
+                            v-model="document.description"
+                            placeholder="Document Description"
+                            class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            required
+                        />
+                        <select v-model="document.is_mandatory"  class="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="1">Mandatory</option>
+                            <option value="0">Optional</option>
+                        </select>
+
+                        <q-btn round color="red" style="font-size: 12px;" @click="removeDocument(index)" icon="delete" />
+
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </div>
 
+                <div class="col-xs-12">
+                    <q-btn outline color="primary" @click="addDocument">
+                        Add Document
+                    </q-btn>
+                </div>
+                <div class=col-xs-12>
+                    <q-separator class="q-my-md"/>
+                </div>
+
+                <div class="col-xs-12">
+                    <q-radio v-model="form.active" :val=1 label="Open" />
+                    <q-radio v-model="form.active" :val=0 label="Closed" />
+                </div>
+            </div>
+            <div class=col-xs-12>
+                <q-separator class="q-my-md"/>
+            </div>
+
+            <q-card-actions class="q-mt-md">
+                <q-btn color="primary" flat type="submit" label="Save"/>
+                <q-btn color="negative" flat type="reset" label="Reset"/>
+            </q-card-actions>
+        </q-form>
+    </q-page>
 
 </template>
 
@@ -290,13 +291,19 @@ const state = reactive({
 
 const form = useForm({
     post_name: props.data?.post_name,
+    code: props.data?.code,
+    category: props.data?.category,
     department_id: props.data?.department_id,
     no_of_post: props.data?.no_of_post,
     salary: props.data?.salary,
-    age_limit: props.data?.age_limit,
+    upper_age_limit: props.data?.upper_age_limit,
+    lower_age_limit: props.data?.lower_age_limit,
+    age_relaxation: props.data?.age_relaxation,
+    application_fee_general: props.data?.application_fee_general,
+    application_fee_other: props.data?.application_fee_other,
     qualification: props.data?.qualification,
     application_deadline: props.data?.application_deadline,
-    application_fee: props.data?.application_fee,
+    active: props.data?.active,
     description: props.data?.description,
     documents: props.data?.documents.map(doc => ({
         id: doc.id,

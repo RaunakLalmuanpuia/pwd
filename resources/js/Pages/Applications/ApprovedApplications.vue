@@ -70,6 +70,7 @@
                             />
                         </th>
                         <th class="px-4 py-2 text-left text-gray-600">Applicant Name</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Application No</th>
                         <th class="px-4 py-2 text-left text-gray-600">Roll No</th>
                         <th class="px-4 py-2 text-left text-gray-600">Parent Name</th>
                         <th class="px-4 py-2 text-left text-gray-600">Community</th>
@@ -94,6 +95,7 @@
                         </td>
                         <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.application_id || 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ application.roll_no || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.applicant?.parents_name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.exam_center?.center_name|| 'N/A' }}</td>
@@ -137,7 +139,7 @@
                         label="Rows per page"
                         dense
                         outlined
-                        style="width: 120px"
+                        style="width: 130px"
                         @update:model-value="updateRowsPerPage"
                     />
                     <div>
@@ -162,6 +164,7 @@
                 </div>
             </div>
         </div>
+
         <q-dialog v-model="marksDialogOpen" persistent>
             <q-card style="min-width: 450px;">
                 <q-card-section>
@@ -278,7 +281,7 @@ const applications = ref({ data: [], last_page: 1 }); // Replace with actual API
 const pagination = ref({ page: 1, rowsPerPage: 10 });
 const loading = ref(false);
 
-const rowsPerPageOptions = [1, 10, 20, 50, 100]; // Define available options for rows per page
+const rowsPerPageOptions = [10, 20, 50, 100]; // Define available options for rows per page
 pagination.value.rowsPerPage = rowsPerPageOptions[0]; // Set the default rows per page
 
 const updateRowsPerPage = () => {

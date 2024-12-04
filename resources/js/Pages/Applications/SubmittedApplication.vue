@@ -122,7 +122,7 @@
                         label="Rows per page"
                         dense
                         outlined
-                        style="width: 120px"
+                        style="width: 130px"
                         @update:model-value="updateRowsPerPage"
                     />
                     <div>
@@ -170,7 +170,7 @@ const applications = ref({ data: [], last_page: 1 }); // Replace with actual API
 const pagination = ref({ page: 1, rowsPerPage: 10 });
 const loading = ref(false);
 
-const rowsPerPageOptions = [1, 10, 20, 50, 100]; // Define available options for rows per page
+const rowsPerPageOptions = [10, 20, 50, 100]; // Define available options for rows per page
 pagination.value.rowsPerPage = rowsPerPageOptions[0]; // Set the default rows per page
 
 const updateRowsPerPage = () => {

@@ -1,103 +1,233 @@
 <template>
-    <div class="max-w-3xl mx-auto p-6 bg-gray-100 shadow-md rounded-lg">
-        <h1 class="text-2xl font-bold mb-6">Edit Exam: {{ exam.exam_name }}</h1>
+    <q-page padding>
+    <p class="page-title">Edit Examinations</p>
+    <q-form @submit="submit" @reset="reset" class="row q-col-gutter-sm zcard q-pa-md">
+        <div class="col-xs-12 col-sm-12  ">
+            <q-input v-model="form.exam_name"
+                     outlined
+                     dense
+                     class="my-input"
+                     label="Name of examination"
+                     :rules="[
+                   val=>!!val || 'Name is required'
+                 ]"
+            />
+        </div>
 
-        <form @submit.prevent="submit">
-            <!-- Exam Name -->
-            <div class="mb-5">
-                <label for="exam_name" class="block text-sm font-medium text-gray-700 mb-2">Exam Name</label>
-                <input
-                    v-model="form.exam_name"
-                    id="exam_name"
-                    type="text"
-                    class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                    placeholder="Enter exam name"
-                />
-                <div v-if="form.errors.exam_name" class="text-red-500 text-sm mt-1">{{ form.errors.exam_name }}</div>
-            </div>
+        <div class="col-xs-12 col-sm-12 q-mb-md ">
+            <q-input v-model="form.description"
+                     type="textarea"
+                     dense
+                     outlined
+                     class="my-input"
+                     label="Name of examination"
+            />
+        </div>
 
-            <!-- Exam Date -->
-            <div class="mb-5">
-                <label for="exam_date" class="block text-sm font-medium text-gray-700 mb-2">Exam Date</label>
-                <input
-                    v-model="form.exam_date"
-                    id="exam_date"
-                    type="date"
-                    class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
-                <div v-if="form.errors.exam_date" class="text-red-500 text-sm mt-1">{{ form.errors.exam_date }}</div>
-            </div>
+        <div class="col-xs-12 col-sm-6  ">
+            <q-input v-model="form.pass_mark"
+                     outlined
+                     dense
+                     class="my-input"
+                     label="Pass mark"
+                     :rules="[
+                   val=>!isNaN(val) || 'Invalid format'
+                 ]"
+            />
+        </div>
+        <div class="col-xs-12 col-sm-6  ">
+            <q-input v-model="form.full_mark"
+                     outlined
+                     dense
+                     class="my-input"
+                     label="Full mark mark"
+                     :rules="[
+                   val=>!isNaN(val)  || 'Invalid format'
+                 ]"
+            />
+        </div>
 
-            <!-- Subjects Section -->
-            <div class="mb-6">
-                <h2 class="text-lg font-bold mb-4">Subjects</h2>
-                <div v-for="(subject, index) in form.subjects" :key="index" class="border p-4 mb-4 bg-white rounded-lg">
-                    <!-- Subject Name -->
-                    <div class="mb-4">
-                        <label for="subject_name" class="block text-sm font-medium text-gray-700 mb-2">Subject Name</label>
-                        <input
-                            v-model="subject.name"
-                            type="text"
-                            class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                            placeholder="Enter subject name"
-                        />
-                    </div>
+        <div class="col-xs-12 col-sm-6  ">
+            <q-input v-model="form.start_at"
+                     type="datetime-local"
+                     outlined
+                     dense
+                     stack-label
+                     class="my-input"
+                     label="Start"
+                     :rules="[
+                   val=>!!val || 'Invalid Date time'
+                 ]"
+            />
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <q-input v-model="form.end_at"
+                     type="datetime-local"
+                     stack-label
+                     outlined
+                     dense
+                     class="my-input"
+                     label="End"
+                     :rules="[
+                   val=>!!val || 'Invalid Date time'
+                 ]"
+            />
+        </div>
+        <div class="col-xs-12 ">
+            <q-separator/>
+        </div>
+        <div class="col-xs-12 flex justify-between items-center">
+            <div class="text-grey-7">Click Add button to add paper</div>
+            <q-btn @click="showSubjectDialog = true" rounded color="primary" outline label="Add"/>
+        </div>
+        <div class="col-xs-12">
+            <q-markup-table flat>
+                <q-tr>
+                    <q-th align="left" style="width: 30%;">Subject</q-th>
+                    <q-th align="center" style="width: 20%;">Date</q-th>
+                    <q-th align="center" style="width: 20%;">Start</q-th>
+                    <q-th align="center" style="width: 20%;">End</q-th>
+                    <q-th align="center" style="width: 10%;">Action</q-th>
+                </q-tr>
+                <q-tr v-for="(item, index) in form.subjects" :key="index">
+                    <q-td align="left">{{ item?.subject_name }}</q-td>
+                    <q-td align="center">{{ item?.exam_date }}</q-td>
+                    <q-td align="center">{{ item?.start_time }}</q-td>
+                    <q-td align="center">{{ item?.end_time }}</q-td>
+                    <q-td align="center">
+                        <q-btn flat icon="edit" @click="editSubject(index)" />
+                        <q-btn flat icon="cancel" @click="removeSubject(index)" />
+                    </q-td>
+                </q-tr>
+            </q-markup-table>
+        </div>
 
-                    <!-- Subject Date -->
-                    <div class="mb-4">
-                        <label for="subject_date" class="block text-sm font-medium text-gray-700 mb-2">Subject Exam Date</label>
-                        <input
-                            v-model="subject.date"
-                            type="date"
-                            class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        />
-                    </div>
+        <div class="col-xs-12 col-sm-6">
+            <q-checkbox v-model="form.active" label="Active"/>
+        </div>
 
-                    <!-- Subject Time -->
-                    <div>
-                        <label for="subject_time" class="block text-sm font-medium text-gray-700 mb-2">Subject Exam Time</label>
-                        <input
-                            v-model="subject.time"
-                            type="time"
-                            class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        />
+        <div class="col-xs-12 ">
+            <q-separator/>
+        </div>
 
-                    </div>
+        <div class="col-xs-12 flex justify-center items-center q-gutter-sm">
+            <q-btn type="reset" label="Cancel" flat/>
+            <q-btn class="q-px-lg" type="submit" label="Save" rounded color="primary"/>
+        </div>
 
-                    <!-- Remove Subject Button -->
-                    <button
-                        type="button"
-                        @click="removeSubject(index)"
-                        class="mt-4 text-sm text-red-600 hover:text-red-800 transition"
-                    >
-                        Remove Subject
-                    </button>
+
+
+
+    </q-form>
+        <q-dialog v-model="showSubjectDialog">
+            <q-card class="q-pa-md">
+                <div class="flex justify-between items-center">
+                    <div class="ztext-lg">New Subject</div>
+                    <q-icon name="cancel" v-close-popup class="cursor-pointer"/>
                 </div>
+                <br/>
+                <q-input v-model="subjectForm.subject_name"
+                         outlined
+                         class="my-input"
+                         :rules="[
+                               val=>!!val || 'Name is required'
+                             ]"
+                         label="Paper Name"/>
 
-                <!-- Add Subject Button -->
-                <button
-                    type="button"
-                    @click="addSubject"
-                    class="bg-blue-500 text-white text-sm px-4 py-2 rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 transition"
-                >
-                    Add Subject
-                </button>
-            </div>
+                <q-input v-model="subjectForm.exam_date"
+                         outlined
+                         class="my-input"
+                         :rules="[
+                                   val=>!!val || 'Exam Date is required'
+                                 ]"
+                         type="date"
+                         label="Date of Exam"/>
 
-            <!-- Submit Button -->
-            <button
-                type="submit"
-                class="bg-green-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-green-700 focus:ring-2 focus:ring-green-400 transition"
-            >
-                Update Exam
-            </button>
-        </form>
-    </div>
+                <q-input v-model="subjectForm.start_time"
+                         outlined
+                         type="time"
+                         class="my-input"
+                         :rules="[
+                                   val=>!!val || 'Start time is required'
+                                 ]"
+                         label="Start At"/>
+
+                <q-input v-model="subjectForm.end_time"
+                         outlined
+                         type="time"
+                         class="my-input"
+                         :rules="[
+                                   val=>!!val || 'End tim is required'
+                                 ]"
+                         label="End At"/>
+
+                <div class="flex q-gutter-sm">
+                    <q-btn type="submit" style="min-width: 90px" rounded color="primary" @click="addSubject"  label="Add"/>
+                    <q-btn rounded color="negative" outline label="Reset" v-close-popup @click="resetSubjectForm"/>
+                </div>
+            </q-card>
+
+        </q-dialog>
+
+
+        <!-- Edit Subject Dialog -->
+        <q-dialog v-model="showEditSubjectDialog">
+            <q-card class="q-pa-md">
+                <div class="flex justify-between items-center">
+                    <div class="ztext-lg">Edit Subject</div>
+                    <q-icon name="cancel" v-close-popup class="cursor-pointer"/>
+                </div>
+                <br/>
+                <q-input v-model="editSubjectForm.subject_name"
+                         outlined
+                         class="my-input"
+                         :rules="[
+                               val=>!!val || 'Name is required'
+                             ]"
+                         label="Paper Name"/>
+
+                <q-input v-model="editSubjectForm.exam_date"
+                         outlined
+                         class="my-input"
+                         :rules="[
+                                   val=>!!val || 'Exam Date is required'
+                                 ]"
+                         type="date"
+                         label="Date of Exam"/>
+
+                <q-input v-model="editSubjectForm.start_time"
+                         outlined
+                         type="time"
+                         class="my-input"
+                         :rules="[
+                                   val=>!!val || 'Start time is required'
+                                 ]"
+                         label="Start At"/>
+
+                <q-input v-model="editSubjectForm.end_time"
+                         outlined
+                         type="time"
+                         class="my-input"
+                         :rules="[
+                                   val=>!!val || 'End time is required'
+                                 ]"
+                         label="End At"/>
+
+                <div class="flex q-gutter-sm">
+                    <q-btn type="submit" style="min-width: 90px" rounded color="primary" @click="updateSubject" label="Save Changes"/>
+                    <q-btn rounded color="negative" outline label="Cancel" v-close-popup @click="resetEditSubjectForm"/>
+                </div>
+            </q-card>
+        </q-dialog>
+    </q-page>
+
+
 </template>
 
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/Admin.vue";
+import {ref} from "vue";
 
 // Layout for the component
 defineOptions({
@@ -113,23 +243,78 @@ const props = defineProps({
 const form = useForm({
     exam_name: props.exam.exam_name,
     exam_date: props.exam.exam_date,
+    description: props.exam.description,
+    pass_mark: props.exam.pass_mark,
+    full_mark: props.exam.full_mark,
+    start_at: props.exam.start_at,
+    end_at: props.exam.end_at,
+    active: props.exam.active,
     subjects: props.exam.subjects.map((subject) => ({
         id: subject.id,
-        name: subject.subject_name,
-        date: subject.exam_date,
-        time: subject.exam_time,
+        subject_name: subject.subject_name,
+        exam_date: subject.exam_date,
+        start_time: subject.start_time,
+        end_time: subject.end_time,
     })),
 });
 
-// Methods
-const addSubject = () => {
-    form.subjects.push({ id: null, name: "", date: "", time: "" });
-};
+const showSubjectDialog = ref(false);
+const showEditSubjectDialog = ref(false);
+const subjectForm = ref({
+    id:'',
+    subject_name: '',
+    exam_date: '',
+    start_time: '',
+    end_time: ''
+});
 
-const removeSubject = (index) => {
+const editSubjectForm = ref({
+    id: '',
+    subject_name: '',
+    exam_date: '',
+    start_time: '',
+    end_time: ''
+});
+
+function resetSubjectForm() {
+    subjectForm.value = {
+        subject_name: '',
+        exam_date: '',
+        start_time: '',
+        end_time: ''
+    };
+}
+
+function addSubject() {
+    const newSubject = {
+        id: null, // Unique ID for the new subject
+        subject_name: subjectForm.value.subject_name,
+        exam_date: subjectForm.value.exam_date,
+        start_time: subjectForm.value.start_time,
+        end_time: subjectForm.value.end_time,
+    };
+
+    form.subjects.push(newSubject);
+    resetSubjectForm();
+    showSubjectDialog.value = false;
+}
+function editSubject(index) {
+    const subject = form.subjects[index];
+    editSubjectForm.value = { ...subject };
+    showEditSubjectDialog.value = true;
+}
+
+function updateSubject() {
+    const index = form.subjects.findIndex(subject => subject.id === editSubjectForm.value.id);
+    if (index !== -1) {
+        form.subjects[index] = { ...editSubjectForm.value };
+        showEditSubjectDialog.value = false;
+    }
+}
+
+function removeSubject(index) {
     form.subjects.splice(index, 1);
-};
-
+}
 const submit = () => {
     form.put(route("exams.update", props.exam.id));
 };

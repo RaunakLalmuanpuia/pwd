@@ -47,28 +47,42 @@ class ExamController extends Controller
     //Create Exam and Subjects
     public function store(Request $request, JobDetail $jobDetail)
     {
+//        dd($request);
         $validated = $request->validate([
             'exam_name' => 'required|string|max:255',
-            'exam_date' => 'required|date',
+            'exam_date' => 'nullable',
+            'start_at' => 'required',
+            'description' =>  'nullable',
+            'end_at'=> 'required',
+            'pass_mark' => 'required',
+            'full_mark'=> 'required',
+            'active' => 'required',
             'subjects' => 'required|array|min:1',
-            'subjects.*.name' => 'required|string|max:255',
-            'subjects.*.date' => 'required|date',
-            'subjects.*.time' => 'required|date_format:H:i',
+            'subjects.*.subject_name' => 'required|string|max:255',
+            'subjects.*.exam_date' => 'required|date',
+            'subjects.*.start_time' => 'required|date_format:H:i',
+            'subjects.*.end_time' => 'required|date_format:H:i',
         ]);
 
         // Create the exam
         $exam = Exam::create([
             'job_details_id' => $jobDetail->id,
             'exam_name' => $validated['exam_name'],
-            'exam_date' => $validated['exam_date'],
+            'description' => $validated['description'],
+            'start_at' => $validated['start_at'],
+            'end_at' => $validated['end_at'],
+            'pass_mark' => $validated['pass_mark'],
+            'full_mark' => $validated['full_mark'],
+            'active' => $validated['active'],
         ]);
 
         // Add the subjects to the exam
         foreach ($validated['subjects'] as $subject) {
             $exam->subjects()->create([
-                'subject_name' => $subject['name'],
-                'exam_date' => $subject['date'],
-                'exam_time' => $subject['time'],
+                'subject_name' => $subject['subject_name'],
+                'exam_date' => $subject['exam_date'],
+                'start_time' => $subject['start_time'],
+                'end_time' => $subject['end_time'],
             ]);
         }
 
@@ -94,40 +108,106 @@ class ExamController extends Controller
      * Update an existing exam along with its subjects.
      */
     // Update Exam and subjects
+//    public function update(Request $request, Exam $exam)
+//    {
+////        dd($request);
+//        $validated = $request->validate([
+//            'exam_name' => 'required|string|max:255',
+//            'exam_date' => 'required|date',
+//            'subjects' => 'required|array|min:1',
+//            'subjects.*.id' => 'nullable|exists:subjects,id',
+//            'subjects.*.name' => 'required|string|max:255',
+//            'subjects.*.date' => 'required|date',
+//            'subjects.*.time' => 'required',
+//        ]);
+//
+//        // Update the exam
+//        $exam->update([
+//            'exam_name' => $validated['exam_name'],
+//            'exam_date' => $validated['exam_date'],
+//        ]);
+//
+//        // Update or create subjects
+//        foreach ($validated['subjects'] as $subjectData) {
+//            if (isset($subjectData['id'])) {
+//                // Update existing subject
+//                $exam->subjects()->where('id', $subjectData['id'])->update([
+//                    'subject_name' => $subjectData['name'],
+//                    'exam_date' => $subjectData['date'],
+//                    'exam_time' => $subjectData['time'],
+//                ]);
+//            } else {
+//                // Create new subject
+//                $exam->subjects()->create([
+//                    'subject_name' => $subjectData['name'],
+//                    'exam_date' => $subjectData['date'],
+//                    'exam_time' => $subjectData['time'],
+//                ]);
+//            }
+//        }
+//
+//        return redirect()->route('exams.show', $exam->job_details_id)
+//            ->with('success', 'Exam and subjects updated successfully.');
+//    }
+
     public function update(Request $request, Exam $exam)
     {
-//        dd($request);
+//        dd($request->subjects);
         $validated = $request->validate([
             'exam_name' => 'required|string|max:255',
-            'exam_date' => 'required|date',
+            'exam_date' => 'nullable',
+            'start_at' => 'required',
+            'description' =>  'nullable',
+            'end_at'=> 'required',
+            'pass_mark' => 'required',
+            'full_mark'=> 'required',
+            'active' => 'required',
             'subjects' => 'required|array|min:1',
-            'subjects.*.id' => 'nullable|exists:subjects,id',
-            'subjects.*.name' => 'required|string|max:255',
-            'subjects.*.date' => 'required|date',
-            'subjects.*.time' => 'required',
+            'subjects.*.id' => 'nullable',
+            'subjects.*.subject_name' => 'required|string|max:255',
+            'subjects.*.exam_date' => 'required|date',
+            'subjects.*.start_time' => 'required',
+            'subjects.*.end_time' => 'required',
         ]);
 
         // Update the exam
         $exam->update([
             'exam_name' => $validated['exam_name'],
             'exam_date' => $validated['exam_date'],
+            'description' => $validated['description'],
+            'start_at' => $validated['start_at'],
+            'end_at' => $validated['end_at'],
+            'pass_mark' => $validated['pass_mark'],
+            'full_mark' => $validated['full_mark'],
+            'active' => $validated['active'],
         ]);
+        // Get the IDs of the subjects in the request
+        $subjectIds = collect($request->subjects)
+            ->filter(fn($subject) => isset($subject['id']))
+            ->pluck('id')
+            ->toArray();
+        // Delete subjects that are not in the request
+        $exam->subjects()->whereNotIn('id', $subjectIds)->delete();
 
         // Update or create subjects
         foreach ($validated['subjects'] as $subjectData) {
+
             if (isset($subjectData['id'])) {
                 // Update existing subject
+
                 $exam->subjects()->where('id', $subjectData['id'])->update([
-                    'subject_name' => $subjectData['name'],
-                    'exam_date' => $subjectData['date'],
-                    'exam_time' => $subjectData['time'],
+                    'subject_name' => $subjectData['subject_name'],
+                    'exam_date' => $subjectData['exam_date'],
+                    'start_time' => $subjectData['start_time'],
+                    'end_time' => $subjectData['end_time'],
                 ]);
             } else {
                 // Create new subject
                 $exam->subjects()->create([
-                    'subject_name' => $subjectData['name'],
-                    'exam_date' => $subjectData['date'],
-                    'exam_time' => $subjectData['time'],
+                    'subject_name' => $subjectData['subject_name'],
+                    'exam_date' => $subjectData['exam_date'],
+                    'start_time' => $subjectData['start_time'],
+                    'end_time' => $subjectData['end_time'],
                 ]);
             }
         }

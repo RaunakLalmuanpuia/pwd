@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\AttendanceSheetWrittenExport;
+
 use App\Exports\EligibleSheetExport;
 use App\Exports\JobDetailsExport;
 use App\Exports\SubmittedSheetExport;
@@ -31,7 +31,6 @@ class JobDetailsController extends Controller
      */
     public function create()
     {
-        //
         return Inertia::render('Jobs/Create');
     }
 
@@ -40,16 +39,22 @@ class JobDetailsController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request);
         $validated = $request->validate([
+            'code' => 'required',
             'post_name' => 'required|string|max:255',
             'department_id' => 'required|integer',
             'no_of_post' => 'required|integer|min:1|max:255',
+            'category'=> 'required|string|max:255',
             'salary' => 'required|numeric|min:0',
-            'age_limit' => 'required|string|max:255',
+            'upper_age_limit' => 'required|string|max:255',
+            'lower_age_limit' => 'required|string|max:255',
+            'age_relaxation' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'application_deadline' => 'required|date|after:today',
-            'application_fee' => 'required|numeric|min:0',
+            'application_fee_other' => 'required|numeric|min:0',
+            'application_fee_general' => 'required|numeric|min:0',
             'documents' => 'nullable|array',
             'documents.*.name' => 'required|string|max:255',
             'documents.*.description' => 'nullable|string|max:255',
@@ -99,17 +104,21 @@ class JobDetailsController extends Controller
 
         // Validate the incoming data
         $validated = $request->validate([
+            'code' => 'required',
             'post_name' => 'required|string|max:255',
             'department_id' => 'required|integer',
             'no_of_post' => 'required|integer|min:1|max:255',
+            'category'=> 'required|string|max:255',
             'salary' => 'required|numeric|min:0',
-            'age_limit' => 'required|string|max:255',
+            'upper_age_limit' => 'required|string|max:255',
+            'lower_age_limit' => 'required|string|max:255',
+            'age_relaxation' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
             'application_deadline' => 'required|date|after:today',
-            'application_fee' => 'required|numeric|min:0',
+            'application_fee_other' => 'required|numeric|min:0',
+            'application_fee_general' => 'required|numeric|min:0',
             'documents' => 'nullable|array',
-            'documents.*.id' => 'nullable|integer|exists:documents,id',
             'documents.*.name' => 'required|string|max:255',
             'documents.*.description' => 'nullable|string|max:255',
             'documents.*.is_mandatory' => 'required|boolean',

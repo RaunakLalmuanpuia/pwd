@@ -14,6 +14,7 @@ class Applications extends Model
         'applicant_id',
         'job_details_id',
         'status',
+        'roll_no',
         'exam_center_id',
     ];
 

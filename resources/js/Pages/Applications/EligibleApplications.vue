@@ -57,7 +57,7 @@
         <div class="row q-mt-sm">
             <p class="page-title">APPLICATIONS: {{ jobDetails?.post_name}} </p>
             <div class="col-xs-12">
-                <table class="border-collapse border border-gray-300 w-full mt-4">
+                <table class="border-collapse border border-gray-300 rounded-lg w-full mt-4">
                     <thead class="bg-gray-100">
                     <tr>
                         <th class="px-4 py-2 text-left text-gray-600"><input type="checkbox" @change="toggleSelectAll($event.target.checked)" :checked="allSelected" /></th>
@@ -103,7 +103,6 @@
                     </tbody>
                 </table>
 
-
                 <div class="flex justify-between items-center mt-4">
                     <q-select
                         v-model="pagination.rowsPerPage"
@@ -111,7 +110,7 @@
                         label="Rows per page"
                         dense
                         outlined
-                        style="width: 120px"
+                        style="width: 130px"
                         @update:model-value="updateRowsPerPage"
                     />
                     <div>

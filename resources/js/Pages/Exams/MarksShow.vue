@@ -19,8 +19,7 @@
                             </q-btn>
                             <q-btn @click="$inertia.get(route('exams.assignMarks', exam.id))" class="sized-btn" color="negative" outline label="Assign Marks"/>
                         </div>
-
-                        <p class="text-gray-600 mt-2">Exam Date: {{ formatDate(exam?.exam_date) }}</p>
+                        <p class="text-gray-600 mt-2">Exam Date: {{ formatDate(exam?.start_at)}} to {{formatDate(exam?.end_at)}}</p>
                         <div class="mt-4">
                             <h3 class="text-lg font-semibold">Subjects</h3>
                             <ul class="mt-2 space-y-2">
@@ -32,7 +31,8 @@
                                     <div class="flex justify-between">
                                         <span>{{ subject?.subject_name }}</span>
                                         <span class="text-gray-500 text-sm">
-                                            {{ formatDate(subject?.exam_date) }} - {{ formatTime(subject?.exam_time) }}
+                                            Date: {{ formatDate(subject.exam_date) }}
+                                            From  : {{formatTime(subject?.start_time)}} - {{formatTime(subject?.end_time)}}
                                         </span>
                                     </div>
                                 </li>
@@ -75,19 +75,6 @@ function formatTime(time) {
 
     const options = { hour: 'numeric', minute: 'numeric', hour12: true };
     return date.toLocaleTimeString([], options);
-}
-// Edit button handler
-const editExam = (id) => {
-    console.log(`Edit exam with ID: ${id}`);
-    // Trigger any edit logic or emit an event
-};
-
-const deleteExam=(id)=>{
-    router.delete(route('exam.destroy',id),{
-        preserveState:false,
-        onStart:params => state.submitting=true,
-        onFinish: params => state.submitting = false
-    })
 }
 </script>
 

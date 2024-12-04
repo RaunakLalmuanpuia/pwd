@@ -20,12 +20,12 @@ class DatabaseSeeder extends Seeder
         // ]);
 
 
-
+        $this->call(DepartmentSeeder::class);
         $this->call(RolesAndPermissionsSeeder::class);
 
         $this->call(UserSeeder::class);
 
-        $this->call(DepartmentSeeder::class);
+
 
         $this->call(ExamCenterSeeder::class);
 //        ExamCenterSeeder::class,

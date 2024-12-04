@@ -10,15 +10,21 @@ class JobDetail extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'code',
         'post_name',
         'department_id',
         'no_of_post',
+        'category',
         'salary',
-        'age_limit',
+        'upper_age_limit',
+        'lower_age_limit',
+        'age_relaxation',
         'qualification',
-        'description',
         'application_deadline',
-        'application_fee',
+        'application_fee_other',
+        'application_fee_general',
+        'description',
+        'active',
     ];
 
     public function department()

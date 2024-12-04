@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('applications', function (Blueprint $table) {
             //
             $table->string('application_id')->nullable()->unique()->after('status'); // Add the column after 'status'
+            $table->string('roll_no')->nullable()->unique()->after('status'); // Add the column after 'status'
         });
     }
 

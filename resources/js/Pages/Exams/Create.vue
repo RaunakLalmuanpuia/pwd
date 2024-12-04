@@ -1,120 +1,173 @@
 <template>
-    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-        <h1 class="text-2xl font-semibold text-center mb-6">Create Exam for Job: {{ job.post_name }}</h1>
+    <q-page padding>
+        <q-form @submit="submit" @reset="reset" class="row q-col-gutter-sm zcard q-pa-md">
 
-        <form @submit.prevent="submit" class="space-y-6">
+            <!--      <div class="col-xs-12 flex items-center">-->
 
-            <!-- Exam Name Input -->
-            <div class="mb-4">
-                <label for="exam_name" class="block text-sm font-medium text-gray-700">Exam Name</label>
-                <input
-                    v-model="form.exam_name"
-                    id="exam_name"
-                    type="text"
-                    class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="Enter exam name"
-                    aria-describedby="exam_name_help"
+            <!--      </div>-->
+
+            <div class="col-xs-12 col-sm-12  ">
+                <q-input v-model="form.exam_name"
+                         outlined
+                         dense
+                         class="my-input"
+                         label="Name of examination"
+                         :rules="[
+                   val=>!!val || 'Name is required'
+                 ]"
                 />
-                <div v-if="form.errors.exam_name" class="text-red-500 text-sm mt-1" id="exam_name_help">
-                    {{ form.errors.exam_name }}
-                </div>
             </div>
 
-            <!-- Exam Date Input -->
-            <div class="mb-4">
-                <label for="exam_date" class="block text-sm font-medium text-gray-700">Exam Date</label>
-                <input
-                    v-model="form.exam_date"
-                    id="exam_date"
-                    type="date"
-                    class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+            <div class="col-xs-12 col-sm-12 q-mb-md ">
+                <q-input v-model="form.description"
+                         type="textarea"
+                         dense
+                         outlined
+                         class="my-input"
+                         label="Description"
                 />
-                <div v-if="form.errors.exam_date" class="text-red-500 text-sm mt-1">
-                    {{ form.errors.exam_date }}
-                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6  ">
+                <q-input v-model="form.pass_mark"
+                         outlined
+                         dense
+                         class="my-input"
+                         label="Pass mark"
+                         :rules="[
+                   val=>!isNaN(val) || 'Invalid format'
+                 ]"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6  ">
+                <q-input v-model="form.full_mark"
+                         outlined
+                         dense
+                         class="my-input"
+                         label="Full mark mark"
+                         :rules="[
+                   val=>!isNaN(val)  || 'Invalid format'
+                 ]"
+                />
             </div>
 
-            <!-- Subjects Section -->
-            <div class="mb-4">
-                <h2 class="text-lg font-semibold mb-2">Subjects</h2>
-                <div v-for="(subject, index) in form.subjects" :key="index" class="border p-4 mb-4 rounded-lg shadow-sm">
-
-                    <!-- Subject Name -->
-                    <div class="mb-3">
-                        <label for="subject_name_{{ index }}" class="block text-sm font-medium text-gray-700">Subject Name</label>
-                        <input
-                            v-model="subject.name"
-                            type="text"
-                            :id="'subject_name_' + index"
-                            class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="Enter subject name"
-                        />
-                        <div v-if="form.errors['subjects.' + index + '.name']" class="text-red-500 text-sm mt-1">
-                            {{ form.errors['subjects.' + index + '.name'] }}
-                        </div>
-                    </div>
-
-                    <!-- Subject Date -->
-                    <div class="mb-3">
-                        <label for="subject_date_{{ index }}" class="block text-sm font-medium text-gray-700">Exam Date</label>
-                        <input
-                            v-model="subject.date"
-                            :id="'subject_date_' + index"
-                            type="date"
-                            class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        />
-                        <div v-if="form.errors['subjects.' + index + '.date']" class="text-red-500 text-sm mt-1">
-                            {{ form.errors['subjects.' + index + '.date'] }}
-                        </div>
-                    </div>
-
-                    <!-- Subject Time -->
-                    <div class="mb-3">
-                        <label for="subject_time_{{ index }}" class="block text-sm font-medium text-gray-700">Exam Time</label>
-                        <input
-                            v-model="subject.time"
-                            :id="'subject_time_' + index"
-                            type="time"
-                            class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        />
-                        <div v-if="form.errors['subjects.' + index + '.time']" class="text-red-500 text-sm mt-1">
-                            {{ form.errors['subjects.' + index + '.time'] }}
-                        </div>
-                    </div>
-
-                    <!-- Remove Subject Button -->
-                    <button
-                        type="button"
-                        @click="removeSubject(index)"
-                        class="text-red-500 text-sm"
-                    >
-                        Remove Subject
-                    </button>
-                </div>
-
-                <!-- Add Subject Button -->
-                <button
-                    type="button"
-                    @click="addSubject"
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md"
-                >
-                    Add Subject
-                </button>
+            <div class="col-xs-12 col-sm-6  ">
+                <q-input v-model="form.start_at"
+                         type="datetime-local"
+                         outlined
+                         dense
+                         stack-label
+                         class="my-input"
+                         label="Start"
+                         :rules="[
+                   val=>!!val || 'Invalid Date time'
+                 ]"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input v-model="form.end_at"
+                         type="datetime-local"
+                         stack-label
+                         outlined
+                         dense
+                         class="my-input"
+                         label="End"
+                         :rules="[
+                   val=>!!val || 'Invalid Date time'
+                 ]"
+                />
             </div>
 
-            <!-- Submit Button -->
-            <div class="text-center">
-                <button
-                    type="submit"
-                    :disabled="form.processing"
-                    class="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md w-full sm:w-auto disabled:opacity-50"
-                >
-                    <span v-if="form.processing">Creating Exam...</span>
-                    <span v-else>Create Exam</span>
-                </button>
+            <div class="col-xs-12 col-sm-6">
+                <q-checkbox v-model="form.active" label="Active"/>
             </div>
-        </form>
-    </div>
+
+            <div class="col-xs-12 ">
+                <q-separator/>
+            </div>
+            <div class="col-xs-12 flex justify-between items-center">
+                <div class="text-grey-7">Click Add button to add paper</div>
+                <q-btn @click="showSubjectDialog = true" rounded color="primary" outline label="Add"/>
+            </div>
+            <div class="col-xs-12">
+                <q-markup-table flat>
+                    <q-tr>
+                        <q-th align="left" style="width: 30%;">Subject</q-th>
+                        <q-th align="center" style="width: 20%;">Date</q-th>
+                        <q-th align="center" style="width: 20%;">Start</q-th>
+                        <q-th align="center" style="width: 20%;">End</q-th>
+                        <q-th align="center" style="width: 10%;">Action</q-th>
+                    </q-tr>
+                    <q-tr v-for="(item, index) in form.subjects" :key="index">
+                        <q-td align="left">{{ item?.subject_name }}</q-td>
+                        <q-td align="center">{{ item?.exam_date }}</q-td>
+                        <q-td align="center">{{ item?.start_time }}</q-td>
+                        <q-td align="center">{{ item?.end_time }}</q-td>
+                        <q-td align="center">
+                            <q-btn flat icon="cancel" @click="removeSubject(index)" />
+                        </q-td>
+                    </q-tr>
+                </q-markup-table>
+            </div>
+
+
+            <div class="col-xs-12 flex justify-center items-center q-gutter-sm">
+                <q-btn type="reset" label="Cancel" flat/>
+                <q-btn class="q-px-lg" type="submit" label="Save" rounded color="primary"/>
+            </div>
+            <q-dialog v-model="showSubjectDialog">
+                <q-card class="q-pa-md">
+                    <div class="flex justify-between items-center">
+                        <div class="ztext-lg">New Subject</div>
+                        <q-icon name="cancel" v-close-popup class="cursor-pointer"/>
+                    </div>
+                    <br/>
+                        <q-input v-model="subjectForm.subject_name"
+                                 outlined
+                                 class="my-input"
+                                 :rules="[
+                               val=>!!val || 'Name is required'
+                             ]"
+                                 label="Paper Name"/>
+
+                        <q-input v-model="subjectForm.exam_date"
+                                 outlined
+                                 class="my-input"
+                                 :rules="[
+                                   val=>!!val || 'Exam Date is required'
+                                 ]"
+                                 type="date"
+                                 label="Date of Exam"/>
+
+                        <q-input v-model="subjectForm.start_time"
+                                 outlined
+                                 type="time"
+                                 class="my-input"
+                                 :rules="[
+                                   val=>!!val || 'Start time is required'
+                                 ]"
+                                 label="Start At"/>
+
+                        <q-input v-model="subjectForm.end_time"
+                                 outlined
+                                 type="time"
+                                 class="my-input"
+                                 :rules="[
+                                   val=>!!val || 'End tim is required'
+                                 ]"
+                                 label="End At"/>
+
+                        <div class="flex q-gutter-sm">
+                            <q-btn type="submit" style="min-width: 90px" rounded color="primary" @click="addSubject"  label="Add"/>
+                            <q-btn rounded color="negative" outline label="Reset" v-close-popup @click="resetSubjectForm"/>
+                        </div>
+                </q-card>
+
+            </q-dialog>
+        </q-form>
+
+    </q-page>
+
+
 </template>
 
 
@@ -134,11 +187,37 @@ const props = defineProps({
 const form = useForm({
     exam_name: "",
     exam_date: "",
+    description: "",
+    start_at: "",
+    end_at: "",
+    pass_mark: "",
+    full_mark: "",
+    active: false,
     subjects: [],
 });
 
+const showSubjectDialog = ref(false);
+
+const subjectForm = ref({
+    subject_name: '',
+    exam_date: '',
+    start_time: '',
+    end_time: ''
+});
+
+const resetSubjectForm = () => {
+    subjectForm.value = { name: '', exam_date: '', start_at: '', end_at: '' };
+    showSubjectDialog.value = false;
+};
+
+
+// const addSubject = () => {
+//     form.subjects.push({ name: "", date: "", time: "" });
+// };
+
 const addSubject = () => {
-    form.subjects.push({ name: "", date: "", time: "" });
+    form.subjects.push({ ...subjectForm.value });
+    resetSubjectForm();
 };
 
 const removeSubject = (index) => {

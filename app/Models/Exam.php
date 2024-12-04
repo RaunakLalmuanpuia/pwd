@@ -14,7 +14,13 @@ class Exam extends Model
     protected $fillable = [
         'job_details_id',
         'exam_name',
+        'description',
         'exam_date',
+        'start_at',
+        'end_at',
+        'pass_mark',
+        'full_mark',
+        'active',
     ];
 
     public function jobDetail(): BelongsTo
