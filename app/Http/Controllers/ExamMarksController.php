@@ -70,7 +70,7 @@ class ExamMarksController extends Controller
             'marks' => 'required|array',
             'marks.*.applicant_id' => 'required|exists:applicants,id',
             'marks.*.subject_id' => 'required|exists:subjects,id',
-            'marks.*.marks' => 'nullable|numeric|min:0|max:100',
+            'marks.*.marks' => 'nullable|numeric|min:0',
         ]);
 
         // Loop through the marks data and update or create them

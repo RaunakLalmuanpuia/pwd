@@ -14,13 +14,12 @@
                         v-model="marks[index][subject.id]"
                         type="number"
                         min="0"
-                        max="100"
                         :placeholder="`Marks for ${subject.subject_name}`"
                         class="mt-1 block w-full px-4 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                     />
-                    <div v-if="marks[index][subject.id] < 0 || marks[index][subject.id] > 100" class="text-red-500 text-sm mt-1">
-                        Marks must be between 0 and 100.
-                    </div>
+<!--                    <div v-if="marks[index][subject.id] < 0 || marks[index][subject.id] > 100" class="text-red-500 text-sm mt-1">-->
+<!--                        Marks must be between 0 and 100.-->
+<!--                    </div>-->
                 </div>
             </div>
 

@@ -7,6 +7,7 @@ use App\Models\ApplicationDocument;
 use App\Models\Applications;
 use App\Models\ExamCenter;
 use App\Models\JobDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
@@ -17,6 +18,13 @@ class ApplicationController extends Controller
     public function index()
     {
         $applicant = Applicants::where('user_id', auth()->id())->first();
+
+        if (!$applicant) {
+            // Redirect back or return a view with an appropriate message
+            return inertia('Applicant/Applications', [
+                'applications' => [],
+            ])->with('success', 'No applicant record found.');
+        }
 
         $applications = Applications::with([
             'jobDetail.exams.subjects', // Eager load exams and their subjects
@@ -61,6 +69,8 @@ class ApplicationController extends Controller
     // Citizen Apply for application
     public function apply(Request $request, JobDetail $jobDetail)
     {
+
+//        dd($jobDetail);
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
 
         $request->validate([
@@ -72,6 +82,32 @@ class ApplicationController extends Controller
         if (!$applicant) {
             return redirect()->back()->with('error', 'Please Update your Bio and Address.');
         }
+
+        // Calculate applicant's age
+        $dob = $applicant->date_of_birth; // Ensure `dob` is a field in the `Applicants` table
+        if (!$dob) {
+            return redirect()->back()->with('error', 'Date of Birth is required to apply for this job.');
+        }
+        $age = now()->diffInYears(Carbon::parse($dob));
+
+        // Apply age relaxation for certain categories
+        $ageRelaxation = 0;
+        if (in_array($applicant->community, ['Schedule Tribe', 'Schedule Caste', 'OBC'])) {
+            $ageRelaxation = (int) $jobDetail->age_relaxation;
+        }
+
+        $upperAgeLimit = $jobDetail->upper_age_limit + $ageRelaxation;
+
+        $lowerAgeLimit = $jobDetail->lower_age_limit;
+
+        if ($age > $upperAgeLimit) {
+            return redirect()->back()->with('error', 'You are above the upper age limit for this job.');
+        }
+
+        if ($age < $lowerAgeLimit) {
+            return redirect()->back()->with('error', 'You are below the lower age limit for this job.');
+        }
+
 
         // Check if the applicant has already applied for this job
         $existingApplication = Applications::where('applicant_id', $applicant->id)
