@@ -373,6 +373,7 @@ class ApplicationController extends Controller
             return redirect()->back()->with('error', 'You do not have an application for this job.');
         }
 
+//        dd($jobDetail);
         // Generate the PDF from the view
         $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
 

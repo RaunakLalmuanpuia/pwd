@@ -185,12 +185,12 @@
                             @php
                                 // Filter AM and PM subjects for the current date
                                 $amSubjects = $subjects->filter(function($subject) {
-                                    $time = \Carbon\Carbon::createFromFormat('H:i:s', $subject->exam_time);
+                                    $time = \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time);
                                     return $time->hour < 12; // AM before 12:00
                                 });
 
                                 $pmSubjects = $subjects->filter(function($subject) {
-                                    $time = \Carbon\Carbon::createFromFormat('H:i:s', $subject->exam_time);
+                                    $time = \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time);
                                     return $time->hour >= 12; // PM from 12:00 onwards
                                 });
                             @endphp
@@ -209,7 +209,7 @@
                                     @else
                                         @foreach($amSubjects as $subject)
                                             {{ $subject->subject_name }}<br>
-                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->exam_time)->format('h:i A') }})<br>
+                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time)->format('h:i A') }})<br>
                                         @endforeach
                                     @endif
                                 </td>
@@ -219,7 +219,7 @@
                                     @else
                                         @foreach($pmSubjects as $subject)
                                             {{ $subject->subject_name }}<br>
-                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->exam_time)->format('h:i A') }})<br>
+                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time)->format('h:i A') }})<br>
                                         @endforeach
                                     @endif
                                 </td>
