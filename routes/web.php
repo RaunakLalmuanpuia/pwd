@@ -37,6 +37,8 @@ Route::get('/', function () {
 Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])
     ->name('login');
 
+Route::get('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
+    ->name('register');
 //Dashboard Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
     Route::get('',[DashboardController::class,'index'])->name('dashboard');
