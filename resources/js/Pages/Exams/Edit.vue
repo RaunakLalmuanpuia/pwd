@@ -248,7 +248,7 @@ const form = useForm({
     full_mark: props.exam.full_mark,
     start_at: props.exam.start_at,
     end_at: props.exam.end_at,
-    active: props.exam.active,
+    active: Boolean(props.exam.active) ,
     subjects: props.exam.subjects.map((subject) => ({
         id: subject.id,
         subject_name: subject.subject_name,
