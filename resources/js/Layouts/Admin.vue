@@ -118,8 +118,8 @@
 
                     <q-expansion-item label="Administration" group="menu" icon="admin_panel_settings">
                         <q-item clickable v-ripple active-class="active-menu"
-                                :active="route().current()==='job.index'"
-                                @click="$inertia.get(route('job.index'))">
+                                :active="route().current()==='exam_center.index'"
+                                @click="$inertia.get(route('exam_center.index'))">
                             <q-item-section avatar>
                                 <q-icon name="circle" size="sm" style="font-size: 8px; padding-left: 8px" class="my-custom-icon" />
                             </q-item-section>

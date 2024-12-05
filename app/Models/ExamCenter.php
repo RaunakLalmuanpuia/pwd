@@ -13,6 +13,7 @@ class ExamCenter extends Model
         'center_name',
         'location',
         'capacity',
+        'available'
     ];
 
     public function applications()
