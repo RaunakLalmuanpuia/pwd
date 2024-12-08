@@ -64,13 +64,24 @@
                     </q-item>
 
                     <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='applications.draft'"
+                            @click="$inertia.get(route('applications.draft'))">
+                        <q-item-section avatar>
+                            <q-icon name="drafts" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Drafts</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-ripple active-class="active-menu"
                             :active="route().current()==='applications.index'"
                             @click="$inertia.get(route('applications.index'))">
                         <q-item-section avatar>
                             <q-icon name="drafts" />
                         </q-item-section>
                         <q-item-section>
-                            <q-item-label>Applications</q-item-label>
+                            <q-item-label>Submission</q-item-label>
                         </q-item-section>
                     </q-item>
 

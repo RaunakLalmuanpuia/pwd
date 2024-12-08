@@ -108,48 +108,6 @@ class ExamController extends Controller
      * Update an existing exam along with its subjects.
      */
     // Update Exam and subjects
-//    public function update(Request $request, Exam $exam)
-//    {
-////        dd($request);
-//        $validated = $request->validate([
-//            'exam_name' => 'required|string|max:255',
-//            'exam_date' => 'required|date',
-//            'subjects' => 'required|array|min:1',
-//            'subjects.*.id' => 'nullable|exists:subjects,id',
-//            'subjects.*.name' => 'required|string|max:255',
-//            'subjects.*.date' => 'required|date',
-//            'subjects.*.time' => 'required',
-//        ]);
-//
-//        // Update the exam
-//        $exam->update([
-//            'exam_name' => $validated['exam_name'],
-//            'exam_date' => $validated['exam_date'],
-//        ]);
-//
-//        // Update or create subjects
-//        foreach ($validated['subjects'] as $subjectData) {
-//            if (isset($subjectData['id'])) {
-//                // Update existing subject
-//                $exam->subjects()->where('id', $subjectData['id'])->update([
-//                    'subject_name' => $subjectData['name'],
-//                    'exam_date' => $subjectData['date'],
-//                    'exam_time' => $subjectData['time'],
-//                ]);
-//            } else {
-//                // Create new subject
-//                $exam->subjects()->create([
-//                    'subject_name' => $subjectData['name'],
-//                    'exam_date' => $subjectData['date'],
-//                    'exam_time' => $subjectData['time'],
-//                ]);
-//            }
-//        }
-//
-//        return redirect()->route('exams.show', $exam->job_details_id)
-//            ->with('success', 'Exam and subjects updated successfully.');
-//    }
-
     public function update(Request $request, Exam $exam)
     {
 //        dd($request->subjects);

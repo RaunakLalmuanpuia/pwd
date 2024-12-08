@@ -39,6 +39,7 @@ Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::
 
 Route::get('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
     ->name('register');
+
 //Dashboard Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
     Route::get('',[DashboardController::class,'index'])->name('dashboard');
@@ -89,12 +90,28 @@ Route::middleware('auth')->group(function () {
         // Citizen View application
         Route::get('{jobDetail}/show', [ApplicationController::class, 'show'])->name('application.show');
         // Citizen apply application
-
         Route::post('{jobDetail}/apply', [ApplicationController::class, 'apply'])->name('application.apply');
+
+        // Citizen update application
+        Route::post('{jobDetail}/update', [ApplicationController::class, 'updateMandatoryDocument'])->name('application.update');
+
+        // Citizen Submit application
+        Route::post('{jobDetail}/submit', [ApplicationController::class, 'SubmitApplication'])->name('application.submit');
+
         // Citizen Application Index
-        Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
-        // Citizen View applications detail
+        Route::get('/applications/submission', [ApplicationController::class, 'index'])->name('applications.index');
+
+
+        // Citizen Application Draft
+        Route::get('/applications/draft', [ApplicationController::class, 'draft'])->name('applications.draft');
+
+        // Citizen View applications detail Submission
         Route::get('{jobDetail}/detail', [ApplicationController::class, 'viewApplication'])->name('application.viewApplication');
+
+        // Citizen View applications detail Draft
+        Route::get('draft/{jobDetail}/detail', [ApplicationController::class, 'viewApplicationDraft'])->name('application.viewApplicationDraft');
+
+
         //Citizen Download Admit Card
         Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
 
@@ -163,12 +180,11 @@ Route::middleware(['auth'])->group(function () {
 
     //Admin show marks
     Route::get('/exam/{model}/marks', [JobDetailsController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
+
     // Download Job Approved/Qualified List
     Route::get('/export-job-qualified/{job_detail_id}', [JobDetailsController::class, 'exportJobDetails'])->name('export.job.details');
-
     // Download Job Eligible List
     Route::get('/export-job-eligible/{job_detail_id}', [JobDetailsController::class, 'exportEligibleJobDetails'])->name('export.job.eligible.details');
-
     // Download Job Submitted List
     Route::get('/export-job-submitted/{job_detail_id}', [JobDetailsController::class, 'exportSubmittedJobDetails'])->name('export.job.submitted.details');
 });

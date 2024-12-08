@@ -99,9 +99,9 @@
                     </q-tr>
                     <q-tr v-for="(item, index) in form.subjects" :key="index">
                         <q-td align="left">{{ item?.subject_name }}</q-td>
-                        <q-td align="center">{{ item?.exam_date }}</q-td>
-                        <q-td align="center">{{ item?.start_time }}</q-td>
-                        <q-td align="center">{{ item?.end_time }}</q-td>
+                        <q-td align="center">{{ formatDate(item?.exam_date) }}</q-td>
+                        <q-td align="center">{{ formatTimeToAmPm(item?.start_time) }}</q-td>
+                        <q-td align="center">{{ formatTimeToAmPm(item?.end_time) }}</q-td>
                         <q-td align="center">
                             <q-btn flat icon="cancel" @click="removeSubject(index)" />
                         </q-td>
@@ -215,6 +215,21 @@ const resetSubjectForm = () => {
 //     form.subjects.push({ name: "", date: "", time: "" });
 // };
 
+function formatTimeToAmPm(time) {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hourNum = parseInt(hours, 10);
+    const isPM = hourNum >= 12;
+    const formattedHours = hourNum % 12 || 12; // Convert to 12-hour format
+    const period = isPM ? 'PM' : 'AM';
+    return `${formattedHours}:${minutes} ${period}`;
+}
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const options = { day: '2-digit', month: 'long', year: 'numeric' };
+    return date.toLocaleDateString('en-IN', options);
+}
 const addSubject = () => {
     form.subjects.push({ ...subjectForm.value });
     resetSubjectForm();

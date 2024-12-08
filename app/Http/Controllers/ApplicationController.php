@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicationController extends Controller
 {
-    // Citizen Application List
+    // Citizen Application Submission List
     public function index()
     {
         $applicant = Applicants::where('user_id', auth()->id())->first();
@@ -29,12 +29,34 @@ class ApplicationController extends Controller
         $applications = Applications::with([
             'jobDetail.exams.subjects', // Eager load exams and their subjects
             'examCenter'               // Eager load the assigned exam center
-        ])->where('applicant_id', $applicant->id)->get();
+        ])->where('applicant_id', $applicant->id) ->where('status', '!=', 'draft') ->get();
 
         return inertia('Applicant/Applications', [
             'applications' => $applications,
         ]);
     }
+    // Citizen Application Draft List
+    public function draft()
+    {
+        $applicant = Applicants::where('user_id', auth()->id())->first();
+
+        if (!$applicant) {
+            // Redirect back or return a view with an appropriate message
+            return inertia('Applicant/Applications', [
+                'applications' => [],
+            ])->with('success', 'No applicant record found.');
+        }
+
+        $applications = Applications::with([
+            'jobDetail.exams.subjects', // Eager load exams and their subjects
+            'examCenter'               // Eager load the assigned exam center
+        ])->where('applicant_id', $applicant->id) ->where('status', 'draft')->get();
+
+        return inertia('Applicant/DraftSubmission', [
+            'applications' => $applications,
+        ]);
+    }
+
     // Citizen View Application
     public function show(JobDetail $jobDetail)
     {
@@ -66,10 +88,29 @@ class ApplicationController extends Controller
         ]);
     }
 
+    public function viewApplicationDraft(JobDetail $jobDetail)
+    {
+
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        $application = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->where('status', 'draft')
+            ->with(['applicationDocuments']) // Load documents associated with the application
+            ->first();
+
+        return inertia('Applicant/SubmitApplication', [
+            'jobDetail' => $jobDetail,
+            'mandatoryDocuments' => $mandatoryDocuments,
+            'applicant' => $applicant,
+            'application' => $application,
+        ]);
+    }
+
     // Citizen Apply for application
     public function apply(Request $request, JobDetail $jobDetail)
     {
-
 //        dd($jobDetail);
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
 
@@ -129,7 +170,7 @@ class ApplicationController extends Controller
         $application = Applications::create([
             'applicant_id' => $applicant->id,
             'job_details_id' => $jobDetail->id,
-            'status' => 'Pending',
+            'status' => 'Draft',
         ]);
 
         if ($request->hasFile('documents') && is_array($request->file('documents'))) {
@@ -148,6 +189,42 @@ class ApplicationController extends Controller
 
         return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
     }
+    public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
+    {
+//        dd($request);
+        $validatedData = $request->validate([
+            'document_id' => 'required|exists:documents,id',
+            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048',
+        ]);
+
+        $document = $jobDetail->documents()->findOrFail($validatedData['document_id']);
+        $filePath = $request->file('file')->store('mandatory_documents');
+
+        $document->update(['file_path' => $filePath]);
+
+        return back()->with('success', 'Document updated successfully.');
+    }
+    public function SubmitApplication(Request $request, JobDetail $jobDetail)
+    {
+//        dd($jobDetail);
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        // Retrieve the draft application for the given job
+        $application = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->where('status', 'draft')
+            ->first();
+
+        // Update the status to 'submitted'
+        $application->update([
+            'status' => 'Pending',
+        ]);
+
+        return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
+
+    }
+
+
 
     // Admin See applicant Detail
     public function showApplicantDetail(JobDetail $jobDetails, Applications $application)

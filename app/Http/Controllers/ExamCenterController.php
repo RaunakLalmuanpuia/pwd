@@ -11,7 +11,7 @@ use Inertia\Inertia;
 
 class ExamCenterController extends Controller
 {
-    //
+    // Exam center Index
     public function index(){
         $examCenters = ExamCenter::all(); // Fetch all available centers
 
@@ -19,11 +19,11 @@ class ExamCenterController extends Controller
             'examCenters' => $examCenters,
         ]);
     }
-
+    // Exam center Create page
     public function create_exam_center(){
         return Inertia::render('ExamCenter/Create');
     }
-
+    // Store new Exam Center
     public function store_exam_center(Request $request){
 //        dd($request);
         $validatedData = $request->validate([
@@ -42,7 +42,7 @@ class ExamCenterController extends Controller
 
         return redirect()->route('exam_center.index')->with('success', 'Exam centers created successfully.');
     }
-
+    // Edit exam center page
     public function edit_exam_center(ExamCenter $model){
 //        dd($model);
 
@@ -50,22 +50,19 @@ class ExamCenterController extends Controller
             'examCenters' => $model,
         ]);
     }
-
+    // Update exam center
     public function update_exam_center(Request $request, ExamCenter $model){
         // Validate the incoming request
-//        dd($model);
+        // dd($model);
         $validatedData = $request->validate([
             'center_name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
             'available' => 'required|boolean',
         ]);
-
         try {
-
             // Update the exam center with validated data
             $model->update($validatedData);
-
             // Redirect back with a success message
             return redirect()->route('exam_center.index')->with('success', 'Exam center updated successfully.');
         } catch (\Exception $e) {
@@ -73,27 +70,22 @@ class ExamCenterController extends Controller
             return redirect()->back()->with('error', 'An error occurred while updating the exam center.');
         }
     }
-
+    // Delete Exam Center
     public function destroy_exam_center(ExamCenter $model)
     {
-//        dd($model);
+        //dd($model);
         try {
-
-
             // Check if there are any associated applications
             if ($model->applications()->exists()) {
                 return redirect()->back()->with('error', 'Cannot delete the exam center because it has associated applications.');
             }
-
             // Delete the exam center
             $model->delete();
-
             return redirect()->route('exam_center.index')->with('success', 'Exam center deleted successfully.');
         } catch (\Exception $e) {
             // Handle exceptions
             return redirect()->back()->with('error', 'An error occurred while deleting the exam center.');
         }
-
     }
 
 
@@ -119,8 +111,6 @@ class ExamCenterController extends Controller
         ]);
 
     }
-
-
     public function store(Request $request,Exam $exam)
     {
 //        dd($request);
@@ -137,7 +127,6 @@ class ExamCenterController extends Controller
             $application->exam_center_id = $assignment['exam_center_id'];
             $application->save();
         }
-
         return redirect()->route('job.edit', $exam->job_details_id)->with('success', 'Exam centers assigned successfully.');
     }
     public function storeCenters(Request $request)

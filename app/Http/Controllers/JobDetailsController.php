@@ -226,7 +226,6 @@ class JobDetailsController extends Controller
         $export = new JobDetailsExport($jobDetails);
         return Excel::download($export, now()->timestamp . '.xlsx');
     }
-
     public function exportEligibleJobDetails($job_detail_id)
     {
         // Fetch the job detail and related data based on the ID
