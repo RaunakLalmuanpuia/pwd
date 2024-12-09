@@ -165,8 +165,8 @@
         </div>
     </div>
 
-    <div class="flex items-center justify-between">
-        <button class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Delete Draft</button>
+    <div class="flex items-center gap-20 justify-center">
+        <button @click="$inertia.delete(route('application.delete_draft', jobDetail?.id))" clickable class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Delete Draft</button>
         <button @click="submitDocument" class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Update</button>
 <!--        <button class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Submit Application</button>-->
         <button
@@ -174,7 +174,7 @@
             :disabled="processing"
             @click="submitApplication"
         >
-            {{ processing ? 'Submitting...' : 'Submit Application' }}
+            {{ processing ? 'Submitting...' : 'Make Payment' }}
         </button>
     </div>
 

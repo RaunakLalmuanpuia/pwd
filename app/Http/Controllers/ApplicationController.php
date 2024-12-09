@@ -187,7 +187,7 @@ class ApplicationController extends Controller
             }
         }
 
-        return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
+        return redirect()->route('dashboard.citizen')->with('success', 'Application Saved to Draft successfully.');
     }
     public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
     {
@@ -203,6 +203,31 @@ class ApplicationController extends Controller
         $document->update(['file_path' => $filePath]);
 
         return back()->with('success', 'Document updated successfully.');
+    }
+
+    public function deleteDraft(Request $request, JobDetail $jobDetail)
+    {
+
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        if (!$applicant) {
+            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
+        }
+
+        // Retrieve the draft application for the given job
+        $application = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->where('status', 'draft')
+            ->first();
+
+        if (!$application) {
+            return redirect()->route('dashboard.citizen')->with('error', 'No draft application found for this job.');
+        }
+
+        // Delete the draft application
+        $application->delete();
+
+        return redirect()->route('dashboard.citizen')->with('success', 'Draft application deleted successfully.');
     }
     public function SubmitApplication(Request $request, JobDetail $jobDetail)
     {

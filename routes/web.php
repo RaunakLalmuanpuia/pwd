@@ -98,6 +98,9 @@ Route::middleware('auth')->group(function () {
         // Citizen Submit application
         Route::post('{jobDetail}/submit', [ApplicationController::class, 'SubmitApplication'])->name('application.submit');
 
+        // Citizen Delete Draft
+        Route::delete('{jobDetail}', [ApplicationController::class, 'deleteDraft'])->name('application.delete_draft');
+
         // Citizen Application Index
         Route::get('/applications/submission', [ApplicationController::class, 'index'])->name('applications.index');
 
