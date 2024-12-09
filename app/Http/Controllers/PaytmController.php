@@ -130,6 +130,7 @@ class PaytmController extends Controller
 
             DB::transaction(function () use ($application, $transaction) {
                 $application->status = 'Pending';
+                $application->application_id = $this->generateUniqueApplicationId();
                 $application->save();
 
 
@@ -148,7 +149,16 @@ class PaytmController extends Controller
 //        return redirect(env('APP_URL') . "/admin/payment/${paytmParams['ORDERID']}");
         return redirect()->route('dashboard.citizen')->with('error', 'Application submitted unsuccessfully.');
 
+    }
 
+    private function generateUniqueApplicationId()
+    {
+        do {
+            // Generate a random unique string (you can customize the format)
+            $uniqueId = 'APP-' . strtoupper(uniqid());
+        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
+
+        return $uniqueId;
     }
 
 }

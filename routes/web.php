@@ -12,6 +12,8 @@ use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamMarksController;
 use App\Http\Controllers\ExamCenterController;
 use App\Http\Controllers\PaytmController;
+use App\Http\Controllers\TransactionController;
+
 
 
 
@@ -205,6 +207,14 @@ Route::middleware(['auth'])->group(function () {
 Route::group(['prefix' => 'paytm'], function () {
     Route::post('initiate', [PaytmController::class, 'initiate'])->name('initiate_payment');
     Route::post('response', [PaytmController::class, 'handlePaymentResponse']);
+});
+
+//PAYMENTS
+Route::group(['prefix' => 'transaction',], function () {
+    Route::get('list', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('{order_id}/detail', [TransactionController::class, 'detail'])->name('transaction.detail');
+    Route::get('{order_id}', [TransactionController::class, 'checkStatus'])->name('transaction.checkStatus');
+    Route::get('{order_id}/sync', [TransactionController::class, 'syncTransaction'])->name('transaction.sync');
 });
 
 require __DIR__.'/auth.php';

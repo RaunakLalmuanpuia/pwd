@@ -140,8 +140,8 @@
                         </q-item>
 
                         <q-item clickable v-ripple active-class="active-menu"
-                                :active="route().current()==='exams.marks.index'"
-                                @click="$inertia.get(route('exams.marks.index'))">
+                                :active="route().current()==='transaction.index'"
+                                @click="$inertia.get(route('transaction.index'))">
                             <q-item-section avatar>
                                 <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
                             </q-item-section>

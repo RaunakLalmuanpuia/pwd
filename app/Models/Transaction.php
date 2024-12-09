@@ -9,7 +9,7 @@ class Transaction extends Model
 {
     use HasFactory;
     protected $fillable = ['order_id','transaction_id','type','voucher_date','amount','status','reference_id','reference_type'];
-    protected $appends = ['customer_name'];
+//    protected $appends = ['customer_name'];
 
     public function reference(): MorphTo
     {

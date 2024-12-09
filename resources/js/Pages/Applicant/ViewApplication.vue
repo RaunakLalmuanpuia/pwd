@@ -30,15 +30,75 @@
         <!-- Right-aligned and smaller image container -->
         <div class="p-4">
             <button
-                @click="toggleDiv"
+                @click="toggleDivPayment"
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-                {{ isVisible ? "Hide Payment" : "Show Payment" }}
+                {{ isVisiblePayment ? "Hide Payment" : "Show Payment" }}
             </button>
         </div>
     </div>
 
 
+<!--    {{application.transaction}}-->
+
+    <div v-if="isVisiblePayment" class="max-w-sm mx-auto bg-card p-6 rounded-lg shadow-lg">
+        <div class="flex items-center justify-center mb-4">
+            <template v-if="application.transaction.status === 'TXN_SUCCESS'">
+                <q-icon name="check_circle"  />
+            </template>
+            <template v-else-if="application.transaction.status === 'TXN_FAILURE'">
+                <q-icon name="cancel"/>
+            </template>
+            <template v-else>
+                <q-icon name="hourglass_empty"  />
+            </template>
+        </div>
+        <h2 class="text-lg font-semibold text-center text-primary">FEE PAYMENT RECEIPT</h2>
+        <table class="w-full mt-4">
+            <tbody>
+            <tr>
+                <td class="border-b border-muted">
+                    <span class="text-muted-foreground">Txn. ID</span>
+                </td>
+                <td class="border-b border-muted text-right">
+                    <span class="text-muted-foreground">{{ application.transaction.transaction_id }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="border-b border-muted">
+                    <span class="text-muted-foreground">Order ID</span>
+                </td>
+                <td class="border-b border-muted text-right">
+                    <span class="text-muted-foreground">{{ application.transaction.order_id }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="border-b border-muted">
+                    <span class="text-muted-foreground">Amount</span>
+                </td>
+                <td class="border-b border-muted text-right">
+                    <span class="text-muted-foreground">{{ application.transaction.amount }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="border-b border-muted">
+                    <span class="text-muted-foreground">Date</span>
+                </td>
+                <td class="border-b border-muted text-right">
+                    <span class="text-muted-foreground">{{ application.transaction.created_at }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="border-b border-muted">
+                    <span class="text-muted-foreground">Status</span>
+                </td>
+                <td class="border-b border-muted text-right">
+                    <span class="text-green-600 font-semibold">{{ application.transaction.status }}</span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
 
     <div v-if="isVisible" class="flex flex-col md:flex-row p-4 bg-background rounded-lg shadow-md">
@@ -88,6 +148,8 @@
             <p><strong>PIN:</strong> {{applicant?.user.address.communication_pin_code }}</p>
         </div>
     </div>
+
+
 
 
 
@@ -157,10 +219,14 @@ defineOptions({
 const props = defineProps(['jobDetail', 'mandatoryDocuments', 'applicant','application']);
 
 const isVisible = ref(false); // Tracks visibility of the div
-
+const isVisiblePayment = ref(false);
 const toggleDiv = () => {
     isVisible.value = !isVisible.value; // Toggle the value of isVisible
 };
+
+const toggleDivPayment = () => {
+    isVisiblePayment.value = !isVisiblePayment.value;
+}
 
 
 

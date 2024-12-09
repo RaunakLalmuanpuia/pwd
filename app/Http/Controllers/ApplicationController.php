@@ -77,7 +77,7 @@ class ApplicationController extends Controller
 
         $application = Applications::where('applicant_id', $applicant->id)
             ->where('job_details_id', $jobDetail->id)
-            ->with(['applicationDocuments']) // Load documents associated with the application
+            ->with(['applicationDocuments', 'transaction']) // Load documents associated with the application
             ->first();
 
         return inertia('Applicant/ViewApplication', [
@@ -261,6 +261,7 @@ class ApplicationController extends Controller
             },
             'applications.applicant.user.address',
             'documents',
+            'applications.transaction',
             'applications.applicationDocuments.jobDocument',
         ]);
 
@@ -425,11 +426,11 @@ class ApplicationController extends Controller
             $application = Applications::findOrFail($applicationId);
             $application->status = $status;
 
-            if ($status === 'approved') {
-                $application->application_id = $this->generateUniqueApplicationId();
-            } elseif ($status === 'pending') {
-                $application->application_id = null;
-            }
+//            if ($status === 'approved') {
+//                $application->application_id = $this->generateUniqueApplicationId();
+//            } elseif ($status === 'pending') {
+//                $application->application_id = null;
+//            }
 
             $application->save();
         }

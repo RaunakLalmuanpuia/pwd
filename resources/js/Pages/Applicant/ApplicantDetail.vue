@@ -12,7 +12,7 @@
                 @click="$router.back()"
             />
             <div class="flex">
-                <q-btn label="Payments" />
+                <q-btn label="Payments" @click="openPaymentDialog" />
             </div>
         </div>
         <br />
@@ -300,6 +300,40 @@
             </div>
         </div>
         <br/>
+        <q-dialog v-model="dialogVisible" >
+            <div class="full-print flex justify-center items-center ">
+                <div class="row zcard q-pa-md " style="max-width: 480px">
+
+                    <div class="col-xs-12">
+                        <p class="ztext ztext-md">Payment Detail</p>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-3 ztext">Status</div>
+                    <div class="col-xs-12 col-sm-9  text-weight-medium">{{ jobDetails.applications[0].transaction?.status || 'NA'}}
+                    </div>
+                    <div class="col-xs-12 col-sm-3 ztext">Order ID</div>
+                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.order_id}}</div>
+
+                    <div class="col-xs-12 col-sm-3 ztext">Transaction ID</div>
+                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.transaction_id }}</div>
+                    <div class="col-xs-12 col-sm-3 ztext">Date</div>
+                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.created_at }}</div>
+                    <div class="col-xs-12 col-sm-3 ztext">Amount</div>
+                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.amount }}</div>
+
+                    <div class="col-xs-12">
+                        <q-separator class="q-my-sm"/>
+                    </div>
+
+
+                    <div class="col-xs-12 print-hide ">
+                        <q-btn color="primary" label="Print" rounded style="min-width: 120px" @click="print"/>
+                    </div>
+
+                </div>
+
+            </div>
+        </q-dialog>
     </q-page>
 </template>
 
@@ -307,7 +341,7 @@
 <script setup>
 
 import AdminLayout from "@/Layouts/Admin.vue";
-
+import {ref} from 'vue'
 import {useQuasar} from "quasar";
 
 defineOptions({
@@ -316,7 +350,15 @@ defineOptions({
 
 const props = defineProps(['jobDetails']);
 
+const dialogVisible = ref(false);
 
+const openPaymentDialog = () => {
+    dialogVisible.value = true;
+};
+
+const closeDialog = () => {
+    dialogVisible.value = false;
+};
 const handleOpen = (item) => {
     let a = document.createElement("a");
     a.target = "_blank";
