@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Applications extends Model
 {
@@ -41,6 +42,11 @@ class Applications extends Model
     public function applicationDocuments()
     {
         return $this->hasMany(ApplicationDocument::class, 'application_id');
+    }
+
+    public function transaction(): MorphOne
+    {
+        return $this->morphOne(Transaction::class, 'reference');
     }
 
 

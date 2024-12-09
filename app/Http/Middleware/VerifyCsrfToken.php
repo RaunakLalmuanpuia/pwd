@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
+        'paytm/response', // Add the Paytm callback route here
     ];
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ExamController;
 use App\Http\Controllers\ExamMarksController;
 use App\Http\Controllers\ExamCenterController;
+use App\Http\Controllers\PaytmController;
 
 
 
@@ -199,6 +200,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('{model}', [ExamCenterController::class, 'edit_exam_center'])->middleware('role:Admin')->name('exam_center.edit');
     Route::put('{model}', [ExamCenterController::class, 'update_exam_center'])->middleware('role:Admin')->name('exam_center.update');
     Route::delete('{model}', [ExamCenterController::class, 'destroy_exam_center'])->middleware('role:Admin')->name('exam_center.destroy');
+});
+
+Route::group(['prefix' => 'paytm'], function () {
+    Route::post('initiate', [PaytmController::class, 'initiate'])->name('initiate_payment');
+    Route::post('response', [PaytmController::class, 'handlePaymentResponse']);
 });
 
 require __DIR__.'/auth.php';

@@ -172,7 +172,7 @@
         <button
             class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80"
             :disabled="processing"
-            @click="submitApplication"
+            @click="pay"
         >
             {{ processing ? 'Submitting...' : 'Make Payment' }}
         </button>
@@ -188,8 +188,11 @@
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 import { ref } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
+import {useQuasar} from "quasar";
+import axios from 'axios';
 
 
+const q = useQuasar(); // Quasar instance
 
 defineOptions({
     layout:ApplicantLayout
@@ -273,5 +276,143 @@ const getUploadedDocumentPath = (documentId) => {
     );
     return uploadedDoc ? `/storage/${uploadedDoc.document_path}` : null;
 };
+
+// const pay = () => {
+//     q.dialog({
+//         title: 'Confirmation',
+//         message: 'Application is draft by default and you can pay later. Do you want to proceed with payment?',
+//         ok: 'Proceed',
+//         cancel: 'Back',
+//     }).onOk(() => {
+//         q.loading.show();
+//
+//         // Example API call using Inertia's router.post
+//         axios.post(
+//             '/paytm/initiate',
+//             {
+//                 job_ids: props.jobDetail.id,
+//                 application_id: props.application.id,
+//             },
+//             {
+//                 onSuccess: ({ props }) => {
+//                     const { token, order_id, amount } = props.data; // Adjust based on your response structure
+//
+//                     const config = {
+//                         root: '',
+//                         flow: 'DEFAULT',
+//                         data: {
+//                             orderId: order_id, // Update order ID
+//                             token: token, // Update token value
+//                             tokenType: 'TXN_TOKEN',
+//                             amount: amount, // Update amount
+//                         },
+//                         handler: {
+//                             notifyMerchant: (eventName, data) => {
+//                                 console.log('notifyMerchant handler function called');
+//                                 console.log('eventName => ', eventName);
+//                                 console.log('data => ', data);
+//                             },
+//                         },
+//                     };
+//
+//                     if (window.Paytm && window.Paytm.CheckoutJS) {
+//                         window.Paytm.CheckoutJS.init(config)
+//                             .then(() => {
+//                                 // After successfully updating configuration, invoke JS Checkout
+//                                 window.Paytm.CheckoutJS.invoke();
+//                             })
+//                             .catch((error) => {
+//                                 console.error('Error initializing Paytm CheckoutJS:', error);
+//                                 q.notify({
+//                                     type: 'warning',
+//                                     message: 'Unable to load Checkout Page: Please Reload to try again',
+//                                 });
+//                             });
+//                     } else {
+//                         console.error('Error: Paytm CheckoutJS not loaded');
+//                         q.notify({
+//                             type: 'warning',
+//                             message: 'Unable to load Checkout Page: Please Reload to try again',
+//                         });
+//                     }
+//                 },
+//                 onError: (err) => {
+//                     console.error(err);
+//                     q.notify({
+//                         type: 'negative',
+//                         message: err?.response?.data?.message || err.toString(),
+//                     });
+//                 },
+//                 onFinish: () => {
+//                     q.loading.hide();
+//                 },
+//             }
+//         );
+//     });
+// };
+
+
+const pay=()=>{
+
+    q.dialog({
+        title:'Confirmation',
+        message:'Application is draft by default and you can pay later. Do you want to proceed with payment',
+        ok:'Proceed',
+        cancel: 'Back'
+    }).onOk(()=>{
+        q.loading.show()
+        // .finally(()=>q.loading.hide())
+        axios.post('/paytm/initiate',{
+            job_ids:props.jobDetail.id,
+            application_id:props.application.id,
+        })
+            .then(res=>{
+                const {token, order_id, amount} = res.data;
+
+
+                var config = {
+                    "root": "",
+                    "flow": "DEFAULT",
+                    "data": {
+                        "orderId": order_id, /* update order id */
+                        "token": token, /* update token value */
+                        "tokenType": "TXN_TOKEN",
+                        "amount": amount /* update amount */
+                    },
+                    "handler": {
+                        "notifyMerchant": function(eventName,data){
+                            console.log("notifyMerchant handler function called");
+                            console.log("eventName => ",eventName);
+                            console.log("data => ",data);
+                        }
+                    }
+                };
+
+                if(window.Paytm && window.Paytm.CheckoutJS){
+                    window.Paytm.CheckoutJS.init(config)
+                        .then(function onSuccess() {
+                            // after successfully updating configuration, invoke JS Checkout
+                            window.Paytm.CheckoutJS.invoke();
+                        }).catch(function onError(error){
+                        console.log("error => ",error);
+                    });
+
+                }else{
+                    console.log("Error Paytm")
+                    q.notify({type:'warning',message:'Unable to load Checkout Page: Please Reload to try again'})
+                }
+            })
+            .catch(err=>{
+                console.log(err)
+                q.notify({type:'negative',message:err?.response?.data?.message||err.toString()})
+            })
+            .finally(()=>{
+                q.loading.hide();
+            })
+    })
+
+
+
+}
 
 </script>
