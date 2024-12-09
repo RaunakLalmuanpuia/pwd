@@ -35,17 +35,12 @@ class TransactionController extends Controller
     public function detail(Request $request,string $order_id)
     {
 
-//        return response()->json([
-//            'data' => Transaction::query()->with(['reference'])->where('order_id', $order_id)->first(),
-//        ]);
         return inertia('Transactions/Detail', [
             'transactions' => Transaction::query()->with(['reference.applicant.user.address','reference.jobDetail', ])->where('order_id', $order_id)->first(),
         ]);
     }
-
     public function checkStatus(Request $request,string $order_id)
     {
-
         $paytmParams = array();
         /* body parameters */
         $paytmParams["body"] = array(
