@@ -143,11 +143,12 @@ class PaytmController extends Controller
 //            return redirect(env('APP_URL') . "/admin/payment/${paytmParams['ORDERID']}");
             return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
         }
+
         $transaction->status = $paytmParams['STATUS'];
         $transaction->save();
 
 //        return redirect(env('APP_URL') . "/admin/payment/${paytmParams['ORDERID']}");
-        return redirect()->route('dashboard.citizen')->with('error', 'Application submitted unsuccessfully.');
+        return redirect()->route('dashboard.citizen')->with('error', 'Error With payments.');
 
     }
 

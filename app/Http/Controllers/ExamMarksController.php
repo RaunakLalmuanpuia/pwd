@@ -105,4 +105,38 @@ class ExamMarksController extends Controller
         return redirect()->route('exams.marks.show', $exam->job_details_id)->with('success', 'Marks updated successfully.');
     }
 
+    public function showMarks(JobDetail $model)
+    {
+        // Load related data for the specific job
+        $jobDetail = JobDetail::with([
+            'exams.subjects', // Load subjects for the exams related to the job
+        ])->findOrFail($model->id);
+
+        // Get the IDs of subjects related to this job's exams
+        $subjectIds = $jobDetail->exams->flatMap(function ($exam) {
+            return $exam->subjects->pluck('id');
+        });
+
+        // Fetch applicants and their marks only for the subjects of this job
+        $applicants = $jobDetail->applications()->with([
+            'applicant.examMarks' => function ($query) use ($subjectIds) {
+                $query->whereIn('subject_id', $subjectIds); // Filter marks by subjects related to the job
+            },
+            'applicant.examMarks.subject', // Load the related subject for each mark
+            'examCenter',
+            'applicant.user',
+        ])->get();
+
+        // Check if there are no applicants
+        if ($applicants->isEmpty()) {
+            return redirect()->back()->with('success', 'No applicants available yet.');
+        }
+
+        // Render the view with the filtered data
+        return Inertia::render('Jobs/Marks', [
+            'jobDetail' => $jobDetail,
+            'applicants' => $applicants,
+        ]);
+    }
+
 }

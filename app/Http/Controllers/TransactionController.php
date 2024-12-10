@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Applications;
 use App\Models\Transaction;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -115,6 +116,7 @@ class TransactionController extends Controller
 
                 $application = $transaction->reference()->first();
                 $application->status = 'pending';
+                $application->application_id = $this->generateUniqueApplicationId();
                 $application->save();
                 return $transaction;
             });
@@ -129,5 +131,15 @@ class TransactionController extends Controller
             'transaction' =>$transaction,
             'application' => $transaction->reference()->first(),
         ];
+    }
+
+    private function generateUniqueApplicationId()
+    {
+        do {
+            // Generate a random unique string (you can customize the format)
+            $uniqueId = 'APP-' . strtoupper(uniqid());
+        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
+
+        return $uniqueId;
     }
 }
