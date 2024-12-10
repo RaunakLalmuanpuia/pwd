@@ -5,16 +5,32 @@
         <div class="row q-gutter-md">
             <div class="flex zcard justify-between flex-inline col-12 q-pa-md">
                 <q-btn @click="$inertia.get(route('user.create'))" rounded label="New user" color="primary"/>
-                <q-input  v-model="search" placeholder="Search" @keyup="handleSearch"  outlined dense>
-                    <template v-slot:append>
-                        <q-icon name="search"/>
-                    </template>
-                </q-input>
+                <q-tabs
+                    stretch
+                    shrink
+                    v-model="state.tab"
+                    align="start"
+                    @update:model-value="handleNavigation"
+                >
+                    <q-space/>
+                    <q-input v-model="state.search"
+                             autofocus
+                             outlined
+                             dense
+                             @keyup.enter="handleSearch"
+                             bg-color="white"
+                             placeholder="Search"
+                    >
+                        <template v-slot:append>
+                            <q-icon name="search"/>
+                        </template>
+                    </q-input>
+                </q-tabs>
             </div>
 
             <div class="col-12 zcard q-pa-md">
                 <q-list  separator>
-                    <q-item v-for="item in users" :key="item.id" >
+                    <q-item v-for="item in users.data" :key="item.id" >
                         <q-item-section>
                             <q-item-label class="ztext">{{item?.name ?? '--'}} </q-item-label>
                             <q-item-label class="ztext" caption>{{item?.email ?? '--' }}</q-item-label>
@@ -39,12 +55,11 @@
                     </q-item>
                 </q-list>
                 <div class="col-12">
-<!--                    <q-pagination-->
-<!--                        @update:model-value="updatePagination"-->
-<!--                        v-model="localData.listData.current_page"-->
-<!--                        :max="pageCount"-->
-<!--                        input-->
-<!--                    />-->
+
+                    <div class="flex q-gutter-sm">
+                        <q-btn :disable="!!!users.prev_page_url" @click="$inertia.get(users.prev_page_url)" flat round icon="chevron_left"/>
+                        <q-btn :disable="!!!users.next_page_url" @click="$inertia.get(users.next_page_url)" flat round icon="chevron_right"/>
+                    </div>
                 </div>
             </div>
 
@@ -56,7 +71,7 @@
 
 <script setup>
 import AdminLayout from "@/Layouts/Admin.vue";
-import {ref, watch} from 'vue';
+import {ref, watch, reactive} from 'vue';
 import {router} from '@inertiajs/vue3'
 import {useQuasar} from "quasar";
 
@@ -66,9 +81,22 @@ defineOptions({
 })
 
 const search = ref('');
-const props = defineProps(['users']);
+const props = defineProps(['users', 'search']);
 
+const state=reactive({
+    search:props?.search,
+    tab: route().current(),
+})
+const handleSearch=e=>{
+    router.get(route('user.index'), {
+        search: state.search
+    });
 
+}
+
+const handleNavigation=(value)=>{
+    router.get(route(value))
+}
 const handleDelete=(item)=>{
     q.dialog({
         title: 'Confirm',

@@ -7,6 +7,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Inertia\Inertia;
 use paytm\paytmchecksum\PaytmChecksum;
 
 class TransactionController extends Controller
@@ -14,22 +15,20 @@ class TransactionController extends Controller
     //
     public function index(Request $request)
     {
-        $perPage = request('per_page', 10); // Number of items per page, default to 10
+
         $search = $request->get('search');
-        $type = $request->get('type');
 
-        $transaction = Transaction::all();
+        $transaction =Transaction::query()
+                ->when($search, fn(Builder $q) => $q->orWhere('order_id', 'LIKE', "$search%")
+                    ->orWhere('transaction_id', 'LIKE', "$search%"))
+                ->latest()
+                ->simplePaginate();
 
-        return inertia('Transactions/List', [
-//            'list' => Transaction::query()
-//                ->when($search, fn(Builder $q) => $q->orWhere('order_id', 'LIKE', "$search%")
-//                    ->orWhere('transaction_id', 'LIKE', "$search%"))
-//                ->when($type,fn($q)=>$q->where('type',"$type"))
-//                ->latest()
-//                ->paginate(),
-//        'list'=>Transaction::all(),
-             'transactions' => $transaction,
+        return Inertia::render('Transactions/List',[
+            'transactions' => $transaction,
+            'search' => $search,
         ]);
+
     }
 
     public function detail(Request $request,string $order_id)

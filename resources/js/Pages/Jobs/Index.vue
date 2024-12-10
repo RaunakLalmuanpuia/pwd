@@ -10,19 +10,34 @@
                 <div class="row q-col-gutter-md">
                     <div class="flex zcard justify-between flex-inline col-12 q-pa-md">
                         <q-btn @click="$inertia.get(route('job.create'))"  rounded label="New Job profile" color="primary"/>
-                        <q-input v-model=" as" placeholder="Search"  outlined dense>
-                            <template v-slot:append>
-                                <q-icon name="search"/>
-                            </template>
-                        </q-input>
+                        <q-tabs
+                            stretch
+                            shrink
+                            v-model="state.tab"
+                            align="start"
+                            @update:model-value="handleNavigation"
+                        >
+                            <q-space/>
+                            <q-input v-model="state.search"
+                                     autofocus
+                                     outlined
+                                     dense
+                                     @keyup.enter="handleSearch"
+                                     bg-color="white"
+                                     placeholder="Search"
+                            >
+                                <template v-slot:append>
+                                    <q-icon name="search"/>
+                                </template>
+                            </q-input>
+                        </q-tabs>
                     </div>
 
                     <div class="col-12">
                     </div>
                     <div class="col-12 zcard q-pa-md">
                         <q-list  separator>
-                            <q-item v-for="item in jobs" :key="item.id" >
-<!--                                {{item}}-->
+                            <q-item v-for="item in jobs.data" :key="item.id" >
                                 <q-item-section>
                                     <q-item-label class="ztext">{{item?.post_name}} </q-item-label>
                                     <q-item-label class="ztext" caption>Fee : {{ item?.application_fee}}</q-item-label>
@@ -48,24 +63,17 @@
                             </q-item>
                         </q-list>
                         <div class="col-12">
-<!--                            <q-pagination-->
-<!--                                @update:model-value="updatePagination"-->
-<!--                                v-model="localData.listData.current_page"-->
-<!--                                :max="pageCount"-->
-<!--                                input-->
-<!--                            />-->
+                            <div class="flex q-gutter-sm">
+                                <q-btn :disable="!!!jobs.prev_page_url" @click="$inertia.get(jobs.prev_page_url)" flat round icon="chevron_left"/>
+                                <q-btn :disable="!!!jobs.next_page_url" @click="$inertia.get(jobs.next_page_url)" flat round icon="chevron_right"/>
+                            </div>
                         </div>
                     </div>
 
                 </div>
 
             </div>
-            <!--    <q-dialog @hide="localData.openCreate=false" v-model="localData.openCreate">-->
-            <!--      <Create @onStaffCreated="onStaffCreated"/>-->
-            <!--    </q-dialog>-->
-            <!--    <q-dialog @hide="localData.openEdit=false" v-model="localData.openEdit">-->
-            <!--      <Edit v-if="!!localData.selectedStaff" @onStaffUpdated="onStaffUpdated" :id="localData.selectedStaff?.id"/>-->
-            <!--    </q-dialog>-->
+
         </q-page>
     </AdminLayout>
 </template>
@@ -74,13 +82,27 @@
 <script setup>
 import AdminLayout from '@/Layouts/Admin.vue';
 import { Head } from '@inertiajs/vue3';
+import {ref, reactive} from "vue";
+import {router} from "@inertiajs/vue3";
 
-const props = defineProps({
-    jobs: Object // Define jobs prop as an array
-});
-console.log(props.jobs);
-const formatDate = (date) => {
-    const d = new Date(date);
-    return d.toLocaleString(); // Format the date to a readable string
-};
+const props = defineProps(['jobs','search']);
+
+const search = ref('');
+
+const state=reactive({
+    search:props?.search,
+    tab: route().current(),
+})
+
+const handleSearch=e=>{
+    router.get(route('job.index'), {
+        search: state.search
+    });
+
+}
+
+const handleNavigation=(value)=>{
+    router.get(route(value))
+}
+
 </script>

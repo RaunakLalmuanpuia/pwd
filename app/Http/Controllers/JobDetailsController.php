@@ -18,11 +18,13 @@ class JobDetailsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jobs = JobDetail::all();
+        $search = $request->get('search');
+        $jobs = JobDetail::query()->when($search,fn($q)=>$q->where('post_name','LIKE',"$search%"))->simplepaginate(2);
         return Inertia::render('Jobs/Index',[
-            'jobs' => $jobs
+            'jobs' => $jobs,
+            'search' => $search,
         ]);
     }
 

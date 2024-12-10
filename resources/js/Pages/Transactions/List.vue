@@ -4,25 +4,35 @@
 
         <div class="row q-gutter-md">
             <div class="flex zcard justify-between flex-inline col-12 q-pa-md">
-                <q-input  v-model="searchTerm" placeholder="Search" @keyup="handleSearch"  outlined dense>
-                    <template v-slot:append>
-                        <q-icon name="search"/>
-                    </template>
-                </q-input>
-<!--                <q-option-group-->
-<!--                    :options="options"-->
-<!--                    @update:model-value="filterTransaction"-->
-<!--                    color="primary"-->
-<!--                    inline-->
-<!--                    v-model="localData.transactionType"-->
-<!--                />-->
+
+                <q-tabs
+                    stretch
+                    shrink
+                    v-model="state.tab"
+                    align="start"
+                    @update:model-value="handleNavigation"
+                >
+                    <q-space/>
+                    <q-input v-model="state.search"
+                             autofocus
+                             outlined
+                             dense
+                             @keyup.enter="handleSearch"
+                             bg-color="white"
+                             placeholder="Search"
+                    >
+                        <template #append>
+                            <q-icon name="search"/>
+                        </template>
+                    </q-input>
+                </q-tabs>
 
             </div>
-<!--{{transactions}}-->
+
             <div class="col-12 zcard q-pa-md">
                 <q-list  separator>
                     <q-item
-                        v-for="item in transactions"
+                        v-for="item in transactions.data"
                         :key="item.id" >
                         <q-item-section>
                             <q-item-label class="ztext">{{item?.order_id ?? '--'}} </q-item-label>
@@ -38,12 +48,10 @@
                     </q-item>
                 </q-list>
                 <div class="col-12">
-<!--                    <q-pagination-->
-<!--                        @update:model-value="updatePagination"-->
-<!--                        v-model="localData.listData.current_page"-->
-<!--                        :max="pageCount"-->
-<!--                        input-->
-<!--                    />-->
+                    <div class="flex q-gutter-sm">
+                        <q-btn :disable="!!!transactions.prev_page_url" @click="$inertia.get(transactions.prev_page_url)" flat round icon="chevron_left"/>
+                        <q-btn :disable="!!!transactions.next_page_url" @click="$inertia.get(transactions.next_page_url)" flat round icon="chevron_right"/>
+                    </div>
                 </div>
             </div>
 
@@ -53,7 +61,8 @@
 </template>
 <script setup>
 import AdminLayout from "@/Layouts/Admin.vue";
-import {ref} from "vue";
+import {ref, reactive} from "vue";
+import {router} from "@inertiajs/vue3";
 
 defineOptions({
     layout:AdminLayout
@@ -62,15 +71,29 @@ defineOptions({
 
 // const props = defineProps('transactions');
 
-const props = defineProps(['transactions']);
+const props = defineProps(['transactions', 'search']);
+
 const options=[
     {value:'Credit',label:'Credit'},
     {value:'Debit',label:'Debit'},
     {value:null,label:'Both'},
 ]
 
-const searchTerm = ref('');
+const search = ref('');
 
-const pagination = ref({ page: 1, rowsPerPage: 10 });
+const state=reactive({
+    search:props?.search,
+    tab: route().current(),
+})
+
+const handleSearch=e=>{
+    router.get(route('transaction.index'), {
+        search: state.search
+    });
+}
+
+const handleNavigation=(value)=>{
+    router.get(route(value))
+}
 
 </script>

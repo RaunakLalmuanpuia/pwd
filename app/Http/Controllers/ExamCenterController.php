@@ -8,12 +8,19 @@ use App\Models\ExamCenter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ExamCenterController extends Controller
 {
     // Exam center Index
-    public function index(){
-        $examCenters = ExamCenter::all(); // Fetch all available centers
+    public function index(Request $request){
+
+        $search = $request->get('search');
+
+        $examCenters = ExamCenter::query()
+            ->when($search, fn(Builder $q) => $q->where('center_name', 'LIKE', "%{$search}%"))
+            ->latest()
+            ->simplePaginate(); // Fetch all available centers
 
         return Inertia::render('ExamCenter/Index', [
             'examCenters' => $examCenters,

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -11,10 +13,25 @@ use Spatie\Permission\Models\Role;
 class UserController extends Controller
 {
     //
-    public function index(){
-        $users = User::where('id', '!=', auth()->id())->with('roles')->get();
+    public function index(Request $request){
+
+        $search = $request->get('search');
+
+
+        $users = User::query()
+            ->with('roles')
+            ->when($search, function (Builder $builder) use ($search) {
+                $builder->where(function ($query) use ($search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%')
+                        ->orWhere('phone', 'like', '%' . $search . '%');
+                });
+            })
+            ->simplePaginate();
+
         return Inertia::render('User/Index',[
-            'users' => $users
+            'users' => $users,
+            'search' => $search,
         ]);
     }
 
