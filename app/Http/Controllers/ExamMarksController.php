@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ExamMarks;
 use App\Models\Exam;
 use App\Models\JobDetail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,15 +13,32 @@ use Inertia\Inertia;
 class ExamMarksController extends Controller
 {
     // Show Job list for Exam Marks
-    public function index(){
-        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->whereIn('status', ['approved', 'eligible']);
-        }])
-            ->with('documents')
-            ->get();
+    public function index(Request $request){
+//        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
+//            $query->whereIn('status', ['approved', 'eligible']);
+//        }])
+//            ->with('documents')
+//            ->get();
+//
+//        return inertia('Exams/MarksIndex', [
+//            'jobDetails' => $jobDetails,
+//        ]);
+        $search = $request->get('search');
 
-        return inertia('Exams/MarksIndex', [
+        $jobDetails = JobDetail::query()
+            ->withCount(['applications' => function ($query) {
+                $query->whereIn('status', ['approved','eligible']);
+            }])
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where('post_name', 'LIKE', "%$search%");
+            })
+            ->latest()
+            ->simplePaginate(10); // Adjust pagination as necessary
+
+
+        return Inertia::render('Exams/MarksIndex',[
             'jobDetails' => $jobDetails,
+            'search' => $search,
         ]);
     }
     // Show for Exam Marks Page

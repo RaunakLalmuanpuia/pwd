@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder;
+use Inertia\Inertia;
 
 class ApplicationController extends Controller
 {
@@ -271,43 +273,67 @@ class ApplicationController extends Controller
         ]);
     }
     // Admin all jobs page (Submitted)
-    public function adminIndexSubmission()
+    public function adminIndexSubmission(Request $request)
     {
-        // Get all job details with the count of their pending applications and related documents
-        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->where('status', 'pending');
-        }])
-            ->with('documents')
-            ->get();
+        $search = $request->get('search');
 
-        return inertia('Applications/Submission', [
+        $jobDetails = JobDetail::query()
+            ->withCount(['applications' => function ($query) {
+                $query->where('status', 'pending');
+            }])
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where('post_name', 'LIKE', "%$search%");
+            })
+            ->latest()
+            ->simplePaginate(10); // Adjust pagination as necessary
+
+
+        return Inertia::render('Applications/Submission',[
             'jobDetails' => $jobDetails,
+            'search' => $search,
         ]);
+
     }
     // Admin all jobs page (Approved)
-    public function adminIndexApproved()
+    public function adminIndexApproved(Request $request)
     {
-        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->where('status', 'approved');
-        }])
-            ->with('documents')
-            ->get();
+        $search = $request->get('search');
 
-        return inertia('Applications/Approved', [
+        $jobDetails = JobDetail::query()
+            ->withCount(['applications' => function ($query) {
+                $query->where('status', 'approved');
+            }])
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where('post_name', 'LIKE', "%$search%");
+            })
+            ->latest()
+            ->simplePaginate(10); // Adjust pagination as necessary
+
+
+        return Inertia::render('Applications/Approved',[
             'jobDetails' => $jobDetails,
+            'search' => $search,
         ]);
     }
     // Admin all jobs page (Eligible)
-    public function adminIndexEligible()
+    public function adminIndexEligible(Request $request)
     {
-        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->where('status', 'eligible');
-        }])
-            ->with('documents')
-            ->get();
+        $search = $request->get('search');
 
-        return inertia('Applications/Eligible', [
+        $jobDetails = JobDetail::query()
+            ->withCount(['applications' => function ($query) {
+                $query->where('status', 'eligible');
+            }])
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where('post_name', 'LIKE', "%$search%");
+            })
+            ->latest()
+            ->simplePaginate(10); // Adjust pagination as necessary
+
+
+        return Inertia::render('Applications/Eligible',[
             'jobDetails' => $jobDetails,
+            'search' => $search,
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use App\Models\JobDetail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,15 +15,24 @@ class ExamController extends Controller
      * Show the form to create a new exam for a job.
      */
     // Job List for Marks.
-    public function index(){
-        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-            $query->whereIn('status', ['approved','eligible']);
-        }])
-            ->with('documents')
-            ->get();
+    public function index(Request $request){
 
-        return inertia('Exams/Index', [
+        $search = $request->get('search');
+
+        $jobDetails = JobDetail::query()
+            ->withCount(['applications' => function ($query) {
+                $query->whereIn('status', ['approved','eligible']);
+            }])
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where('post_name', 'LIKE', "%$search%");
+            })
+            ->latest()
+            ->simplePaginate(10); // Adjust pagination as necessary
+
+
+        return Inertia::render('Exams/Index',[
             'jobDetails' => $jobDetails,
+            'search' => $search,
         ]);
     }
     // Create Exam
