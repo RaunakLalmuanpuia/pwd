@@ -126,17 +126,47 @@ class AdminApplicationController extends Controller
         ]);
     }
     // Admin view All Approved application list
-    public function adminShowApproved(JobDetail $jobDetails)
+//    public function adminShowApproved(JobDetail $jobDetails)
+//    {
+//        $perPage = request('per_page', 10); // Number of items per page, default to 10
+//        $search = request('search', ''); // Search term from the request
+//        $jobDetails->load([
+//            'applications' => function ($query) {
+//                $query->where('status', 'approved');
+//            },
+//            'documents',
+//            'applications.applicationDocuments.jobDocument',
+//        ]);
+//        // Load filtered and paginated applications
+//        $applications = $jobDetails->applications()
+//            ->where('status', 'approved')
+//            ->with(['applicant.user',
+//                'examCenter',
+//                'applicant.exams' => function ($query) use ($jobDetails) {
+//                    $query->where('exams.job_details_id', $jobDetails->id); // Specify table for `job_details_id`
+//                },
+//                'applicant.examMarks.subject',])
+//            ->whereHas('applicant.user', function ($query) use ($search) {
+//                if ($search) {
+//                    $query->where('name', 'like', '%' . $search . '%');
+//                }
+//            })
+//            ->paginate($perPage);
+//
+//        $examCenters = ExamCenter::all(); // Fetch all available centers
+//
+//        // Return the Inertia view with the specific JobDetail
+//        return inertia('Applications/ApprovedApplications', [
+//            'jobDetails' => $jobDetails,
+//            'applications' => $applications,
+//            'examCenters' => $examCenters,
+//        ]);
+//    }
+    public function adminShowApproved(Request $request, JobDetail $jobDetails)
     {
-        $perPage = request('per_page', 10); // Number of items per page, default to 10
-        $search = request('search', ''); // Search term from the request
-        $jobDetails->load([
-            'applications' => function ($query) {
-                $query->where('status', 'approved');
-            },
-            'documents',
-            'applications.applicationDocuments.jobDocument',
-        ]);
+
+        $search = $request->get('search');
+
         // Load filtered and paginated applications
         $applications = $jobDetails->applications()
             ->where('status', 'approved')
@@ -148,10 +178,12 @@ class AdminApplicationController extends Controller
                 'applicant.examMarks.subject',])
             ->whereHas('applicant.user', function ($query) use ($search) {
                 if ($search) {
-                    $query->where('name', 'like', '%' . $search . '%');
+                    $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('application_id', 'like', '%' . $search . '%')
+                        ->orWhere('parents_name', 'like', '%' . $search . '%');
                 }
             })
-            ->paginate($perPage);
+            ->simplePaginate(2);
 
         $examCenters = ExamCenter::all(); // Fetch all available centers
 
@@ -160,6 +192,7 @@ class AdminApplicationController extends Controller
             'jobDetails' => $jobDetails,
             'applications' => $applications,
             'examCenters' => $examCenters,
+            'search' => $search,
         ]);
     }
     // Admin view All Eligible application list
@@ -196,7 +229,6 @@ class AdminApplicationController extends Controller
     // Admin change status of applicants
     public function bulkChangeStatus(Request $request)
     {
-//        dd($request);
         $request->validate([
             'status' => 'required|in:approved,pending,eligible',
             'application_ids' => 'required|array',
@@ -208,12 +240,6 @@ class AdminApplicationController extends Controller
         foreach ($request->application_ids as $applicationId) {
             $application = Applications::findOrFail($applicationId);
             $application->status = $status;
-
-//            if ($status === 'approved') {
-//                $application->application_id = $this->generateUniqueApplicationId();
-//            } elseif ($status === 'pending') {
-//                $application->application_id = null;
-//            }
 
             $application->save();
         }

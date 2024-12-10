@@ -3,16 +3,28 @@
         <p class="page-title">QUALIFIED LIST</p>
 
         <div class="flex justify-between items-center zcard q-pa-md">
-            <q-input v-model="searchTerm"
-                     dense
-                     outlined
-                     placeholder="Search"
-                     style="width: 240px"
-                     @input="fetchApplications">
-                <template v-slot:append>
-                    <q-icon name="search"/>
-                </template>
-            </q-input>
+
+            <q-tabs
+                stretch
+                shrink
+                v-model="state.tab"
+                align="start"
+                @update:model-value="handleNavigation"
+            >
+                <q-space/>
+                <q-input v-model="state.search"
+                         autofocus
+                         outlined
+                         dense
+                         @keyup.enter="handleSearch"
+                         bg-color="white"
+                         placeholder="Search"
+                >
+                    <template v-slot:append>
+                        <q-icon name="search"/>
+                    </template>
+                </q-input>
+            </q-tabs>
 
             <div class="flex items-center q-gutter-md">
                 <q-btn @click="assignExamCenter" color="primary"  :disabled="selectedApplications.length === 0"  label="Assign Exam Center"/>
@@ -133,32 +145,14 @@
                     </tbody>
                 </table>
                 <div class="flex justify-between items-center mt-4">
-                    <q-select
-                        v-model="pagination.rowsPerPage"
-                        :options="rowsPerPageOptions"
-                        label="Rows per page"
-                        dense
-                        outlined
-                        style="width: 130px"
-                        @update:model-value="updateRowsPerPage"
-                    />
-                    <div>
-                        <button
-                            @click="prevPage"
-                            :disabled="pagination.page === 1"
-                            class="bg-gray-200 text-black py-1 px-4 rounded"
-                        >
-                            Previous
-                        </button>
-                        <span>Page {{ pagination.page }} of {{ applications.last_page }}</span>
-                        <button
-                            @click="nextPage"
-                            :disabled="pagination.page === applications.last_page"
-                            class="bg-gray-200 text-black py-1 px-4 rounded"
-                        >
-                            Next
-                        </button>
+                    <div class="col-12">
+
+                        <div class="flex q-gutter-sm">
+                            <q-btn :disable="!!!applications.prev_page_url" @click="$inertia.get(applications.prev_page_url)" flat round icon="chevron_left"/>
+                            <q-btn :disable="!!!applications.next_page_url" @click="$inertia.get(applications.next_page_url)" flat round icon="chevron_right"/>
+                        </div>
                     </div>
+
 
 
                 </div>
@@ -251,7 +245,7 @@
 <script setup>
 
 import AdminLayout from "@/Layouts/Admin.vue";
-import { ref, computed, watch } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import {useQuasar} from "quasar";
 defineOptions({
@@ -260,7 +254,7 @@ defineOptions({
 
 const q = useQuasar();
 
-const props = defineProps(['jobDetails','examCenters', 'applications']);
+const props = defineProps(['jobDetails','examCenters', 'applications','search']);
 
 const approveRejectForm = useForm({
     application_ids: [],
@@ -276,56 +270,40 @@ const examCenterForm = useForm({
 const marksDialogOpen = ref(false);
 const assignExamCenterDialogOpen = ref(false);
 
-const searchTerm = ref('');
-const applications = ref({ data: [], last_page: 1 }); // Replace with actual API data
-const pagination = ref({ page: 1, rowsPerPage: 10 });
-const loading = ref(false);
-
-const rowsPerPageOptions = [10, 20, 50, 100]; // Define available options for rows per page
-pagination.value.rowsPerPage = rowsPerPageOptions[0]; // Set the default rows per page
-
-const updateRowsPerPage = () => {
-    pagination.value.page = 1; // Reset to the first page
-    fetchApplications(); // Fetch data with the updated rows per page
+// Handle "View Marks" button click
+const viewMarks = (application) => {
+    selectedApplicant.value = application.applicant;
+    marksDialogOpen.value = true;
+};
+// Assign Exam Center Dialog
+const assignExamCenter = () => {
+    assignExamCenterDialogOpen.value = true;
 };
 
-const fetchApplications = () => {
-    loading.value = true;
 
-    const params = {
-        page: pagination.value.page,
-        per_page: pagination.value.rowsPerPage,
-        search: searchTerm.value,
-    };
+const state=reactive({
+    search:props?.search,
+    tab: route().current(),
+})
 
-    router.get(route('admin.applications.show_approved', { jobDetails: props.jobDetails.id }), params, {
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: ({ props }) => {
-            applications.value = props.applications;
-            loading.value = false;
+const search = ref('');
 
-        },
+
+const handleSearch=e=>{
+    router.get(route('admin.applications.show_approved', props.jobDetails.id), {
+        search: state.search
     });
-};
 
-// Pagination Controls
-const nextPage = () => {
-    if (pagination.value.page < applications.value.last_page) {
-        pagination.value.page++;
-        fetchApplications(); // Ensure this is called after incrementing the page
-    }
-};
+}
 
-const prevPage = () => {
-    if (pagination.value.page > 1) {
-        pagination.value.page--;
-        fetchApplications();
-    }
-};
+const handleNavigation=(value)=> {
+    router.get(route(value))
+}
 
-watch([pagination, searchTerm], fetchApplications, { immediate: true });
 
+
+
+const loading = ref(false);
 
 
 const selectedApplicant = ref(null);
@@ -334,33 +312,17 @@ const selectedApplicant = ref(null);
 const selectedApplications = ref([]);
 
 const allSelected = computed({
-    get: () => applications.value.data.length > 0 && selectedApplications.value.length === applications.value.data.length,
+    get: () => props.applications.data.length > 0 && selectedApplications.value.length === props.applications.data.length,
     set: (value) => toggleSelectAll(value),
 });
 
 function toggleSelectAll(checked) {
     selectedApplications.value = checked
-        ? applications.value.data.map((application) => application.id)
+        ? props.applications.data.map((application) => application.id)
         : [];
 }
-watch(
-    () => applications.value.data,
-    () => {
-        selectedApplications.value = [];
-    }
-);
-// Handle "View Marks" button click
-const viewMarks = (application) => {
-    selectedApplicant.value = application.applicant;
-    marksDialogOpen.value = true;
-};
 
 
-
-// Assign Exam Center Dialog
-const assignExamCenter = () => {
-    assignExamCenterDialogOpen.value = true;
-};
 
 
 // Function to assign exam center
@@ -446,11 +408,6 @@ const eligibleSelectedApplications = () => {
         });
     })
 };
-
-
-
-
-
 
 </script>
 <style scoped>
