@@ -32,7 +32,7 @@
             </div>
             <div class="col-xs-12 col-sm-3 text-grey-6">Regn No</div>
             <div class="col-xs-12 col-sm-3 text-weight-medium">
-                {{ jobDetails.applications[0]?.id || '--' }}
+                {{ jobDetails.applications[0]?.application_id || '--' }}
             </div>
 
             <div class="col-xs-12 col-sm-3 text-grey-6">Applied Jobs</div>

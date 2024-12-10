@@ -69,27 +69,25 @@ const $q = useQuasar();
 defineOptions({
     layout:AdminLayout
 })
-const data = defineProps(['transactions']);
 
+const data = defineProps(['transactions']);
 
 const localState = ref({
     transaction: data.transactions,
     application: data.transactions.reference,
 });
 
-console.log(localState);
-
 const canSync=computed(()=>{
-    if (data.transaction?.status === 'TXN_FAILURE') {
+    if (data.transactions?.status === 'TXN_FAILURE') {
         return false;
     }
-    if (data.transaction?.status === 'TXN_SUCCESS') {
+    if (data.transactions?.status === 'TXN_SUCCESS') {
         return false;
     }
     return true;
 
 })
-console.log(data.transactions.order_id)
+
 const syncTransaction = () => {
     const order_id = data.transactions.order_id;
 

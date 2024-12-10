@@ -13,6 +13,8 @@ use App\Http\Controllers\ExamMarksController;
 use App\Http\Controllers\ExamCenterController;
 use App\Http\Controllers\PaytmController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
+
 
 
 
@@ -217,6 +219,25 @@ Route::group(['prefix' => 'transaction',], function () {
     Route::get('{order_id}/sync', [TransactionController::class, 'syncTransaction'])->name('transaction.sync');
 });
 
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/examCenter', [ExamCenterController::class, 'index'])->middleware('role:Admin')->name('exam_center.index');
+    Route::get('/examCenter/create', [ExamCenterController::class, 'create_exam_center'])->middleware('role:Admin')->name('exam_center.create');
+    Route::post('/examCenter/store', [ExamCenterController::class, 'store_exam_center'])->middleware('role:Admin')->name('exam_center.store');
+    Route::get('{model}', [ExamCenterController::class, 'edit_exam_center'])->middleware('role:Admin')->name('exam_center.edit');
+    Route::put('{model}', [ExamCenterController::class, 'update_exam_center'])->middleware('role:Admin')->name('exam_center.update');
+    Route::delete('{model}', [ExamCenterController::class, 'destroy_exam_center'])->middleware('role:Admin')->name('exam_center.destroy');
+});
+
+
+Route::group(['prefix' => 'user'], function () {
+    Route::get('index', [UserController::class, 'index'])->name('user.index');
+    Route::get('create', [UserController::class, 'create'])->name('user.create');
+    Route::get('{model}', [UserController::class, 'edit'])->name('user.edit');
+    Route::post('', [UserController::class, 'store'])->name('user.store');
+    Route::put('{model}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('{model}', [UserController::class, 'destroy'])->name('user.destroy');
+});
 require __DIR__.'/auth.php';
 
 
