@@ -127,6 +127,7 @@
                     </tbody>
                 </table>
                 <div class="flex justify-between items-center mt-4">
+<!--                    {{applications.data}}-->
                     <q-select
                         v-model="state.perPage"
                         dense
@@ -137,10 +138,42 @@
                         style="width: 150px;"
                     />
 
-                    <q-btn :disable="!!!applications.prev_page_url" @click="$inertia.get(applications.prev_page_url)" flat round icon="chevron_left"/>
-                    <q-btn :disable="!!!applications.next_page_url" @click="$inertia.get(applications.next_page_url)" flat round icon="chevron_right"/>
 
+                    <div class="flex items-center q-gutter-sm">
+                        <!-- First Page Button -->
+                        <q-btn
+                            :disable="applications.current_page === 1"
+                            @click="navigateToPage(applications.first_page_url)"
+                            flat round icon="first_page"
+                        />
 
+                        <!-- Previous Page Button -->
+                        <q-btn
+                            :disable="!!!applications.prev_page_url"
+                            @click="navigateToPage(applications.prev_page_url)"
+                            flat round icon="chevron_left"
+                        />
+
+                        <!-- Page Information -->
+                        <span class="text-gray-600">
+                            Page {{ applications.current_page }} of {{ applications.last_page }}
+                        </span>
+
+                        <!-- Next Page Button -->
+                        <q-btn
+                            :disable="!!!applications.next_page_url"
+                            @click="navigateToPage(applications.next_page_url)"
+                            flat round icon="chevron_right"
+                        />
+
+                        <!-- Last Page Button -->
+                        <q-btn
+                            :disable="applications.current_page === applications.last_page"
+                            @click="navigateToPage(applications.last_page_url)"
+                            flat round icon="last_page"
+
+                        />
+                    </div>
 
                 </div>
             </div>
@@ -171,7 +204,7 @@ const approveRejectForm = useForm({
 const state=reactive({
     search:props?.search,
     tab: route().current(),
-    perPage: props?.perPage || 3, // Default perPage
+    perPage: props?.perPage || 1, // Default perPage
 })
 
 const search = ref('');
@@ -189,6 +222,15 @@ const handleNavigation=(value)=> {
     router.get(route(value))
 }
 
+const navigateToPage = (url) => {
+    // Append the perPage parameter to pagination URLs
+    if (url) {
+        router.get(url, {
+            search: state.search,
+            perPage: state.perPage,
+        });
+    }
+};
 
 const selectedApplications = ref([]);
 

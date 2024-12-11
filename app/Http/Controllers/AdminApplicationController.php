@@ -11,7 +11,6 @@ use Inertia\Inertia;
 
 class AdminApplicationController extends Controller
 {
-    //
 
     // Admin See applicant Detail
     public function showApplicantDetail(JobDetail $jobDetails, Applications $application)
@@ -96,7 +95,6 @@ class AdminApplicationController extends Controller
             'search' => $search,
         ]);
     }
-
     // Admin view All submitted application list
     public function adminShowSubmitted(Request $request, JobDetail $jobDetails)
     {
@@ -113,6 +111,8 @@ class AdminApplicationController extends Controller
                 }
             })
             ->paginate($perPage);
+
+//        dd($applications);
 
         return inertia('Applications/SubmittedApplication', [
             'jobDetails' => $jobDetails,
@@ -144,7 +144,7 @@ class AdminApplicationController extends Controller
                         ->orWhere('parents_name', 'like', '%' . $search . '%');
                 }
             })
-            ->simplePaginate($perPage);
+            ->paginate($perPage);
 
         $examCenters = ExamCenter::all(); // Fetch all available centers
 
