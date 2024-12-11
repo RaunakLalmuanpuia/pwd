@@ -70,6 +70,7 @@ class ExamController extends Controller
             'subjects' => 'required|array|min:1',
             'subjects.*.subject_name' => 'required|string|max:255',
             'subjects.*.exam_date' => 'required|date',
+            'subjects.*.full_mark' => 'required',
             'subjects.*.start_time' => 'required|date_format:H:i',
             'subjects.*.end_time' => 'required|date_format:H:i',
         ]);
@@ -91,6 +92,7 @@ class ExamController extends Controller
             $exam->subjects()->create([
                 'subject_name' => $subject['subject_name'],
                 'exam_date' => $subject['exam_date'],
+                'full_mark' => $subject['full_mark'],
                 'start_time' => $subject['start_time'],
                 'end_time' => $subject['end_time'],
             ]);
@@ -134,6 +136,7 @@ class ExamController extends Controller
             'subjects.*.id' => 'nullable',
             'subjects.*.subject_name' => 'required|string|max:255',
             'subjects.*.exam_date' => 'required|date',
+            'subjects.*.full_mark' => 'required',
             'subjects.*.start_time' => 'required',
             'subjects.*.end_time' => 'required',
         ]);
@@ -166,6 +169,7 @@ class ExamController extends Controller
                 $exam->subjects()->where('id', $subjectData['id'])->update([
                     'subject_name' => $subjectData['subject_name'],
                     'exam_date' => $subjectData['exam_date'],
+                    'full_mark' => $subjectData['full_mark'],
                     'start_time' => $subjectData['start_time'],
                     'end_time' => $subjectData['end_time'],
                 ]);
@@ -174,6 +178,7 @@ class ExamController extends Controller
                 $exam->subjects()->create([
                     'subject_name' => $subjectData['subject_name'],
                     'exam_date' => $subjectData['exam_date'],
+                    'full_mark' => $subjectData['full_mark'],
                     'start_time' => $subjectData['start_time'],
                     'end_time' => $subjectData['end_time'],
                 ]);

@@ -83,15 +83,17 @@
         <div class="col-xs-12">
             <q-markup-table flat>
                 <q-tr>
-                    <q-th align="left" style="width: 30%;">Subject</q-th>
+                    <q-th align="left" style="width: 20%;">Subject</q-th>
                     <q-th align="center" style="width: 20%;">Date</q-th>
-                    <q-th align="center" style="width: 20%;">Start</q-th>
+                    <q-th align="center" style="width: 15%;">Pass Mark</q-th>
+                    <q-th align="center" style="width: 15%;">Start</q-th>
                     <q-th align="center" style="width: 20%;">End</q-th>
                     <q-th align="center" style="width: 10%;">Action</q-th>
                 </q-tr>
                 <q-tr v-for="(item, index) in form.subjects" :key="index">
                     <q-td align="left">{{ item?.subject_name }}</q-td>
                     <q-td align="center">{{ formatDate(item?.exam_date) }}</q-td>
+                    <q-td align="center">{{ item?.full_mark }}</q-td>
                     <q-td align="center">{{ formatTimeToAmPm(item?.start_time) }}</q-td>
                     <q-td align="center">{{ formatTimeToAmPm(item?.end_time) }}</q-td>
                     <q-td align="center">
@@ -142,6 +144,16 @@
                                  ]"
                          type="date"
                          label="Date of Exam"/>
+
+                <q-input v-model="subjectForm.full_mark"
+                         outlined
+                         dense
+                         class="my-input"
+                         label="Full Mark"
+                         :rules="[
+                           val=>!isNaN(val)  || 'Invalid format'
+                         ]"
+                />
 
                 <q-input v-model="subjectForm.start_time"
                          outlined
@@ -194,6 +206,16 @@
                                  ]"
                          type="date"
                          label="Date of Exam"/>
+
+                <q-input v-model="editSubjectForm.full_mark"
+                         outlined
+                         dense
+                         class="my-input"
+                         label="Full Mark"
+                         :rules="[
+                           val=>!isNaN(val)  || 'Invalid format'
+                         ]"
+                />
 
                 <q-input v-model="editSubjectForm.start_time"
                          outlined
@@ -253,6 +275,7 @@ const form = useForm({
         id: subject.id,
         subject_name: subject.subject_name,
         exam_date: subject.exam_date,
+        full_mark: subject.full_mark,
         start_time: subject.start_time,
         end_time: subject.end_time,
     })),
@@ -264,6 +287,7 @@ const subjectForm = ref({
     id:'',
     subject_name: '',
     exam_date: '',
+    full_mark: '',
     start_time: '',
     end_time: ''
 });
@@ -272,6 +296,7 @@ const editSubjectForm = ref({
     id: '',
     subject_name: '',
     exam_date: '',
+    full_mark: '',
     start_time: '',
     end_time: ''
 });
@@ -280,6 +305,7 @@ function resetSubjectForm() {
     subjectForm.value = {
         subject_name: '',
         exam_date: '',
+        full_mark: '',
         start_time: '',
         end_time: ''
     };
@@ -290,6 +316,7 @@ function addSubject() {
         id: null, // Unique ID for the new subject
         subject_name: subjectForm.value.subject_name,
         exam_date: subjectForm.value.exam_date,
+        full_mark: subjectForm.value.full_mark,
         start_time: subjectForm.value.start_time,
         end_time: subjectForm.value.end_time,
     };

@@ -15,6 +15,8 @@ class ExamMarks extends Model
         'applicant_id',
         'subject_id',
         'marks',
+        'remark',
+        'passed'
     ];
 
     public function applicant()

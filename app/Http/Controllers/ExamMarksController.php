@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Application;
+use App\Models\Applications;
 use App\Models\ExamMarks;
 use App\Models\Exam;
 use App\Models\JobDetail;
+use App\Utils\ApplicationStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 
@@ -14,15 +18,7 @@ class ExamMarksController extends Controller
 {
     // Show Job list for Exam Marks
     public function index(Request $request){
-//        $jobDetails = JobDetail::withCount(['applications' => function ($query) {
-//            $query->whereIn('status', ['approved', 'eligible']);
-//        }])
-//            ->with('documents')
-//            ->get();
-//
-//        return inertia('Exams/MarksIndex', [
-//            'jobDetails' => $jobDetails,
-//        ]);
+
         $search = $request->get('search');
 
         $jobDetails = JobDetail::query()
@@ -51,6 +47,7 @@ class ExamMarksController extends Controller
         ]);
     }
 
+    // Old
     public function create(Exam $exam)
     {
         $exam->load('subjects');
@@ -79,11 +76,52 @@ class ExamMarksController extends Controller
             'examMarks' => $examMarks,
         ]);
     }
+    // New
+    public function assignMarks(Request $request){
 
+        $applicant_id = $request->get('search');
+
+        $model = Applications::query()
+            ->where('status', 'approved')
+            ->where('application_id', $applicant_id)->with('jobDetail', 'applicant.user.address')->first();
+//        dd($model);
+        $subjects = collect();
+
+        if($model){
+
+            // Extract the subjects related to the job detail's exams
+            // Extract the subjects related to the job detail's exams
+            $subjects = $model->jobDetail->exams
+                ->flatMap(fn($exam) => $exam->subjects->map(function ($subject) use ($exam, $model) {
+                    // Include existing marks if available
+                    $existingMarks = ExamMarks::where('applicant_id', $model->applicant_id)
+                        ->where('subject_id', $subject->id)
+                        ->first();
+
+                    return [
+                        'exam_name' => $exam->exam_name, // Include exam name
+                        'subject_id' => $subject->id,
+                        'subject_name' => $subject->subject_name,
+                        'full_mark' => $subject->full_mark,
+                        'existing_marks' => $existingMarks?->marks,
+                        'remark' => $existingMarks?->remark,
+                        'passed' => (bool)($existingMarks?->passed)
+                    ];
+                }))
+                ->groupBy('exam_name'); // Group subjects by 'exam_name'
+
+
+        }
+
+        return Inertia::render('ExamMark/Result', [
+            'applicants' => $model,
+            'subjects' => $subjects,
+        ]);
+    }
     // Store Exam Marks
-
     public function store(Request $request, Exam $exam)
     {
+//        dd($request);
         $validated = $request->validate([
             'marks' => 'required|array',
             'marks.*.applicant_id' => 'required|exists:applicants,id',
@@ -103,6 +141,56 @@ class ExamMarksController extends Controller
         }
 
         return redirect()->route('exams.marks.show', $exam->job_details_id)->with('success', 'Marks updated successfully.');
+    }
+
+    public function storeExamMarks(Request $request)
+    {
+//        dd($request);
+        // Validate the incoming request
+        $validator = Validator::make($request->all(), [
+            'application_id' => 'required|exists:applications,id',
+            'subjects' => 'required|array',
+            'subjects.*.*.subject_name' => 'required|string',
+            'subjects.*.*.existing_marks' => 'nullable|numeric|min:0',
+            'subjects.*.*.remark' => 'nullable|string',
+            'subjects.*.*.passed' => 'required|boolean', // Change to required
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $applicationId = $request->input('application_id');
+        $subjects = $request->input('subjects');
+
+        // Retrieve the associated application
+        $application = Applications::find($applicationId);
+
+        if (!$application) {
+            return response()->json(['error' => 'Application not found'], 404);
+        }
+
+
+        // Store or update marks for each subject
+        foreach ($subjects as $examName => $examSubjects) {
+            foreach ($examSubjects as $subject) {
+                // Ensure the required keys exist before accessing them
+
+                ExamMarks::updateOrCreate(
+                    [
+                        'applicant_id' => $application->applicant_id,
+                        'subject_id' => $subject['subject_id'],
+                    ],
+                    [
+                        'marks' => $subject['existing_marks'] ?? null,
+                        'remark' => $subject['remark'] ?? null,
+                        'passed' => $subject['passed'],
+                    ]
+                );
+            }
+        }
+        return redirect()->back()->with('success', 'Marks updated successfully.');
+//        return response()->json(['message' => 'Exam marks stored successfully']);
     }
 
     public function showMarks(JobDetail $model)

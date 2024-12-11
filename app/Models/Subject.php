@@ -14,6 +14,7 @@ class Subject extends Model
     protected $fillable = [
         'exam_id',
         'subject_name',
+        'full_mark',
         'exam_date',
         'exam_time',
         'start_time',

@@ -150,10 +150,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/exam-marks', [ExamMarksController::class, 'index'])->middleware('role:Admin')->name('exams.marks.index');
     //Show exam marks page
     Route::get('/assign-marks/{jobDetail}/show', [ExamMarksController::class, 'show'])->middleware('role:Admin')->name('exams.marks.show');
-    // Display form to assign marks to applicants
+    // Display form to assign marks to applicants (Creating new)
     Route::get('/exams/{exam}/assign-marks', [ExamMarksController::class, 'create'])->middleware('role:Admin')->name('exams.assignMarks');
-    // Store the marks assigned to applicants
+
+
+    Route::get('/exams/assign-marks', [ExamMarksController::class, 'assignMarks'])->middleware('role:Admin')->name('exams.marks_assign');
+
+    // Store the marks assigned to applicants (Old)
     Route::post('/exams/{exam}/assign-marks', [ExamMarksController::class, 'store'])->middleware('role:Admin')->name('exams.storeMarks');
+
+    // Store the marks assigned to applicants (New)
+    Route::post('/exams/store-marks', [ExamMarksController::class, 'storeExamMarks'])->middleware('role:Admin')->name('exams.storeExamMarks');
     //Admin show marks
     Route::get('/exam/{model}/marks', [ExamMarksController::class, 'showMarks'])->middleware('role:Admin')->name('job.showMarks');
     // Assign Exam Center

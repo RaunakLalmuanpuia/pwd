@@ -25,6 +25,14 @@
                         </template>
                     </q-input>
                 </q-tabs>
+
+                <div class="flex q-gutter-sm">
+                    <q-btn @click="generateExcel" color="accent" label="Generate Excel" class=""/>
+                    <q-separator vertical/>
+                    <q-btn outline :to="{name:'admit-card:download'}" label="Download Admit Card" no-caps/>
+                    <q-separator vertical/>
+                    <q-btn color="primary"  @click="$inertia.get(route('exams.marks_assign'))" label="Exam Result Entry" no-caps/>
+                </div>
             </div>
 
             <div class="col-12 zcard q-pa-md">
