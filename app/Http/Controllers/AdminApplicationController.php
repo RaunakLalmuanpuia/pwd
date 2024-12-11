@@ -98,21 +98,15 @@ class AdminApplicationController extends Controller
     }
 
     // Admin view All submitted application list
-    public function adminShowSubmitted(JobDetail $jobDetails)
+    public function adminShowSubmitted(Request $request, JobDetail $jobDetails)
     {
-        $perPage = request('per_page', 10); // Number of items per page, default to 10
-        $search = request('search', ''); // Search term from the request
-        $jobDetails->load([
-            'applications' => function ($query) {
-                $query->where('status', 'pending');
-            },
-            'documents',
-            'applications.applicationDocuments.jobDocument',
-        ]);
+        $search = $request->get('search');
+        $perPage = $request->get('perPage', 5); // Default to 2 if not provided
+
         // Load filtered and paginated applications
         $applications = $jobDetails->applications()
             ->where('status', 'pending')
-            ->with(['applicant.user', 'examCenter', 'applicant.exams', 'applicant.examMarks.subject',])
+            ->with(['applicant.user'])
             ->whereHas('applicant.user', function ($query) use ($search) {
                 if ($search) {
                     $query->where('name', 'like', '%' . $search . '%');
@@ -123,49 +117,16 @@ class AdminApplicationController extends Controller
         return inertia('Applications/SubmittedApplication', [
             'jobDetails' => $jobDetails,
             'applications' => $applications,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
     // Admin view All Approved application list
-//    public function adminShowApproved(JobDetail $jobDetails)
-//    {
-//        $perPage = request('per_page', 10); // Number of items per page, default to 10
-//        $search = request('search', ''); // Search term from the request
-//        $jobDetails->load([
-//            'applications' => function ($query) {
-//                $query->where('status', 'approved');
-//            },
-//            'documents',
-//            'applications.applicationDocuments.jobDocument',
-//        ]);
-//        // Load filtered and paginated applications
-//        $applications = $jobDetails->applications()
-//            ->where('status', 'approved')
-//            ->with(['applicant.user',
-//                'examCenter',
-//                'applicant.exams' => function ($query) use ($jobDetails) {
-//                    $query->where('exams.job_details_id', $jobDetails->id); // Specify table for `job_details_id`
-//                },
-//                'applicant.examMarks.subject',])
-//            ->whereHas('applicant.user', function ($query) use ($search) {
-//                if ($search) {
-//                    $query->where('name', 'like', '%' . $search . '%');
-//                }
-//            })
-//            ->paginate($perPage);
-//
-//        $examCenters = ExamCenter::all(); // Fetch all available centers
-//
-//        // Return the Inertia view with the specific JobDetail
-//        return inertia('Applications/ApprovedApplications', [
-//            'jobDetails' => $jobDetails,
-//            'applications' => $applications,
-//            'examCenters' => $examCenters,
-//        ]);
-//    }
     public function adminShowApproved(Request $request, JobDetail $jobDetails)
     {
 
         $search = $request->get('search');
+        $perPage = $request->get('perPage', 5); // Default to 2 if not provided
 
         // Load filtered and paginated applications
         $applications = $jobDetails->applications()
@@ -183,7 +144,7 @@ class AdminApplicationController extends Controller
                         ->orWhere('parents_name', 'like', '%' . $search . '%');
                 }
             })
-            ->simplePaginate(2);
+            ->simplePaginate($perPage);
 
         $examCenters = ExamCenter::all(); // Fetch all available centers
 
@@ -193,20 +154,16 @@ class AdminApplicationController extends Controller
             'applications' => $applications,
             'examCenters' => $examCenters,
             'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
     // Admin view All Eligible application list
-    public function adminShowEligible(JobDetail $jobDetails)
+    public function adminShowEligible(Request $request, JobDetail $jobDetails)
     {
-        $perPage = request('per_page', 10); // Number of items per page, default to 10
-        $search = request('search', ''); // Search term from the request
-        $jobDetails->load([
-            'applications' => function ($query) {
-                $query->where('status', 'eligible');
-            },
-            'documents',
-            'applications.applicationDocuments.jobDocument',
-        ]);
+        $search = $request->get('search');
+        $perPage = $request->get('perPage', 5); // Default to 2 if not provided
+
+
         // Load filtered and paginated applications
         $applications = $jobDetails->applications()
             ->where('status', 'eligible')
@@ -217,13 +174,18 @@ class AdminApplicationController extends Controller
                 'applicant.examMarks.subject',])
             ->whereHas('applicant.user', function ($query) use ($search) {
                 if ($search) {
-                    $query->where('name', 'like', '%' . $search . '%');
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhere('application_id', 'like', '%' . $search . '%')
+                        ->orWhere('parents_name', 'like', '%' . $search . '%');
                 }
             })
             ->paginate($perPage);
+
         return inertia('Applications/EligibleApplications', [
             'jobDetails' => $jobDetails,
             'applications' => $applications,
+            'search' => $search,
+            'perPage' => $perPage,
         ]);
     }
     // Admin change status of applicants

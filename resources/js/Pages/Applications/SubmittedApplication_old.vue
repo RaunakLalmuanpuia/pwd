@@ -2,27 +2,16 @@
     <q-page padding>
         <p class="page-title">SUBMITTED APPLICATIONS</p>
         <div class="flex justify-between items-center zcard q-pa-md">
-            <q-tabs
-                stretch
-                shrink
-                v-model="state.tab"
-                align="start"
-                @update:model-value="handleNavigation"
-            >
-                <q-space/>
-                <q-input v-model="state.search"
-                         autofocus
-                         outlined
-                         dense
-                         @keyup.enter="handleSearch"
-                         bg-color="white"
-                         placeholder="Search"
-                >
-                    <template v-slot:append>
-                        <q-icon name="search"/>
-                    </template>
-                </q-input>
-            </q-tabs>
+            <q-input v-model="searchTerm"
+                     dense
+                     outlined
+                     placeholder="Search"
+                     style="width: 240px"
+                     @input="fetchApplications">
+                <template v-slot:append>
+                    <q-icon name="search"/>
+                </template>
+            </q-input>
             <div class="flex items-center q-gutter-md">
                 <q-btn @click="approveSelectedApplications" color="primary"  :disabled="selectedApplications.length === 0"  label="Mark as Qualified"/>
                 <q-separator vertical/>
@@ -128,18 +117,31 @@
                 </table>
                 <div class="flex justify-between items-center mt-4">
                     <q-select
-                        v-model="state.perPage"
+                        v-model="pagination.rowsPerPage"
+                        :options="rowsPerPageOptions"
+                        label="Rows per page"
                         dense
                         outlined
-                        :options="[5, 10, 20, 25]"
-                        label="Results per page"
-                        @update:model-value="handleSearch"
-                        style="width: 150px;"
+                        style="width: 130px"
+                        @update:model-value="updateRowsPerPage"
                     />
-
-                    <q-btn :disable="!!!applications.prev_page_url" @click="$inertia.get(applications.prev_page_url)" flat round icon="chevron_left"/>
-                    <q-btn :disable="!!!applications.next_page_url" @click="$inertia.get(applications.next_page_url)" flat round icon="chevron_right"/>
-
+                    <div>
+                        <button
+                            @click="prevPage"
+                            :disabled="pagination.page === 1"
+                            class="bg-gray-200 text-black py-1 px-4 rounded"
+                        >
+                            Previous
+                        </button>
+                        <span>Page {{ pagination.page }} of {{ applications.last_page }}</span>
+                        <button
+                            @click="nextPage"
+                            :disabled="pagination.page === applications.last_page"
+                            class="bg-gray-200 text-black py-1 px-4 rounded"
+                        >
+                            Next
+                        </button>
+                    </div>
 
 
                 </div>
@@ -151,7 +153,7 @@
 <script setup>
 
 import AdminLayout from "@/Layouts/Admin.vue";
-import {ref, computed, watch, reactive} from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import {useQuasar} from "quasar";
 defineOptions({
@@ -160,51 +162,97 @@ defineOptions({
 
 
 const q = useQuasar();
-const props = defineProps(['jobDetails', 'applications','search', 'perPage']);
+const props = defineProps(['jobDetails', 'applications']);
 
+
+const searchTerm = ref('');
+const applications = ref({ data: [], last_page: 1 }); // Replace with actual API data
+const pagination = ref({ page: 1, rowsPerPage: 10 });
+const loading = ref(false);
+
+const rowsPerPageOptions = [10, 20, 50, 100]; // Define available options for rows per page
+pagination.value.rowsPerPage = rowsPerPageOptions[0]; // Set the default rows per page
+
+const updateRowsPerPage = () => {
+    pagination.value.page = 1; // Reset to the first page
+    fetchApplications(); // Fetch data with the updated rows per page
+};
 
 const approveRejectForm = useForm({
     application_ids: [],
     status: '',
 });
 
-const state=reactive({
-    search:props?.search,
-    tab: route().current(),
-    perPage: props?.perPage || 3, // Default perPage
-})
+const fetchApplications = () => {
+    loading.value = true;
 
-const search = ref('');
+    const params = {
+        page: pagination.value.page,
+        per_page: pagination.value.rowsPerPage,
+        search: searchTerm.value,
+    };
 
+    router.get(route('admin.applications.show_submission', { jobDetails: props.jobDetails.id }), params, {
+        preserveState: true,
+        preserveScroll: true,
+        onSuccess: ({ props }) => {
+            applications.value = props.applications;
+            loading.value = false;
 
-const handleSearch=e=>{
-    router.get(route('admin.applications.show_submission', props.jobDetails.id), {
-        search: state.search,
-        perPage: state.perPage,
+        },
     });
+};
 
-}
+const nextPage = () => {
+    if (pagination.value.page < applications.value.last_page) {
+        pagination.value.page++;
+        fetchApplications(); // Ensure this is called after incrementing the page
+    }
+};
 
-const handleNavigation=(value)=> {
-    router.get(route(value))
-}
+const prevPage = () => {
+    if (pagination.value.page > 1) {
+        pagination.value.page--;
+        fetchApplications();
+    }
+};
+
+watch([pagination, searchTerm], fetchApplications, { immediate: true });
 
 
+
+const dialogVisible = ref(false); // Controls dialog visibility
+
+// Open dialog and set selected application
 const selectedApplications = ref([]);
 
 const allSelected = computed({
-    get: () => props.applications.data.length > 0 && selectedApplications.value.length === props.applications.data.length,
+    get: () => applications.value.data.length > 0 && selectedApplications.value.length === applications.value.data.length,
     set: (value) => toggleSelectAll(value),
 });
 
+
 function toggleSelectAll(checked) {
     selectedApplications.value = checked
-        ? props.applications.data.map((application) => application.id)
+        ? applications.value.data.map((application) => application.id)
         : [];
 }
 
+watch(
+    () => applications.value.data,
+    () => {
+        selectedApplications.value = [];
+    }
+);
+
+
+
 
 const approveSelectedApplications = () => {
+    if (selectedApplications.value.length === 0) {
+        alert('Please select at least one applicant.');
+        return;
+    }
 
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'approved'; // Set the desired status
@@ -221,11 +269,43 @@ const approveSelectedApplications = () => {
                 q.notify({type:'positive',message})
                 approveRejectForm.reset();
                 selectedApplications.value = []; // Clear selection after success
+                fetchApplications();
             },
 
         });
     })
 
+};
+
+
+
+// const updateStatus = (applicationId, status) => {
+//     approveRejectForm.status = status; // Update the form's status
+//     approveRejectForm.put(route('admin.applications.changeStatus', { application: applicationId }), {
+//         onSuccess: () => {
+//             approveRejectForm.reset(); // Reset the form after a successful update
+//         },
+//     });
+// };
+const updateStatus = (applicationId, status) => {
+    approveRejectForm.status = status;
+    approveRejectForm.put(
+        route('admin.applications.changeStatus', { application: applicationId }),
+        {
+            onSuccess: () => {
+                approveRejectForm.reset();
+                // Optionally remove from selected after approval
+                selectedApplications.value = selectedApplications.value.filter(
+                    (id) => id !== applicationId
+                );
+            },
+        }
+    );
+};
+// Format date utility
+const formatDate = (dateString) => {
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
 </script>
@@ -236,7 +316,21 @@ button:hover {
     transition: transform 0.2s ease-in-out;
 }
 
+/* Modal animation */
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
 
+/* Optional custom styling */
+.bg-gray-800 {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* Tailwind customization */
+.list-disc {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+}
 .page-title {
     font-family: 'Poppins';
     font-size: 21px;
@@ -246,5 +340,7 @@ button:hover {
     color: #333333;
 
 }
-
+.ztext {
+    font-size: 0.875rem;
+}
 </style>

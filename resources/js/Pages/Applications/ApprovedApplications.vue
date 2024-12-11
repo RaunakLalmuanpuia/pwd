@@ -147,10 +147,19 @@
                 <div class="flex justify-between items-center mt-4">
                     <div class="col-12">
 
-                        <div class="flex q-gutter-sm">
+                            <q-select
+                                v-model="state.perPage"
+                                dense
+                                outlined
+                                :options="[2, 5, 10, 20]"
+                                label="Results per page"
+                                @update:model-value="handleSearch"
+                                style="width: 150px;"
+                            />
+
                             <q-btn :disable="!!!applications.prev_page_url" @click="$inertia.get(applications.prev_page_url)" flat round icon="chevron_left"/>
                             <q-btn :disable="!!!applications.next_page_url" @click="$inertia.get(applications.next_page_url)" flat round icon="chevron_right"/>
-                        </div>
+
                     </div>
 
 
@@ -254,7 +263,7 @@ defineOptions({
 
 const q = useQuasar();
 
-const props = defineProps(['jobDetails','examCenters', 'applications','search']);
+const props = defineProps(['jobDetails','examCenters', 'applications','search', 'perPage']);
 
 const approveRejectForm = useForm({
     application_ids: [],
@@ -275,33 +284,29 @@ const viewMarks = (application) => {
     selectedApplicant.value = application.applicant;
     marksDialogOpen.value = true;
 };
+
 // Assign Exam Center Dialog
 const assignExamCenter = () => {
     assignExamCenterDialogOpen.value = true;
 };
 
-
 const state=reactive({
     search:props?.search,
     tab: route().current(),
+    perPage: props?.perPage || 3, // Default perPage
 })
 
 const search = ref('');
-
-
 const handleSearch=e=>{
     router.get(route('admin.applications.show_approved', props.jobDetails.id), {
-        search: state.search
+        search: state.search,
+        perPage: state.perPage,
     });
 
 }
-
 const handleNavigation=(value)=> {
     router.get(route(value))
 }
-
-
-
 
 const loading = ref(false);
 
@@ -315,22 +320,15 @@ const allSelected = computed({
     get: () => props.applications.data.length > 0 && selectedApplications.value.length === props.applications.data.length,
     set: (value) => toggleSelectAll(value),
 });
-
 function toggleSelectAll(checked) {
     selectedApplications.value = checked
         ? props.applications.data.map((application) => application.id)
         : [];
 }
 
-
-
-
 // Function to assign exam center
 const assignExamCenterToApplicants = () => {
-    if (!examCenterForm.exam_center_id) {
-        alert('Please select an exam center.');
-        return;
-    }
+
 
     examCenterForm.application_ids = selectedApplications.value;
 
@@ -341,7 +339,6 @@ const assignExamCenterToApplicants = () => {
             q.notify({type:'positive',message})
             assignExamCenterDialogOpen.value = false;
             examCenterForm.reset(); // Clear the form
-            fetchApplications();
         },
         onError: (err) => {
             console.error(err);
@@ -351,10 +348,6 @@ const assignExamCenterToApplicants = () => {
 };
 
 const approveSelectedApplications = () => {
-    if (selectedApplications.value.length === 0) {
-        alert('Please select at least one applicant.');
-        return;
-    }
 
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'pending'; // Set the desired status
@@ -372,7 +365,7 @@ const approveSelectedApplications = () => {
                 q.notify({type:'positive',message})
                 approveRejectForm.reset();
                 selectedApplications.value = []; // Clear selection after success
-                fetchApplications();
+
             },
         });
     })
@@ -389,8 +382,6 @@ const eligibleSelectedApplications = () => {
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'eligible'; // Set the desired status
 
-
-
     q.dialog({
         title:'Confirmation',
         message:'Do you want to proceed with ' +selectedApplications.value?.length + ' Applications',
@@ -403,7 +394,6 @@ const eligibleSelectedApplications = () => {
                 q.notify({type:'positive',message})
                 approveRejectForm.reset();
                 selectedApplications.value = []; // Clear selection after success
-                fetchApplications();
             },
         });
     })
