@@ -37,7 +37,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('welcome');
 
 Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])
     ->name('login');
@@ -213,6 +213,22 @@ Route::group(['prefix' => 'user'], function () {
     Route::put('{model}', [UserController::class, 'update'])->name('user.update');
     Route::delete('{model}', [UserController::class, 'destroy'])->name('user.destroy');
 });
+
+
+Route::get('page/privacy', function () {
+    return Inertia::render('Privacy',[
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+    ]);
+})->name('privacy');
+
+
+Route::get('page/terms', function () {
+    return Inertia::render('Terms', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+    ]);
+})->name('terms');
 
 require __DIR__.'/auth.php';
 

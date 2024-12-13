@@ -10,34 +10,23 @@ defineProps({
     canRegister: {
         type: Boolean,
     },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
-    },
+
 });
 
-function handleImageError() {
-    document.getElementById("screenshot-container")?.classList.add("!hidden");
-    document.getElementById("docs-card")?.classList.add("!row-span-1");
-    document.getElementById("docs-card-content")?.classList.add("!flex-row");
-    document.getElementById("background")?.classList.add("!hidden");
-}
 </script>
 
 <template>
-    <div class="bg-gray-100 text-gray-800 font-sans">
+    <div class="flex flex-col min-h-screen bg-gray-100 text-gray-800 font-sans">
         <!-- Header Section -->
-        <Head title="Home" />
+        <Head title="Terms" />
 
         <header class="bg-primary text-white p-6 shadow-md">
             <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-3xl font-bold text-white">
-                    Recruitment Portal
-                </h1>
+                <Link @click="$inertia.get(route('welcome'))">
+                    <h1 class="text-3xl font-bold text-white">
+                        Recruitment Portal
+                    </h1>
+                </Link>
                 <nav
                     v-if="canLogin"
                     class="-mx-3 flex flex-1 justify-end text-white"
@@ -124,105 +113,45 @@ function handleImageError() {
             </div>
         </header>
 
-        <!-- Hero Section -->
-        <section
-            class="bg-cover bg-center py-24"
-            style="background-image: url('/images/hero-bg.jpg')"
-        >
-            <div class="container mx-auto text-center text-white">
-                <!-- <h2 class="text-4xl md:text-5xl font-bold">
-                    Join Us in Serving the Nation
-                </h2> -->
-                <p class="mt-4 text-lg md:text-xl text-black">
-                    Explore government job opportunities and make a difference.
-                </p>
-                <button
-                    class="mt-6 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"
-                >
-                    Apply Now
-                </button>
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h1 class="text-xl font-bold mb-4">Terms and Conditions</h1>
+                <ol class="list-decimal list-inside space-y-4 text-gray-700">
+                    <li>
+                        The Mizoram Government recruitment online portal has been developed and hosted by the Mizoram State
+                        e-Governance Society (MSeGS) to allow aspirants to apply online for vacant posts in Mizoram
+                        Government departments. The documents and information displayed on this website are for reference purposes only
+                        and do not purport to be a legal document.
+                    </li>
+                    <li>
+                        We do not warrant the accuracy or completeness of the information, text, graphics, links, or
+                        other items contained within the website. As a result of updates and corrections, the web
+                        contents are subject to change without any notice.
+                    </li>
+                    <li>
+                        Under no circumstances will Mizoram State e-Governance Society (MSeGS) be liable for any expense, loss, or damage, including
+                        without limitation, indirect or consequential loss or damage, or any expense, loss, or damage
+                        whatsoever arising from the use, or loss of use, of data, arising out of or in connection with
+                        the use of this website.
+                    </li>
+                    <li>
+                        These terms and conditions shall be governed by and construed in accordance with Indian laws.
+                        Any dispute arising under these terms and conditions shall be subject to the jurisdiction of
+                        the courts of India.
+                    </li>
+                    <li>
+                        Certain links on the website lead to resources located on other websites maintained by third
+                        parties over whom we have no control or connection. These websites are external to this
+                        website, and by visiting them, you are outside our website and its channels. We neither endorse
+                        nor offer any judgment or warranty and accept no responsibility or liability for the authenticity,
+                        availability of any goods or services, or for any damage, loss, or harm, direct or consequential,
+                        or any violation of local or international laws that may occur by visiting and transacting on
+                        these websites.
+                    </li>
+                </ol>
             </div>
-        </section>
+        </main>
 
-        <!-- About Section -->
-        <section id="about" class="py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">About the Portal</h2>
-                <p class="text-lg max-w-2xl mx-auto">
-                    Our recruitment portal is dedicated to connecting qualified
-                    candidates with government job openings, ensuring a
-                    transparent and efficient hiring process.
-                </p>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="bg-gray-200 py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">Our Services</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="p-6 bg-white rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-2">Job Listings</h3>
-                        <p>
-                            Access to various government job opportunities
-                            updated regularly.
-                        </p>
-                    </div>
-                    <div class="p-6 bg-white rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-2">
-                            Online Application
-                        </h3>
-                        <p>
-                            Apply online and track your application status
-                            easily.
-                        </p>
-                    </div>
-                    <div class="p-6 bg-white rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-2">
-                            Support & Guidance
-                        </h3>
-                        <p>
-                            Get support through our helpdesk for any
-                            application-related queries.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Application Section -->
-        <section id="apply" class="py-16 px-4 md:px-0 bg-blue-600 text-white">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6 text-white">Ready to Apply?</h2>
-                <p class="text-lg mb-6">
-                    Take the first step towards a rewarding career in the
-                    government sector.
-                </p>
-                <button
-                    class="px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"
-                >
-                    Start Application
-                </button>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
-                <p class="text-lg max-w-2xl mx-auto">
-                    If you have any questions, feel free to reach out through
-                    our support center.
-                </p>
-                <div class="mt-8">
-                    <a
-                        href="mailto:support@gov-recruitment.gov"
-                        class="text-blue-500 hover:underline"
-                    >support@gov-recruitment.gov</a
-                    >
-                </div>
-            </div>
-        </section>
 
         <!-- Footer -->
         <footer class="bg-gray-800 text-gray-200 py-4 text-center">

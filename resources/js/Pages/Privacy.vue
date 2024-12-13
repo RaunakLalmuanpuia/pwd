@@ -10,34 +10,24 @@ defineProps({
     canRegister: {
         type: Boolean,
     },
-    laravelVersion: {
-        type: String,
-        required: true,
-    },
-    phpVersion: {
-        type: String,
-        required: true,
-    },
+
 });
 
-function handleImageError() {
-    document.getElementById("screenshot-container")?.classList.add("!hidden");
-    document.getElementById("docs-card")?.classList.add("!row-span-1");
-    document.getElementById("docs-card-content")?.classList.add("!flex-row");
-    document.getElementById("background")?.classList.add("!hidden");
-}
 </script>
 
 <template>
-    <div class="bg-gray-100 text-gray-800 font-sans">
+    <div class="flex flex-col min-h-screen bg-gray-100 text-gray-800 font-sans">
         <!-- Header Section -->
-        <Head title="Home" />
+        <Head title="Privacy Policy" />
 
         <header class="bg-primary text-white p-6 shadow-md">
             <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-3xl font-bold text-white">
-                    Recruitment Portal
-                </h1>
+                <Link @click="$inertia.get(route('welcome'))">
+                    <h1 class="text-3xl font-bold text-white">
+                        Recruitment Portal
+                    </h1>
+                </Link>
+
                 <nav
                     v-if="canLogin"
                     class="-mx-3 flex flex-1 justify-end text-white"
@@ -124,105 +114,51 @@ function handleImageError() {
             </div>
         </header>
 
-        <!-- Hero Section -->
-        <section
-            class="bg-cover bg-center py-24"
-            style="background-image: url('/images/hero-bg.jpg')"
-        >
-            <div class="container mx-auto text-center text-white">
-                <!-- <h2 class="text-4xl md:text-5xl font-bold">
-                    Join Us in Serving the Nation
-                </h2> -->
-                <p class="mt-4 text-lg md:text-xl text-black">
-                    Explore government job opportunities and make a difference.
-                </p>
-                <button
-                    class="mt-6 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"
-                >
-                    Apply Now
-                </button>
+        <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
+            <div class="bg-white shadow-lg rounded-lg p-6">
+                <h1 class="text-xl font-bold mb-4">Privacy Policy</h1>
+                <ol class="list-decimal list-inside space-y-4 text-gray-700">
+                    <li>
+                        This website does not automatically capture any specific personal information from you
+                        (like name, phone number, or e-mail address) that allows us to identify you individually.
+                    </li>
+                    <li>
+                        If the website requests you to provide personal information, you will be informed of the
+                        particular purposes for which the information is gathered, and adequate security measures
+                        will be taken to protect your personal information.
+                    </li>
+                    <li>
+                        We collect personal information (like name, address, phone number, qualification, and
+                        signature) in connection with your application and recruitment process.
+                    </li>
+                    <li>
+                        The personal information collected will be used solely for recruitment purposes, and we
+                        will not use it for any other purpose unless you have given your explicit consent.
+                    </li>
+                    <li>
+                        You have the option to ask for deletion of your data. However, we may need to retain
+                        some of your personal information for accounting purposes.
+                    </li>
+                    <li>
+                        Application fees once paid cannot be refunded. In cases where the fee amount is deducted
+                        more than once, applicants may seek a refund from Mizoram State e-Governance Society (MSeGS),
+                        Aizawl upon providing the said transaction record.
+                    </li>
+                    <li>
+                        We do not sell or share any personally identifiable information volunteered on the website
+                        to any third party (public/private). Any information provided to this website will be
+                        protected from loss, misuse, unauthorized access or disclosure, alteration, or destruction.
+                    </li>
+                    <li>
+                        We may gather certain information about your visit to the site, such as IP address, domain
+                        name, browser type, operating system, date and time of the visit, and pages visited. We do
+                        not attempt to link these details to the identity of any individual unless an attempt to
+                        damage the site is detected.
+                    </li>
+                </ol>
             </div>
-        </section>
+        </main>
 
-        <!-- About Section -->
-        <section id="about" class="py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">About the Portal</h2>
-                <p class="text-lg max-w-2xl mx-auto">
-                    Our recruitment portal is dedicated to connecting qualified
-                    candidates with government job openings, ensuring a
-                    transparent and efficient hiring process.
-                </p>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="bg-gray-200 py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">Our Services</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="p-6 bg-white rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-2">Job Listings</h3>
-                        <p>
-                            Access to various government job opportunities
-                            updated regularly.
-                        </p>
-                    </div>
-                    <div class="p-6 bg-white rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-2">
-                            Online Application
-                        </h3>
-                        <p>
-                            Apply online and track your application status
-                            easily.
-                        </p>
-                    </div>
-                    <div class="p-6 bg-white rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-2">
-                            Support & Guidance
-                        </h3>
-                        <p>
-                            Get support through our helpdesk for any
-                            application-related queries.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Application Section -->
-        <section id="apply" class="py-16 px-4 md:px-0 bg-blue-600 text-white">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6 text-white">Ready to Apply?</h2>
-                <p class="text-lg mb-6">
-                    Take the first step towards a rewarding career in the
-                    government sector.
-                </p>
-                <button
-                    class="px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"
-                >
-                    Start Application
-                </button>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">Contact Us</h2>
-                <p class="text-lg max-w-2xl mx-auto">
-                    If you have any questions, feel free to reach out through
-                    our support center.
-                </p>
-                <div class="mt-8">
-                    <a
-                        href="mailto:support@gov-recruitment.gov"
-                        class="text-blue-500 hover:underline"
-                    >support@gov-recruitment.gov</a
-                    >
-                </div>
-            </div>
-        </section>
 
         <!-- Footer -->
         <footer class="bg-gray-800 text-gray-200 py-4 text-center">
