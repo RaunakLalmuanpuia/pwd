@@ -40,6 +40,21 @@
                ]"
                     />
                 </div>
+
+
+                <div class="col-xs-12">
+                    <q-select v-model="form.departments"
+                              clearable
+                              :error="!!form.errors?.departments"
+                              :error-message="form.errors?.departments?.toString()"
+                              :options="departments"
+                              bg-color="white"
+                              label="Department"
+                              no-error-icon
+                              outlined
+                    />
+                </div>
+
                 <div class="col-xs-12">
                     <q-select v-model="form.category"
                               class="my-input"
@@ -276,13 +291,15 @@ import { router, useForm, Link } from '@inertiajs/vue3';
 import {reactive, ref} from 'vue';
 import { useQuasar } from 'quasar';
 
+
+const q = useQuasar();
 defineOptions({
     layout:AdminLayout
 })
 
-const props = defineProps({
-    data: Object,
-});
+
+const props = defineProps(["data", "current_department", "departments"]);
+
 
 const state = reactive({
     submitting: false
@@ -293,7 +310,7 @@ const form = useForm({
     post_name: props.data?.post_name,
     code: props.data?.code,
     category: props.data?.category,
-    department_id: props.data?.department_id,
+    departments:props?.current_department?.name,
     no_of_post: props.data?.no_of_post,
     salary: props.data?.salary,
     upper_age_limit: props.data?.upper_age_limit,
@@ -329,50 +346,17 @@ const removeDocument = (index) => {
     form.documents.splice(index, 1);
 };
 
-const submit = () => {
-    form.put(route('job.update', props.data.id), {
-        onError: (err) => {
-            errors.value = err;
-        },
-    });
-};
-
-
-const handleDelete = () => {
-    router.delete(route('job.destroy',props.data.id),{
-        preserveState:false,
-        onStart: () => state.submitting = true,
-        onFinish: () => state.submitting = false
-    })
-};
-// Function to format date
-const formatDate = (date) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(date).toLocaleDateString(undefined, options);
-};
-
-
-function formatTime(time) {
-    const [hours, minutes, seconds] = time.split(':');
-    const date = new Date();
-    date.setHours(hours, minutes, seconds);
-
-    const options = { hour: 'numeric', minute: 'numeric', hour12: true };
-    return date.toLocaleTimeString([], options);
+const submit = e => {
+    form.transform(data => ({
+        department_id: data?.departments?.value || null, // Directly use the value
+        ...data
+    }))
+        .put(route('job.update',props.data?.id), {
+            onStart: params => q.loading.show({message:'Updating...'}),
+            onFinish: params => q.loading.hide()
+        })
 }
-// Edit button handler
-const editExam = (id) => {
-    console.log(`Edit exam with ID: ${id}`);
-    // Trigger any edit logic or emit an event
-};
 
-const deleteExam=(id)=>{
-    router.delete(route('exam.destroy',id),{
-        preserveState:false,
-        onStart:params => state.submitting=true,
-        onFinish: params => state.submitting = false
-    })
-}
 
 
 </script>

@@ -7,11 +7,14 @@ use App\Exports\EligibleSheetExport;
 use App\Exports\JobDetailsExport;
 use App\Exports\SubmittedSheetExport;
 use App\Models\Applications;
+use App\Models\Departments;
 use App\Models\Documents;
 use App\Models\JobDetail;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Permission\Models\Role;
 
 class JobDetailsController extends Controller
 {
@@ -33,7 +36,10 @@ class JobDetailsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Jobs/Create');
+
+        return Inertia::render('Jobs/Create',[
+            'departments' => Departments::query()->get(['name as label','id as value']),
+        ]);
     }
 
     /**
@@ -45,7 +51,7 @@ class JobDetailsController extends Controller
         $validated = $request->validate([
             'code' => 'required',
             'post_name' => 'required|string|max:255',
-            'department_id' => 'required|integer',
+            'department_id' => ['required',Rule::exists('departments','id')],
             'no_of_post' => 'required|integer|min:1|max:255',
             'category'=> 'required|string|max:255',
             'salary' => 'required|numeric|min:0',
@@ -65,7 +71,7 @@ class JobDetailsController extends Controller
 
 
         $jobDetails = JobDetail::create($validated);
-
+//        $jobDetails->departments()->sync([$validated['department_id']]);
         foreach ($validated['documents'] as $document) {
             Documents::create([
                 'job_detail_id' => $jobDetails->id,
@@ -93,7 +99,9 @@ class JobDetailsController extends Controller
     public function edit(JobDetail $model)
     {
         return inertia('Jobs/Edit', [
-            'data'=>$model->load(['documents', 'exams.subjects'])
+            'data'=>$model->load(['documents', 'exams.subjects', 'department']),
+            'current_department' => $model->department()->first(),
+            'departments' => Departments::query()->get(['name as label','id as value']),
         ]);
     }
 
@@ -108,7 +116,7 @@ class JobDetailsController extends Controller
         $validated = $request->validate([
             'code' => 'required',
             'post_name' => 'required|string|max:255',
-            'department_id' => 'required|integer',
+            'department_id' => ['required',Rule::exists('departments','id')],
             'no_of_post' => 'required|integer|min:1|max:255',
             'category'=> 'required|string|max:255',
             'salary' => 'required|numeric|min:0',

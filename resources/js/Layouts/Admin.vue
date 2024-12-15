@@ -150,7 +150,9 @@
                             </q-item-section>
                         </q-item>
 
-                        <q-item clickable v-ripple>
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='report.submitted'"
+                                @click="$inertia.get(route('report.submitted'))">
                             <q-item-section avatar>
                                 <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
                             </q-item-section>

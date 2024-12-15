@@ -18,6 +18,9 @@ defineProps({
         type: String,
         required: true,
     },
+    jobs:{
+        type: Array,
+    }
 });
 
 function handleImageError() {
@@ -127,21 +130,75 @@ function handleImageError() {
         <!-- Hero Section -->
         <section
             class="bg-cover bg-center py-24"
-            style="background-image: url('/images/hero-bg.jpg')"
+            style="background-image: url('/images/pwd_logo.png')"
         >
+<!--            <div class="container mx-auto text-center text-white">-->
+
+<!--                <p class="mt-4 text-lg md:text-xl text-white">-->
+<!--                    Explore government job opportunities and make a difference.-->
+<!--                </p>-->
+
+
+<!--                <button-->
+<!--                    class="mt-6 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"-->
+<!--                >-->
+<!--                    Apply Now-->
+<!--                </button>-->
+<!--            </div>-->
             <div class="container mx-auto text-center text-white">
-                <!-- <h2 class="text-4xl md:text-5xl font-bold">
-                    Join Us in Serving the Nation
-                </h2> -->
-                <p class="mt-4 text-lg md:text-xl text-black">
-                    Explore government job opportunities and make a difference.
-                </p>
-                <button
-                    class="mt-6 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"
-                >
-                    Apply Now
-                </button>
+                <div class="col-xs-12 row q-col-gutter-md">
+                    <div class="col-xs-12 col-sm-6">
+
+                        <div style="font-size: 32px" class="navy-panel text-white q-col-gutter-sm q-pa-md"> Job Applications</div>
+
+                        <br/>
+
+                        <div class="zcard row q-col-gutter-sm q-pa-md">
+                            <div class="col-12 q-pa-none q-ma-none" v-for="item in jobs" :key="item.id">
+
+                                <p style="color: #484848" class="q-pa-none q-ma-none text-weight-medium text-start">{{item.post_name}}</p>
+
+                                <div class="flex justify-between items-center">
+                                    <p style="color:#484848;" class=" q-ma-none">Last Date: {{item.application_deadline}}</p>
+                                    <p style="color:#484848;" class=" q-ma-none">{{item.no_of_post}} Posts</p>
+<!--<p style="color:#484848;">{{item}}</p>-->
+                                </div>
+                                <q-separator/>
+
+                            </div>
+                                        <button
+                                            @click="$inertia.get(route('dashboard.citizen'))"
+                                                class="mt-6 px-6 py-2 bg-blue-500 hover:bg-blue-600 text-lg font-semibold rounded-md"
+                                            >
+                                                Apply Now
+                                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-xs-12 col-sm-2"></div>
+
+                    <div class="col-xs-12 col-sm-4">
+                        <div style="font-size: 32px" class="navy-panel text-white q-col-gutter-sm q-pa-md"> Notifications </div>
+                        <br/>
+                        <div class="zcard row q-col-gutter-sm q-pa-md">
+                            <div class="col-12 q-pa-none q-ma-none">
+
+                                <p style="color: #484848" class="q-pa-none q-ma-none text-weight-medium">Title</p>
+                                <div class="flex justify-between items-center">
+                                    <q-btn class="q-pa-xs" @click="handleReadmore(item)" color="primary" flat label="VIEW NOTICE"/>
+                                    <p style="color:#484848;" class=" q-ma-none">Date</p>
+                                </div>
+                                <q-separator/>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </section>
 
         <!-- About Section -->
@@ -265,4 +322,11 @@ function handleImageError() {
 
 <style scoped>
 /* Custom styles if needed */
+.primary-title {
+    font-family: 'Poppins';
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: normal;
+    /*color: $primary;*/
+}
 </style>

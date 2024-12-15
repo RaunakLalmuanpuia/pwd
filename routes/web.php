@@ -16,6 +16,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\AdminApplicationController;
+use App\Http\Controllers\ReportController;
 
 
 
@@ -36,6 +37,7 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'jobs' => \App\Models\JobDetail::all()
     ]);
 })->name('welcome');
 
@@ -212,6 +214,13 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('', [UserController::class, 'store'])->name('user.store');
     Route::put('{model}', [UserController::class, 'update'])->name('user.update');
     Route::delete('{model}', [UserController::class, 'destroy'])->name('user.destroy');
+});
+
+
+//User Controller
+Route::group(['prefix' => 'report'], function () {
+    Route::get('application', [ReportController::class, 'submitted'])->name('report.submitted');
+    Route::get('written', [ReportController::class, 'writtenExam'])->name('report.writtenExam');
 });
 
 

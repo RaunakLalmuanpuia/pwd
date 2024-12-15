@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class JobDetail extends Model
@@ -27,10 +29,17 @@ class JobDetail extends Model
         'active',
     ];
 
-    public function department()
+//    public function departments(): BelongsTo
+//    {
+//        return $this->belongsTo(Departments::class, 'department_id');
+//    }
+
+    public function department(): BelongsTo
     {
-        return $this->belongsTo(Departments::class);
+        return $this->belongsTo(Departments::class, 'department_id');
     }
+
+
 
     public function applications(): HasMany
     {

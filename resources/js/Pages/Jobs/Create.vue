@@ -45,6 +45,19 @@
                         />
                     </div>
                     <div class="col-xs-12">
+                        <q-select v-model="form.department"
+                                  :error="!!form.errors?.department"
+                                  :error-message="form.errors?.department?.toString()"
+                                  :options="departments"
+                                  bg-color="white"
+                                  label="Department"
+                                  outlined
+                                  :rules="[
+                                 val=>!!val || 'Department is required'
+                               ]"
+                        />
+                    </div>
+                    <div class="col-xs-12">
                         <q-select v-model="form.category"
                                   class="my-input"
                                   :options="['A','B', 'C', 'D']"
@@ -282,15 +295,17 @@
 <script setup>
 import AdminLayout from '@/Layouts/Admin.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
-// const departments = defineProps(["departments"]);
+
+// const props = defineProps(['roles','offices'])
+const props = defineProps(["departments"]);
 
 const form = useForm({
     code: "",
     post_name: "",
-    department_id: 1,
+    department:null,
     no_of_post: "",
     category:'',
     salary: "",
@@ -306,6 +321,11 @@ const form = useForm({
     documents: [],
 });
 
+const state = reactive({
+    submitting: false,
+    toggle:'password'
+})
+
 
 const errors = ref({});
 
@@ -317,12 +337,19 @@ const removeDocument = (index) => {
     form.documents.splice(index, 1);
 };
 
-const handleSubmit = () => {
-    form.post(route('job.store'), {
-        onError: (err) => {
-            errors.value = err;
-        },
-    });
-};
+// const handleSubmit = () => {
+//     form.post(route('job.store'), {
+//         onError: (err) => {
+//             errors.value = err;
+//         },
+//     });
+// };
 
+const handleSubmit = e => {
+    form.transform(data => ({department_id: data?.department?.value, ...data}))
+        .post(route('job.store'), {
+            onStart: params => state.submitting = true,
+            onFinish: params => state.submitting = false
+        })
+}
 </script>

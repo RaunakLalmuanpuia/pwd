@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Departments extends Model
 {
     use HasFactory;
-    public function jobDetails()
+
+    public function jobDetail()
     {
-        return $this->hasMany(JobDetail::class);
+        return $this->hasMany(JobDetail::class, 'department_id');
     }
+
+
 }
