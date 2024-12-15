@@ -2,49 +2,29 @@
 
 <template>
 
-    <div class="q-pa-md">
-        <div class="q-gutter-y-md" style="max-width: 600px">
-            <q-card>
-                <q-tabs
-                    v-model="tab"
-                    dense
-                    class="text-grey"
-                    active-color="primary"
-                    indicator-color="primary"
-                    align="justify"
-                    narrow-indicator
-                >
-                    <q-tab name="mails" label="Mails" @click="$inertia.get(route('report.submitted'))" />
-                    <q-tab name="alarms" label="Alarms" @click="$inertia.get(route('report.writtenExam'))" />
-                    <q-tab name="movies" label="Movies" @click="$inertia.get(route('report.submitted'))"/>
-                </q-tabs>
-
-                <q-separator />
 
 
-            </q-card>
+    <q-toolbar padding class="card justify-center">
+        <q-tabs padding>
 
-        </div>
-    </div>
+            <q-item clickable v-ripple
+                    :active="route().current()==='report.submitted'"
+                    :class="{ 'q-item--active': route().current() === 'report.submitted' }"
+                    @click="$inertia.get(route('report.submitted'))">
+                <q-item-section>
+                    APPLICATIONS
+                </q-item-section>
+            </q-item>
 
-    <q-toolbar class="card justify-center">
-        <q-tabs>
-            <q-tab
-                replace
-                @click="$inertia.get(route('report.submitted'))"
-                label="Application"
 
-            />
-            <q-route-tab
-                replace
-                @click="$inertia.get(route('user.index'))"
-                label="Physical Test"
-            />
-            <q-route-tab
-                replace
-                :to="{name:'report:written'}"
-                label="Written Exam"
-            />
+            <q-item clickable v-ripple
+                    :class="{ 'q-item--active': route().current() === 'report.writtenExam' }"
+                    :active="route().current()==='report.writtenExam'"
+                    @click="$inertia.get(route('report.writtenExam'))">
+                <q-item-section>
+                    WRITTEN EXAM
+                </q-item-section>
+            </q-item>
             <q-route-tab
                 replace
                 :to="{name:'report:interview'}"
@@ -186,7 +166,9 @@ const posts=[
     border: solid 1px #dedede;
     background-color: #fff;
 }
-.underline-active {
-    text-decoration: underline;
+
+.q-item--active {
+    border-bottom: 2px solid #027be3; /* Blue color for active state, adjust as needed */
+    font-weight: bold; /* Optional: to make active item stand out more */
 }
 </style>
