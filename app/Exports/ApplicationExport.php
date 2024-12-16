@@ -16,6 +16,7 @@ class ApplicationExport implements FromView
     }
     public function view(): View
     {
+
         return view('reports.applications', [
             'applications'=>$this->data
         ]);

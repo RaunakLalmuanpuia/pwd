@@ -16,9 +16,9 @@
             <th>Category</th>
 
             <th>Qualification</th>
-            <th>Course/Subject</th>
-            <th>School/Institute</th>
-            <th>Passed Year</th>
+{{--            <th>Course/Subject</th>--}}
+{{--            <th>School/Institute</th>--}}
+{{--            <th>Passed Year</th>--}}
 
             <th>Hno</th>
             <th>City/Town/Village</th>
@@ -34,25 +34,25 @@
         <tbody>
         @foreach($applications as $application)
             <tr>
-                <td>{{ date('d-m-Y', strtotime($application->submitted_at)) }}</td>
+                <td>{{ date('d-m-Y', strtotime($application->created_at)) }}</td>
 
-                <td>{{ $application?->regn_no }}</td>
-                <td>{{ $application?->applicant_name ?? ''}}</td>
-                <td>{{ $application?->applicant?->parent_name ??'' }}</td>
+                <td>{{ $application?->application_id }}</td>
+                <td>{{ $application?->applicant->user->name ?? ''}}</td>
+                <td>{{ $application?->applicant?->parents_name ??'' }}</td>
                 <td>{{ date('d-m-Y', strtotime($application->applicant?->date_of_birth)) }}</td>
-                <td>{{ $application->applicant?->gender ?? ''}}</td>
-                <td>{{ $application->applicant?->category ?? '' }}</td>
+                <td>{{ $application->applicant?->sex ?? ''}}</td>
+                <td>{{ $application->applicant?->community ?? '' }}</td>
 
-                <td>{{ $application?->education?->qualification ?? '' }}</td>
-                <td>{{ $application?->education?->course ?? ''}}</td>
-                <td>{{ $application?->education?->institute ?? '' }}</td>
-                <td>{{ $application?->education?->passed_year ??'' }}</td>
+                <td>{{ $application?->applicant?->qualification ?? '' }}</td>
+{{--                <td>{{ $application?->applicant?->course ?? ''}}</td>--}}
+{{--                <td>{{ $application?->education?->institute ?? '' }}</td>--}}
+{{--                <td>{{ $application?->education?->passed_year ??'' }}</td>--}}
 
-                <td>{{ $application?->address?->house_no ??'' }}</td>
-                <td>{{ $application?->address?->town ??'' }}</td>
-                <td>{{ $application?->address?->locality ??'' }}</td>
-                <td>{{ $application?->address?->district_name ??'' }}</td>
-                <td>{{ $application?->address?->state_name ??'' }}</td>
+                <td>{{ $application?->applicant->user->address?->permanent_house_no ??'' }}</td>
+                <td>{{ $application?->applicant->user->address?->permanent_city ??'' }}</td>
+                <td>{{ $application?->applicant->user->address?->permanent_locality ??'' }}</td>
+                <td>{{ $application?->applicant->user->address?->permanent_district ??'' }}</td>
+                <td>{{ $application?->applicant->user->address?->permanent_state ??'' }}</td>
 
 
 

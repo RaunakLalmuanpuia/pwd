@@ -116,7 +116,8 @@
 <script setup>
 import AdminLayout from "@/Layouts/Admin.vue";
 import { ref } from 'vue';
-
+import axios from "axios";
+import {useQuasar} from "quasar";
 // Declare the reactive `tab` variable
 const tab = ref('mails');
 
@@ -124,8 +125,8 @@ defineOptions({
     layout:AdminLayout
 })
 
-import {useForm, usePage} from "@inertiajs/vue3";
-
+import {router, useForm, usePage} from "@inertiajs/vue3";
+const q = useQuasar();
 const page = usePage();
 const form = useForm({
     status:'',
@@ -141,6 +142,7 @@ const statuses=[
     {value:['VERIFIED'],label:'Verified'},
     {value:['REJECTED'],label:'Rejected'},
     {value:['SUBMITTED'],label:'Submitted'},
+    {value:['APPROVED'],label:'Approved'},
     {value:['VERIFIED','REJECTED','SUBMITTED'],label:'All'},
 ]
 const genders=[
@@ -154,6 +156,36 @@ const posts=[
     {value:'UDC',label:'UDC'},
 
 ]
+
+
+const onFilter = () => {
+    q.loading.show(); // Show loading indicator (assuming you're using Quasar's loading plugin)
+
+    // Generate the URL using Inertia's route helper
+    const url = route('report.application.download');
+
+    // Make a GET request to the URL with responseType as 'blob'
+    axios.post(url, form, { responseType: 'blob' })
+        .then((res) => {
+            // Create an object URL from the response data and trigger a download
+            const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.setAttribute('download', Date.now() + '.xlsx'); // Set a dynamic file name
+            link.click();
+        })
+        .catch((err) => {
+            // Show an error notification if something goes wrong
+            q.notify({
+                type: 'negative',
+                message: err.response?.data?.message || 'Failed to download file',
+            });
+        })
+        .finally(() => {
+            q.loading.hide(); // Hide loading indicator
+        });
+};
+
 </script>
 
 

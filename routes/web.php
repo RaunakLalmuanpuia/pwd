@@ -217,10 +217,10 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 
-//User Controller
+//Report Controller
 Route::group(['prefix' => 'report'], function () {
     Route::get('application', [ReportController::class, 'submitted'])->name('report.submitted');
-    Route::get('application/download', [ReportController::class, 'downloadApplicationReport'])->name('report.application.download');
+    Route::post('application/download', [ReportController::class, 'downloadApplicationReport'])->name('report.application.download');
     Route::get('written', [ReportController::class, 'writtenExam'])->name('report.writtenExam');
 });
 
