@@ -18,7 +18,7 @@ defineProps({
 <template>
     <div class="flex flex-col min-h-screen bg-gray-100 text-gray-800 font-sans">
         <!-- Header Section -->
-        <Head title="Privacy Policy" />
+        <Head title="About Us" />
 
         <header class="bg-primary text-white p-6 shadow-md">
             <div class="container mx-auto flex justify-between items-center">
