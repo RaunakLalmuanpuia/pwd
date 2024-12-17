@@ -39,7 +39,7 @@
     <q-page padding>
 
 
-        <p class="q-ma-none page-title py-3"> Exam Report </p>
+        <p class="q-ma-none page-title py-3"> Exam Center </p>
         <br/>
         <q-form @submit="onFilter" class="row  q-col-gutter-md q-pa-md">
 
@@ -58,48 +58,6 @@
                 />
             </div>
 
-<!--            <div class="col-xs-12 col-sm-6 ">-->
-<!--                <q-select-->
-<!--                    v-model="form.exam"-->
-<!--                    outlined-->
-<!--                    class="my-input"-->
-<!--                    dense-->
-<!--                    label="Job Exam"-->
-<!--                    :options="exams"-->
-<!--                    :rules="[-->
-<!--                      val=>!!val || 'Exam is required'-->
-<!--                    ]"-->
-<!--                />-->
-<!--            </div>-->
-
-            <!-- Handling jobs display -->
-<!--            <div class="col-xs-12 col-sm-6">-->
-<!--                <template v-if="!selectedDepartment">-->
-<!--                    &lt;!&ndash; Case 1: No department selected &ndash;&gt;-->
-<!--                    <p>Please select a department.</p>-->
-<!--                </template>-->
-
-<!--                <template v-else-if="jobs.length > 0">-->
-<!--                    &lt;!&ndash; Case 2: Department selected and jobs available &ndash;&gt;-->
-<!--                    <q-select-->
-<!--                        v-model="form.posts"-->
-<!--                        outlined-->
-<!--                        class="my-input"-->
-<!--                        dense-->
-<!--                        :options="jobs"-->
-<!--                        clearable-->
-<!--                        label="Post"-->
-<!--                        :rules="[-->
-<!--                        val => !!val || 'Post is required'-->
-<!--                      ]"-->
-<!--                    />-->
-<!--                </template>-->
-
-<!--                <template v-else>-->
-<!--                    &lt;!&ndash; Case 3: Department selected but no jobs available &ndash;&gt;-->
-<!--                    <p>No jobs available for the selected department.</p>-->
-<!--                </template>-->
-<!--            </div>-->
             <!-- Job Selection -->
             <div class="col-xs-12 col-sm-6">
                 <template v-if="!selectedDepartment">
@@ -240,7 +198,7 @@ const onDepartmentChange = () => {
     exams.value = [];
     if (selectedDepartment.value) {
         router.get(
-            route("report.writtenExam"),
+            route("report.exam_center"),
             { department: selectedDepartment.value.value }, // Pass department ID
             {
                 preserveState: true,
@@ -261,7 +219,7 @@ const onJobChange = () => {
     form.exam = null;
     if (selectedJob.value) {
         router.get(
-            route("report.writtenExam"),
+            route("report.exam_center"),
             { job_id: selectedJob.value.value }, // Pass job ID
             {
                 preserveState: true,

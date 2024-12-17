@@ -2,32 +2,38 @@
 
 <template>
 
-    <q-toolbar class="card justify-center">
-        <q-tabs>
-                <q-item clickable v-ripple
-                        :active="route().current()==='report.submitted'"
-                        :class="{ 'q-item--active': route().current() === 'report.submitted' }"
-                        @click="$inertia.get(route('report.submitted'))">
-                    <q-item-section>
-                        APPLICATIONS
-                    </q-item-section>
-                </q-item>
+    <q-toolbar padding class="card justify-center">
+        <q-tabs padding>
+
+            <q-item clickable v-ripple
+                    :active="route().current()==='report.submitted'"
+                    :class="{ 'q-item--active': route().current() === 'report.submitted' }"
+                    @click="$inertia.get(route('report.submitted'))">
+                <q-item-section>
+                    APPLICATIONS
+                </q-item-section>
+            </q-item>
 
 
-                <q-item clickable v-ripple
-                        :class="{ 'q-item--active': route().current() === 'report.writtenExam' }"
-                        :active="route().current()==='report.writtenExam'"
-                        @click="$inertia.get(route('report.writtenExam'))">
-                    <q-item-section>
-                        EXAM REPORT
-                    </q-item-section>
-                </q-item>
+            <q-item clickable v-ripple
+                    :class="{ 'q-item--active': route().current() === 'report.writtenExam' }"
+                    :active="route().current()==='report.writtenExam'"
+                    @click="$inertia.get(route('report.writtenExam'))">
+                <q-item-section>
+                    EXAM REPORT
+                </q-item-section>
+            </q-item>
 
-            <q-route-tab
-                replace
-                :to="{name:'report:interview'}"
-                label="Interview"
-            />
+            <q-item clickable v-ripple
+                    :class="{ 'q-item--active': route().current() === 'report.exam_center' }"
+                    :active="route().current()==='report.exam_center'"
+                    @click="$inertia.get(route('report.exam_center'))">
+                <q-item-section>
+                    EXAM CENTER
+                </q-item-section>
+            </q-item>
+
+
         </q-tabs>
     </q-toolbar>
     <q-page padding>

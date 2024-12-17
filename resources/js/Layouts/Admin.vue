@@ -151,7 +151,7 @@
                         </q-item>
 
                         <q-item clickable v-ripple active-class="active-menu"
-                                :active="route().current()==='report.submitted'"
+                                :active="['report.submitted', 'report.writtenExam', 'report.exam_center'].includes(route().current())"
                                 @click="$inertia.get(route('report.submitted'))">
                             <q-item-section avatar>
                                 <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
