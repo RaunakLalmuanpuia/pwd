@@ -36,17 +36,26 @@
         <p class="q-ma-none page-title py-3"> Applications</p>
         <br/>
         <q-form @submit="onFilter" class="row  q-col-gutter-md q-pa-md">
+
             <div class="col-xs-12 col-sm-6">
                 <q-select
-                    v-model="form.posts"
+                    v-model="selectedDepartment"
                     outlined
-                    class="my-input"
                     dense
-                    :options="posts"
+                    :options="departments"
                     clearable
-                    label="Post"
+                    label="Select Department"
+                    @update:model-value="onDepartmentChange"
+                    :rules="[
+      val => !!val || 'Department is required'
+    ]"
                 />
             </div>
+
+
+
+
+
 
             <div class="col-xs-12 col-sm-6 ">
                 <q-select
@@ -61,6 +70,36 @@
                     ]"
                 />
             </div>
+
+            <!-- Handling jobs display -->
+            <div class="col-xs-12 col-sm-6">
+                <template v-if="!selectedDepartment">
+                    <!-- Case 1: No department selected -->
+                    <p>Please select a department.</p>
+                </template>
+
+                <template v-else-if="jobs.length > 0">
+                    <!-- Case 2: Department selected and jobs available -->
+                    <q-select
+                        v-model="form.posts"
+                        outlined
+                        class="my-input"
+                        dense
+                        :options="jobs"
+                        clearable
+                        label="Post"
+                        :rules="[
+                        val => !!val || 'Post is required'
+                      ]"
+                    />
+                </template>
+
+                <template v-else>
+                    <!-- Case 3: Department selected but no jobs available -->
+                    <p>No jobs available for the selected department.</p>
+                </template>
+            </div>
+
             <div class="col-xs-12 col-sm-6"/>
             <div class="col-xs-12">
                 <p class="ztext q-ma-none">optional</p>
@@ -121,6 +160,8 @@ import {useQuasar} from "quasar";
 // Declare the reactive `tab` variable
 const tab = ref('mails');
 
+const props = defineProps(['departments', 'jobs']);
+
 defineOptions({
     layout:AdminLayout
 })
@@ -137,13 +178,26 @@ const form = useForm({
 
 })
 
+const selectedDepartment = ref(null); // Holds selected department
+const selectedJob = ref(null); // Holds selected job
+
+
+const onDepartmentChange = () => {
+    if (selectedDepartment.value) {
+        router.get(
+            route("report.submitted"), // Backend route
+            { department: selectedDepartment.value.value }, // Send department ID
+            { preserveState: true, replace: true } // Keep page state intact
+        );
+    }
+};
 
 const statuses=[
-    {value:['VERIFIED'],label:'Verified'},
-    {value:['REJECTED'],label:'Rejected'},
-    {value:['SUBMITTED'],label:'Submitted'},
+    // {value:['VERIFIED'],label:'Verified'},
+    {value:['ELIGIBLE'],label:'Eligible'},
+    {value:['SUBMITTED'],label:'Pending'},
     {value:['APPROVED'],label:'Approved'},
-    {value:['VERIFIED','REJECTED','SUBMITTED'],label:'All'},
+    {value:['ELIGIBLE','SUBMITTED','APPROVED'],label:'All'},
 ]
 const genders=[
     {value:'Male',label:'Male'},
@@ -160,6 +214,18 @@ const posts=[
 
 const onFilter = () => {
     q.loading.show(); // Show loading indicator (assuming you're using Quasar's loading plugin)
+
+    if (!selectedDepartment || !form.posts) {
+        q.notify({
+            type: 'warning',
+            message: !selectedDepartment
+                ? 'Please select a department.'
+                : 'No Job Avaliable for the selected department.',
+            position: 'bottom',
+        });
+        q.loading.hide();
+    }
+
 
     // Generate the URL using Inertia's route helper
     const url = route('report.application.download');

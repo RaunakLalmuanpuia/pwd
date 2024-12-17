@@ -224,6 +224,7 @@ Route::group(['prefix' => 'report'], function () {
     Route::get('written', [ReportController::class, 'writtenExam'])->name('report.writtenExam');
 });
 
+Route::get('/jobs-by-department', [ReportController::class, 'getJobsByDepartment'])->name('jobs.by.department');
 
 Route::get('page/privacy', function () {
     return Inertia::render('Privacy',[
