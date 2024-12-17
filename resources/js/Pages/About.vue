@@ -116,46 +116,37 @@ defineProps({
 
         <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
             <div class="bg-white shadow-lg rounded-lg p-6">
-                <h1 class="text-xl font-bold mb-4">Privacy Policy</h1>
-                <ol class="list-decimal list-inside space-y-4 text-gray-700">
-                    <li>
-                        This website does not automatically capture any specific personal information from you
-                        (like name, phone number, or e-mail address) that allows us to identify you individually.
-                    </li>
-                    <li>
-                        If the website requests you to provide personal information, you will be informed of the
-                        particular purposes for which the information is gathered, and adequate security measures
-                        will be taken to protect your personal information.
-                    </li>
-                    <li>
-                        We collect personal information (like name, address, phone number, qualification, and
-                        signature) in connection with your application and recruitment process.
-                    </li>
-                    <li>
-                        The personal information collected will be used solely for recruitment purposes, and we
-                        will not use it for any other purpose unless you have given your explicit consent.
-                    </li>
-                    <li>
-                        You have the option to ask for deletion of your data. However, we may need to retain
-                        some of your personal information for accounting purposes.
-                    </li>
-                    <li>
-                        Application fees once paid cannot be refunded. In cases where the fee amount is deducted
-                        more than once, applicants may seek a refund from Mizoram State e-Governance Society (MSeGS),
-                        Aizawl upon providing the said transaction record.
-                    </li>
-                    <li>
-                        We do not sell or share any personally identifiable information volunteered on the website
-                        to any third party (public/private). Any information provided to this website will be
-                        protected from loss, misuse, unauthorized access or disclosure, alteration, or destruction.
-                    </li>
-                    <li>
-                        We may gather certain information about your visit to the site, such as IP address, domain
-                        name, browser type, operating system, date and time of the visit, and pages visited. We do
-                        not attempt to link these details to the identity of any individual unless an attempt to
-                        damage the site is detected.
-                    </li>
-                </ol>
+                <h1 class="text-xl font-bold mb-4">ABOUT US</h1>
+
+                <p class="text-lg text-gray-700">
+                    Welcome to our Job Recruitment Portal! Our platform is designed to help job seekers apply for various government positions across different departments. We ensure a smooth and transparent application process for all applicants.
+                </p>
+                <p class="text-lg text-gray-700 mt-4">
+                    <strong>Our Mission:</strong> To connect talented individuals with meaningful job opportunities and ensure a fair examination and selection process. We strive to provide the best experience for both applicants and hiring departments.
+                </p>
+
+
+                <p class="text-lg text-gray-700 mt-4">
+                    <strong>Our Process:</strong>
+                    <ul class="list-disc list-inside">
+                        <li>Applicants can view available jobs and apply directly.</li>
+                        <li>Each job includes specific qualifications, salary details, and application deadlines.</li>
+                        <li>After applying, candidates are assigned to exams for further evaluation.</li>
+                        <li>Exams include various subjects, and applicants are evaluated based on their performance.</li>
+                        <li>After the exams, marks are assigned, and applicants are selected based on their performance and other criteria.</li>
+                    </ul>
+                </p>
+
+                <h2 class="text-2xl font-semibold mt-6 mb-4">Departments</h2>
+                <p class="text-lg text-gray-700">
+                    Our system is integrated with various departments offering job opportunities. Each department lists available positions with detailed job requirements, salary, and other important information.
+                </p>
+
+
+
+
+
+
             </div>
         </main>
 

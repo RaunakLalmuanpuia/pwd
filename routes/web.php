@@ -224,7 +224,6 @@ Route::group(['prefix' => 'report'], function () {
     Route::get('written', [ReportController::class, 'writtenExam'])->name('report.writtenExam');
 });
 
-Route::get('/jobs-by-department', [ReportController::class, 'getJobsByDepartment'])->name('jobs.by.department');
 
 Route::get('page/privacy', function () {
     return Inertia::render('Privacy',[
@@ -240,6 +239,13 @@ Route::get('page/terms', function () {
         'canRegister' => Route::has('register'),
     ]);
 })->name('terms');
+
+Route::get('page/about', function () {
+    return Inertia::render('About', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+    ]);
+})->name('about');
 
 require __DIR__.'/auth.php';
 

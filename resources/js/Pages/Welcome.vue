@@ -56,7 +56,7 @@ function handleImageError() {
                     <template v-else>
                         <Link
                             v-if="canRegister"
-                            :href="route('register')"
+                            :href="route('about')"
                             class="rounded-md px-3 py-2 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                         >
                             <PrimaryButton
@@ -65,17 +65,17 @@ function handleImageError() {
                                 About Us
                             </PrimaryButton>
                         </Link>
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                        >
-                            <PrimaryButton
-                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"
-                            >
-                                Services
-                            </PrimaryButton>
-                        </Link>
+<!--                        <Link-->
+<!--                            v-if="canRegister"-->
+<!--                            :href="route('register')"-->
+<!--                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"-->
+<!--                        >-->
+<!--                            <PrimaryButton-->
+<!--                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"-->
+<!--                            >-->
+<!--                                Services-->
+<!--                            </PrimaryButton>-->
+<!--                        </Link>-->
                         <Link
                             v-if="canRegister"
                             :href="route('register')"
@@ -87,17 +87,17 @@ function handleImageError() {
                                 Apply
                             </PrimaryButton>
                         </Link>
-                        <Link
-                            v-if="canRegister"
-                            :href="route('register')"
-                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition duration-300 hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                        >
-                            <PrimaryButton
-                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"
-                            >
-                                Contact
-                            </PrimaryButton>
-                        </Link>
+<!--                        <Link-->
+<!--                            v-if="canRegister"-->
+<!--                            :href="route('register')"-->
+<!--                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition duration-300 hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"-->
+<!--                        >-->
+<!--                            <PrimaryButton-->
+<!--                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"-->
+<!--                            >-->
+<!--                                Contact-->
+<!--                            </PrimaryButton>-->
+<!--                        </Link>-->
 
                         <Link
                             :href="route('login')"
