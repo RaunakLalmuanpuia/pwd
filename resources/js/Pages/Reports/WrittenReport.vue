@@ -2,8 +2,6 @@
 
 <template>
 
-
-
     <q-toolbar padding class="card justify-center">
         <q-tabs padding>
 
@@ -22,7 +20,7 @@
                     :active="route().current()==='report.writtenExam'"
                     @click="$inertia.get(route('report.writtenExam'))">
                 <q-item-section>
-                    WRITTEN EXAM
+                    EXAM REPORT
                 </q-item-section>
             </q-item>
             <q-route-tab
@@ -35,34 +33,68 @@
     <q-page padding>
 
 
-        <p class="q-ma-none page-title py-3"> Written Report</p>
+        <p class="q-ma-none page-title py-3"> Exam Report </p>
         <br/>
         <q-form @submit="onFilter" class="row  q-col-gutter-md q-pa-md">
+
             <div class="col-xs-12 col-sm-6">
                 <q-select
-                    v-model="form.posts"
+                    v-model="selectedDepartment"
                     outlined
-                    class="my-input"
                     dense
-                    :options="posts"
+                    :options="departments"
                     clearable
-                    label="Post"
+                    label="Select Department"
+                    @update:model-value="onDepartmentChange"
+                    :rules="[
+                  val => !!val || 'Department is required'
+                ]"
                 />
             </div>
 
             <div class="col-xs-12 col-sm-6 ">
                 <q-select
-                    v-model="form.status"
+                    v-model="form.exam"
                     outlined
                     class="my-input"
                     dense
-                    label="Application Status"
-                    :options="statuses"
+                    label="Job Exam"
+                    :options="exams"
                     :rules="[
-                      val=>!!val || 'Status is required'
+                      val=>!!val || 'Exam is required'
                     ]"
                 />
             </div>
+
+            <!-- Handling jobs display -->
+            <div class="col-xs-12 col-sm-6">
+                <template v-if="!selectedDepartment">
+                    <!-- Case 1: No department selected -->
+                    <p>Please select a department.</p>
+                </template>
+
+                <template v-else-if="jobs.length > 0">
+                    <!-- Case 2: Department selected and jobs available -->
+                    <q-select
+                        v-model="form.posts"
+                        outlined
+                        class="my-input"
+                        dense
+                        :options="jobs"
+                        clearable
+                        label="Post"
+                        :rules="[
+                        val => !!val || 'Post is required'
+                      ]"
+                    />
+                </template>
+
+                <template v-else>
+                    <!-- Case 3: Department selected but no jobs available -->
+                    <p>No jobs available for the selected department.</p>
+                </template>
+            </div>
+
             <div class="col-xs-12 col-sm-6"/>
             <div class="col-xs-12">
                 <p class="ztext q-ma-none">optional</p>
@@ -118,31 +150,50 @@
 <script setup>
 import AdminLayout from "@/Layouts/Admin.vue";
 import { ref } from 'vue';
-
+import axios from "axios";
+import {useQuasar} from "quasar";
 // Declare the reactive `tab` variable
 const tab = ref('mails');
+
+const props = defineProps(['departments', 'jobs', 'exams']);
 
 defineOptions({
     layout:AdminLayout
 })
 
-import {useForm, usePage} from "@inertiajs/vue3";
-
+import {router, useForm, usePage} from "@inertiajs/vue3";
+const q = useQuasar();
 const page = usePage();
 const form = useForm({
     status:'',
     state:'',
     district:'',
     gender:'',
+    exam:'',
     posts:'',
 
 })
 
+const selectedDepartment = ref(null); // Holds selected department
+const selectedJob = ref(null); // Holds selected job
+
+
+const onDepartmentChange = () => {
+    if (selectedDepartment.value) {
+        router.get(
+            route("report.writtenExam"), // Backend route
+            { department: selectedDepartment.value.value }, // Send department ID
+            { preserveState: true, replace: true } // Keep page state intact
+        );
+    }
+};
+
 const statuses=[
-    {value:['VERIFIED'],label:'Verified'},
-    {value:['REJECTED'],label:'Rejected'},
-    {value:['SUBMITTED'],label:'Submitted'},
-    {value:['VERIFIED','REJECTED','SUBMITTED'],label:'All'},
+    // {value:['VERIFIED'],label:'Verified'},
+    {value:['ELIGIBLE'],label:'Eligible'},
+    {value:['SUBMITTED'],label:'Pending'},
+    {value:['APPROVED'],label:'Approved'},
+    {value:['ELIGIBLE','SUBMITTED','APPROVED'],label:'All'},
 ]
 const genders=[
     {value:'Male',label:'Male'},
@@ -155,8 +206,49 @@ const posts=[
     {value:'UDC',label:'UDC'},
 
 ]
-</script>
 
+
+const onFilter = () => {
+    q.loading.show(); // Show loading indicator (assuming you're using Quasar's loading plugin)
+
+    if (!selectedDepartment || !form.posts) {
+        q.notify({
+            type: 'warning',
+            message: !selectedDepartment
+                ? 'Please select a department.'
+                : 'No Job Avaliable for the selected department.',
+            position: 'bottom',
+        });
+        q.loading.hide();
+    }
+
+
+    // Generate the URL using Inertia's route helper
+    const url = route('report.written.download');
+
+    // Make a GET request to the URL with responseType as 'blob'
+    axios.post(url, form, { responseType: 'blob' })
+        .then((res) => {
+            // Create an object URL from the response data and trigger a download
+            const fileUrl = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.setAttribute('download', Date.now() + '.xlsx'); // Set a dynamic file name
+            link.click();
+        })
+        .catch((err) => {
+            // Show an error notification if something goes wrong
+            q.notify({
+                type: 'negative',
+                message: err.response?.data?.message || 'Failed to download file',
+            });
+        })
+        .finally(() => {
+            q.loading.hide(); // Hide loading indicator
+        });
+};
+
+</script>
 
 <style scoped>
 

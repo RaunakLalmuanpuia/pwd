@@ -222,6 +222,7 @@ Route::group(['prefix' => 'report'], function () {
     Route::get('application', [ReportController::class, 'submitted'])->name('report.submitted');
     Route::post('application/download', [ReportController::class, 'downloadApplicationReport'])->name('report.application.download');
     Route::get('written', [ReportController::class, 'writtenExam'])->name('report.writtenExam');
+    Route::post('written/download', [ReportController::class, 'generateExamReport'])->name('report.written.download');
 });
 
 

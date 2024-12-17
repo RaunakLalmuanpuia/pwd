@@ -19,7 +19,7 @@
                         :active="route().current()==='report.writtenExam'"
                         @click="$inertia.get(route('report.writtenExam'))">
                     <q-item-section>
-                        WRITTEN EXAM
+                        EXAM REPORT
                     </q-item-section>
                 </q-item>
 
@@ -47,15 +47,10 @@
                     label="Select Department"
                     @update:model-value="onDepartmentChange"
                     :rules="[
-      val => !!val || 'Department is required'
-    ]"
+                  val => !!val || 'Department is required'
+                ]"
                 />
             </div>
-
-
-
-
-
 
             <div class="col-xs-12 col-sm-6 ">
                 <q-select

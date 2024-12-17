@@ -35,6 +35,11 @@ class Exam extends Model
 
     public function applicantExams(): HasMany
     {
-        return $this->hasMany(ApplicantExam::class);
+        return $this->hasMany(Applications::class);
+    }
+
+    public function examMarks()
+    {
+        return $this->hasMany(ExamMarks::class, 'exam_id');
     }
 }
