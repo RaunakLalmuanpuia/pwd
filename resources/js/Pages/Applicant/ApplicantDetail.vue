@@ -9,14 +9,13 @@
                 flat
                 icon="arrow_left"
                 label="back"
-                @click="$router.back()"
+                @click="goBack"
             />
             <div class="flex">
                 <q-btn label="Payments" @click="openPaymentDialog" />
             </div>
         </div>
         <br />
-<!--        {{jobDetails}}-->
         <div class="row zcard q-pa-md">
             <div class="col-xs-12">
                 <div class="column">
@@ -150,124 +149,99 @@
             <div class="col-xs-12 col-sm-3 text-weight-medium">
                 {{ jobDetails.applications[0]?.applicant?.qualification || '--' }}
             </div>
+            <div class="col-xs-12"></div>
 
-            <div v-if="jobDetails.applications[0]?.applicant?.qualification === 'Doctorate'" style="display: flex; flex-wrap: wrap; gap: 10px;">
-                <!-- Graduate Qualification -->
-                <div style="display: flex; flex: 1 1 100%; align-items: center; gap: 15px; margin-bottom: 10px;">
-                    <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream">
-                        <span style="color: #6c757d;">Graduate Qualification Degree:</span>
-                        <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}</span>
-                    </div>
-                    <div v-if="jobDetails.applications[0]?.applicant?.graduateStream">
-                        <span style="color: #6c757d;">Graduate Qualification Stream:</span>
-                        <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}</span>
-                    </div>
+            <template v-if="jobDetails.applications[0]?.applicant?.qualification === 'Doctorate'">
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Graduate Qualification Degree:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}</span>
                 </div>
 
-                <!-- Post Graduate Qualification -->
-                <div style="display: flex; flex: 1 1 100%; align-items: center; gap: 15px; margin-bottom: 10px;">
-                    <div v-if="jobDetails.applications[0]?.applicant?.postGraduateDegree && jobDetails.applications[0]?.applicant?.postGraduateStream">
-                        <span style="color: #6c757d;">Post Graduate Qualification Degree:</span>
-                        <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.postGraduateDegree || '--' }}</span>
-                    </div>
-                    <div v-if="jobDetails.applications[0]?.applicant?.postGraduateStream">
-                        <span style="color: #6c757d;">Post Graduate Qualification Stream:</span>
-                        <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.postGraduateStream || '--' }}</span>
-                    </div>
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Graduate Qualification Stream:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}</span>
+                </div>
+                <div class="col-xs-12
+                 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Post Graduate Qualification Degree:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.postGraduateDegree || '--' }}</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Post Graduate Qualification Stream:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.postGraduateStream || '--' }}</span>
                 </div>
 
-                <!-- Doctorate Qualification -->
-                <div style="display: flex; flex: 1 1 100%; align-items: center; gap: 15px; margin-bottom: 10px;">
-                    <div v-if="jobDetails.applications[0]?.applicant?.doctorateDegree && jobDetails.applications[0]?.applicant?.doctorateStream">
-                        <span style="color: #6c757d;">Doctorate Qualification Degree:</span>
-                        <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.doctorateDegree || '--' }}</span>
-                    </div>
-                    <div v-if="jobDetails.applications[0]?.applicant?.doctorateStream">
-                        <span style="color: #6c757d;">Doctorate Qualification Stream:</span>
-                        <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.doctorateStream || '--' }}</span>
-                    </div>
+                <div class="col-xs-12
+                 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Doctorate Qualification Degree:</span>
                 </div>
-            </div>
-
-
-            <!-- Show all qualifications if qualification is Doctorate -->
-            <div v-if="jobDetails.applications[0]?.applicant?.qualification === 'Doctorate'">
-                <!-- Graduate Qualification -->
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-grey-6">Graduate Qualification Degree</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.doctorateDegree || '--' }}</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Doctorate Qualification Stream:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.doctorateStream || '--' }}</span>
                 </div>
 
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-grey-6">Graduate Qualification Stream</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}
+            </template>
+
+            <template v-if="jobDetails.applications[0]?.applicant?.qualification === 'Post Graduate'">
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Graduate Qualification Degree:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}</span>
                 </div>
 
-                <!-- Post Graduate Qualification -->
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateDegree && jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-grey-6">Post Graduate Qualification Degree</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateDegree && jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.postGraduateDegree || '--' }}
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Graduate Qualification Stream:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}</span>
+                </div>
+                <div class="col-xs-12
+                 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Post Graduate Qualification Degree:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.postGraduateDegree || '--' }}</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Post Graduate Qualification Stream:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.postGraduateStream || '--' }}}</span>
                 </div>
 
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-grey-6">Post Graduate Qualification Stream</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.postGraduateStream || '--' }}
+            </template>
+
+            <template v-if="jobDetails.applications[0]?.applicant?.qualification === 'Graduate'">
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Graduate Qualification Degree:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}</span>
                 </div>
 
-                <!-- Doctorate Qualification -->
-                <div v-if="jobDetails.applications[0]?.applicant?.doctorateDegree && jobDetails.applications[0]?.applicant?.doctorateStream" class="col-xs-12 col-sm-3 text-grey-6">Doctorate Qualification Degree</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.doctorateDegree && jobDetails.applications[0]?.applicant?.doctorateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.doctorateDegree || '--' }}
+                <div class="col-xs-12 col-sm-3 text-grey-6">
+                    <span style="color: #6c757d;">Graduate Qualification Stream:</span>
+                </div>
+                <div class="col-xs-12 col-sm-3 text-weight-medium">
+                    <span style="font-weight: 500;">{{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}</span>
                 </div>
 
-                <div v-if="jobDetails.applications[0]?.applicant?.doctorateStream" class="col-xs-12 col-sm-3 text-grey-6">Doctorate Qualification Stream</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.doctorateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.doctorateStream || '--' }}
-                </div>
-            </div>
 
-            <!-- Show Post Graduate and Graduate qualifications if qualification is Post Graduate -->
-            <div v-if="jobDetails.applications[0]?.applicant?.qualification === 'Post Graduate'">
-                <!-- Post Graduate Qualification -->
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateDegree && jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-grey-6">Post Graduate Qualification Degree</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateDegree && jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.postGraduateDegree || '--' }}
-                </div>
-
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-grey-6">Post Graduate Qualification Stream</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.postGraduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.postGraduateStream || '--' }}
-                </div>
-
-                <!-- Graduate Qualification -->
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-grey-6">Graduate Qualification Degree</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}
-                </div>
-
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-grey-6">Graduate Qualification Stream</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}
-                </div>
-            </div>
-
-            <!-- Show only Graduate qualifications if qualification is Graduate -->
-            <div v-if="jobDetails.applications[0]?.applicant?.qualification === 'Graduate'" >
-                <!-- Graduate Qualification -->
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-grey-6">Graduate Qualification Degree</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateDegree && jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.graduateDegree || '--' }}
-                </div>
-
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-grey-6">Graduate Qualification Stream</div>
-                <div v-if="jobDetails.applications[0]?.applicant?.graduateStream" class="col-xs-12 col-sm-3 text-weight-medium">
-                    {{ jobDetails.applications[0]?.applicant?.graduateStream || '--' }}
-                </div>
-            </div>
-
-
-
-
+            </template>
 
             <div class="col-xs-12">
                 <q-separator class="q-my-md" />
@@ -317,9 +291,9 @@
                     <div class="col-xs-12 col-sm-3 ztext">Transaction ID</div>
                     <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.transaction_id }}</div>
                     <div class="col-xs-12 col-sm-3 ztext">Date</div>
-                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.created_at }}</div>
+                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ formatDate(jobDetails.applications[0].transaction?.created_at) }}</div>
                     <div class="col-xs-12 col-sm-3 ztext">Amount</div>
-                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ jobDetails.applications[0].transaction?.amount }}</div>
+                    <div class="col-xs-12 col-sm-9 text-weight-medium">{{ formatAmount(jobDetails.applications[0].transaction?.amount) }}</div>
 
                     <div class="col-xs-12">
                         <q-separator class="q-my-sm"/>
@@ -362,10 +336,31 @@ const closeDialog = () => {
 const handleOpen = (item) => {
     let a = document.createElement("a");
     a.target = "_blank";
-    a.href = item?.full_path;
+    a.href = `/storage/${item?.document_path}`;
     a.click();
 };
 
+
+function goBack() {
+        window.history.back(); // Use browser's native back functionality
+}
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, '0'); // Ensure two digits for day
+    const month = date.toLocaleString('default', { month: 'long' }); // Full month name
+    const year = date.getFullYear();
+
+    return `${day} ${month} ${year}`;
+};
+const formatAmount = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(amount);
+};
 
 </script>
 <style scoped>

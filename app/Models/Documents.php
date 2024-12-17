@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Documents extends Model
 {
@@ -24,5 +26,14 @@ class Documents extends Model
     public function jobPosting(): BelongsTo
     {
         return $this->belongsTo(JobDetail::class, 'job_detail_id');
+    }
+
+//    public function documentAttachments(): HasMany
+//    {
+//        return $this->hasMany(ApplicationDocument::class, 'document_id');
+//    }
+    public function documentAttachments(): HasOne
+    {
+        return $this->hasOne(ApplicationDocument::class, 'document_id', 'id'); // Explicitly define keys
     }
 }

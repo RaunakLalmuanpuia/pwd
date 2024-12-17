@@ -21,7 +21,7 @@ class AdminApplicationController extends Controller
                 $query->where('id', $application->id);
             },
             'applications.applicant.user.address',
-            'documents',
+            'documents.documentAttachments',
             'applications.transaction',
             'applications.applicationDocuments.jobDocument',
         ]);

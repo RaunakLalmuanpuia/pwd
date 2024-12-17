@@ -160,6 +160,7 @@
                 v-for="document in mandatoryDocuments" :key="document.id"
                 class="row col-xs-12 col-sm-6 print-hide"
             >
+<!--                {{document.document_attachments}}-->
                 <div class="col-xs-8 flex items-center text-grey-6">
                     <label class="block text-sm font-medium text-bold">{{ document.document_name }}</label>
                 </div>
@@ -169,7 +170,7 @@
                         :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
                         color="primary"
                         flat
-
+                        @click="handleOpen(document.document_attachments)"
                     />
                 </div>
             </div>
@@ -236,18 +237,14 @@ const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
 };
-const currentDate = ref(formatDate(new Date()));
-const isDocumentUploaded = (documentId) => {
-    return props.application.application_documents.some(
-        (uploadedDoc) => uploadedDoc.document_id === documentId
-    );
+
+const handleOpen = (item) => {
+    let a = document.createElement("a");
+    a.target = "_blank";
+    // a.href = item?.document_path;
+    a.href = `/storage/${item?.document_path}`;
+    a.click();
 };
 
-const getUploadedDocumentPath = (documentId) => {
-    const uploadedDoc = props.application.application_documents.find(
-        (doc) => doc.document_id === documentId
-    );
-    return uploadedDoc ? `/storage/${uploadedDoc.document_path}` : null;
-};
 
 </script>

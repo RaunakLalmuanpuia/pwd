@@ -1,7 +1,7 @@
 
 
 <template>
-    
+
 
     <div class="p-4 bg-background rounded-lg shadow-md">
         <h2 class="text-lg font-bold">Name of Post</h2>
@@ -33,7 +33,11 @@
     <div v-if="isVisible" class="flex flex-col md:flex-row p-4 bg-background rounded-lg shadow-md">
         <div class="w-full md:w-1/2 p-4 border-r border-border">
             <div class="flex items-center mb-4">
-                <q-img  :src="`/storage/${applicant.passport_photo}`" alt="Passport Size Photo" class="rounded-full mr-4" />
+                <q-img
+                    :src="`/storage/${applicant.passport_photo}`"
+                    alt="Passport Size Photo"
+                    class="mr-4"
+                    style="width: 120px; height: 120px; object-fit: cover;" />
                 <div>
                     <h3 class="text-md font-bold">{{ applicant?.user.name }}</h3>
                     <p class="text-muted-foreground">Name (As HSLC Cert. / Service Book)</p>

@@ -2,7 +2,6 @@
 
 <template>
 
-
     <div class="p-4 bg-background rounded-lg shadow-md">
         <h2 class="text-lg font-bold">Name of Post</h2>
         <p class="text-base">{{ jobDetail.post_name }}</p>
@@ -25,15 +24,6 @@
                 class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
                 {{ isVisible ? "Hide Profile" : "Show Profile" }}
-            </button>
-        </div>
-        <!-- Right-aligned and smaller image container -->
-        <div class="p-4">
-            <button
-                @click="toggleDiv"
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-                {{ isVisible ? "Hide Payment" : "Show Payment" }}
             </button>
         </div>
     </div>
@@ -107,6 +97,7 @@
                         :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
                         color="primary"
                         flat
+                        @click="handleOpen(document.document_attachments)"
                     />
                 </div>
             </div>
@@ -202,6 +193,7 @@ const props = defineProps(['jobDetail', 'mandatoryDocuments', 'applicant','appli
 const form = useForm({
     document_id: null,
     file: null,
+    application_id: props.application.id,
 });
 
 
@@ -211,38 +203,9 @@ function handleFileUpload(event, documentId) {
     form.document_id = documentId;
     form.file = event.target.files[0];
 }
-//
-// function submitDocument(documentId) {
-//     if (!form.file) {
-//         alert('Please select a file before submitting.');
-//         return;
-//     }
-//
-//     processing.value = true;
-//     form.post(`/api/documents/${props.jobDetail.id}/update`, {
-//         onSuccess: () => {
-//             alert('Document updated successfully!');
-//             form.reset();
-//         },
-//         onError: (errors) => {
-//             console.error(errors);
-//         },
-//         onFinish: () => {
-//             processing.value = false;
-//         },
-//     });
-// }
 
 const submitDocument = () => {
     form.post(route('application.update', { jobDetail: props.jobDetail.id }), {
-        onSuccess: () => {
-            form.reset();
-        },
-    });
-};
-
-const submitApplication = () => {
-    router.post(route('application.submit', { jobDetail: props.jobDetail.id }), {
         onSuccess: () => {
             form.reset();
         },
@@ -263,97 +226,15 @@ const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return date.toLocaleDateString('en-US', options);
 };
-const currentDate = ref(formatDate(new Date()));
-const isDocumentUploaded = (documentId) => {
-    return props.application.application_documents.some(
-        (uploadedDoc) => uploadedDoc.document_id === documentId
-    );
+
+const handleOpen = (item) => {
+    let a = document.createElement("a");
+    a.target = "_blank";
+    // a.href = item?.document_path;
+    a.href = `/storage/${item?.document_path}`;
+    a.click();
 };
-
-const getUploadedDocumentPath = (documentId) => {
-    const uploadedDoc = props.application.application_documents.find(
-        (doc) => doc.document_id === documentId
-    );
-    return uploadedDoc ? `/storage/${uploadedDoc.document_path}` : null;
-};
-
-// const pay = () => {
-//     q.dialog({
-//         title: 'Confirmation',
-//         message: 'Application is draft by default and you can pay later. Do you want to proceed with payment?',
-//         ok: 'Proceed',
-//         cancel: 'Back',
-//     }).onOk(() => {
-//         q.loading.show();
-//
-//         // Example API call using Inertia's router.post
-//         axios.post(
-//             '/paytm/initiate',
-//             {
-//                 job_ids: props.jobDetail.id,
-//                 application_id: props.application.id,
-//             },
-//             {
-//                 onSuccess: ({ props }) => {
-//                     const { token, order_id, amount } = props.data; // Adjust based on your response structure
-//
-//                     const config = {
-//                         root: '',
-//                         flow: 'DEFAULT',
-//                         data: {
-//                             orderId: order_id, // Update order ID
-//                             token: token, // Update token value
-//                             tokenType: 'TXN_TOKEN',
-//                             amount: amount, // Update amount
-//                         },
-//                         handler: {
-//                             notifyMerchant: (eventName, data) => {
-//                                 console.log('notifyMerchant handler function called');
-//                                 console.log('eventName => ', eventName);
-//                                 console.log('data => ', data);
-//                             },
-//                         },
-//                     };
-//
-//                     if (window.Paytm && window.Paytm.CheckoutJS) {
-//                         window.Paytm.CheckoutJS.init(config)
-//                             .then(() => {
-//                                 // After successfully updating configuration, invoke JS Checkout
-//                                 window.Paytm.CheckoutJS.invoke();
-//                             })
-//                             .catch((error) => {
-//                                 console.error('Error initializing Paytm CheckoutJS:', error);
-//                                 q.notify({
-//                                     type: 'warning',
-//                                     message: 'Unable to load Checkout Page: Please Reload to try again',
-//                                 });
-//                             });
-//                     } else {
-//                         console.error('Error: Paytm CheckoutJS not loaded');
-//                         q.notify({
-//                             type: 'warning',
-//                             message: 'Unable to load Checkout Page: Please Reload to try again',
-//                         });
-//                     }
-//                 },
-//                 onError: (err) => {
-//                     console.error(err);
-//                     q.notify({
-//                         type: 'negative',
-//                         message: err?.response?.data?.message || err.toString(),
-//                     });
-//                 },
-//                 onFinish: () => {
-//                     q.loading.hide();
-//                 },
-//             }
-//         );
-//     });
-// };
-
-
 const pay=()=>{
-
     q.dialog({
         title:'Confirmation',
         message:'Application is draft by default and you can pay later. Do you want to proceed with payment',

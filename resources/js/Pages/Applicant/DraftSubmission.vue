@@ -28,7 +28,6 @@
                                     </div>
 
                                     <div class="flex items-center justify-between">
-                                        <button  @click="$inertia.get(route('application.viewApplication', application.job_detail.id))" class="bg-secondary text-primary-foreground px-4 py-2 rounded-md mr-2 hover:bg-primary/80">View Details</button>
                                         <button  @click="$inertia.get(route('application.viewApplicationDraft', application.job_detail.id))" class="bg-secondary text-primary-foreground px-4 py-2 rounded-md mr-2 hover:bg-primary/80">Submit Application</button>
                                     </div>
                                 </div>

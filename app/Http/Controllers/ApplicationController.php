@@ -74,7 +74,8 @@ class ApplicationController extends Controller
     public function viewApplication(JobDetail $jobDetail)
     {
 //        dd($jobDetail);
-        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->with('documentAttachments')->get();
+//        dd($mandatoryDocuments);
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         $application = Applications::where('applicant_id', $applicant->id)
@@ -92,7 +93,7 @@ class ApplicationController extends Controller
     public function viewApplicationDraft(JobDetail $jobDetail)
     {
 
-        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->with('documentAttachments')->get();
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         $application = Applications::where('applicant_id', $applicant->id)
@@ -177,12 +178,13 @@ class ApplicationController extends Controller
         if ($request->hasFile('documents') && is_array($request->file('documents'))) {
             foreach ($request->file('documents') as $key => $document) {
                 if ($document->isValid()) {
-                    $path = $document->store('documents');
+
+                    $path = $document->storeAs('public/documents', $document->getClientOriginalName());
 
                     ApplicationDocument::create([
                         'application_id' => $application->id,
                         'document_id' => $key,
-                        'document_path' => $path,
+                        'document_path' => 'documents/' . $document->getClientOriginalName(), // Store path as documents/file_name
                     ]);
                 }
             }
@@ -192,18 +194,32 @@ class ApplicationController extends Controller
     }
     public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
     {
-//        dd($request);
+
         $validatedData = $request->validate([
             'document_id' => 'required|exists:documents,id',
-            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048',
+            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048', // File validation
+            'application_id' => 'required|exists:applications,id', // Ensure application exists
         ]);
 
-        $document = $jobDetail->documents()->findOrFail($validatedData['document_id']);
-        $filePath = $request->file('file')->store('mandatory_documents');
+        // Find the corresponding ApplicationDocument by application_id and document_id
+        $applicationDocument = ApplicationDocument::where('application_id', $validatedData['application_id'])
+            ->where('document_id', $validatedData['document_id'])
+            ->first();
 
-        $document->update(['file_path' => $filePath]);
+        // Check if the document is valid
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            // Store the file in public/documents with the original file name
+            $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
+
+            // Update the ApplicationDocument record with the new document path
+            $applicationDocument->update([
+                'document_path' => 'documents/' . $request->file('file')->getClientOriginalName(),
+            ]);
+        }
 
         return back()->with('success', 'Document updated successfully.');
+
+
     }
 
     public function deleteDraft(Request $request, JobDetail $jobDetail)
