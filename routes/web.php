@@ -226,7 +226,7 @@ Route::group(['prefix' => 'report'], function () {
     Route::get('exam_center', [ReportController::class, 'examCenter'])->name('report.exam_center');
 });
 
-
+// Privacy Page
 Route::get('page/privacy', function () {
     return Inertia::render('Privacy',[
         'canLogin' => Route::has('login'),
@@ -234,14 +234,14 @@ Route::get('page/privacy', function () {
     ]);
 })->name('privacy');
 
-
+// T&C Page
 Route::get('page/terms', function () {
     return Inertia::render('Terms', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
     ]);
 })->name('terms');
-
+// About us Page
 Route::get('page/about', function () {
     return Inertia::render('About', [
         'canLogin' => Route::has('login'),

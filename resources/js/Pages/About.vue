@@ -128,14 +128,15 @@ defineProps({
 
                 <p class="text-lg text-gray-700 mt-4">
                     <strong>Our Process:</strong>
-                    <ul class="list-disc list-inside">
-                        <li>Applicants can view available jobs and apply directly.</li>
-                        <li>Each job includes specific qualifications, salary details, and application deadlines.</li>
-                        <li>After applying, candidates are assigned to exams for further evaluation.</li>
-                        <li>Exams include various subjects, and applicants are evaluated based on their performance.</li>
-                        <li>After the exams, marks are assigned, and applicants are selected based on their performance and other criteria.</li>
-                    </ul>
+
                 </p>
+                <ul class="list-disc list-inside">
+                    <li>Applicants can view available jobs and apply directly.</li>
+                    <li>Each job includes specific qualifications, salary details, and application deadlines.</li>
+                    <li>After applying, candidates are assigned to exams for further evaluation.</li>
+                    <li>Exams include various subjects, and applicants are evaluated based on their performance.</li>
+                    <li>After the exams, marks are assigned, and applicants are selected based on their performance and other criteria.</li>
+                </ul>
 
                 <h2 class="text-2xl font-semibold mt-6 mb-4">Departments</h2>
                 <p class="text-lg text-gray-700">
@@ -155,7 +156,7 @@ defineProps({
         <footer class="bg-gray-800 text-gray-200 py-4 text-center">
             <div class="container flex justify-between items-center">
                 <div class="flex space-x-2">
-                    <img src="/assets/images/footer-logo.png"/>
+                    <img src="/images/msegslogo.svg"/>
                     <div>
                         <div>Crafted with care by</div>
                         <div>Mizoram State e-Governance Society</div>

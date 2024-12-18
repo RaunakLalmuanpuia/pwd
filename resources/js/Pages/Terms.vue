@@ -157,7 +157,7 @@ defineProps({
         <footer class="bg-gray-800 text-gray-200 py-4 text-center">
             <div class="container flex justify-between items-center">
                 <div class="flex space-x-2">
-                    <img src="/assets/images/footer-logo.png"/>
+                    <img src="/images/msegslogo.svg"/>
                     <div>
                         <div>Crafted with care by</div>
                         <div>Mizoram State e-Governance Society</div>
