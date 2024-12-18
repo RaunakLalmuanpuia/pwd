@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Exports\ApplicationExport;
+use App\Exports\ExamCenterExport;
 use App\Exports\ExamReportExport;
+use App\Models\Applicants;
 use App\Models\Applications;
 
 use App\Models\Departments;
 use App\Models\Exam;
+use App\Models\ExamCenter;
 use App\Models\JobDetail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -44,48 +47,6 @@ class ReportController extends Controller
         ]);
     }
 
-
-//    public function writtenExam(Request $request){
-//
-//
-//        $selectedDepartment = $request->input('department');
-//
-//        $jobs = [];
-//        $exams = [];
-//
-//
-//        if ($selectedDepartment) {
-//            $jobs = JobDetail::query()
-//                ->where('department_id', $selectedDepartment)
-//                ->select('id', 'post_name', 'department_id')
-//                ->with('department:id,name')
-//                ->get()
-//                ->map(function ($job) {
-//                    return [
-//                        'value' => $job->id, // Set as value for q-select
-//                        'label' => $job->post_name, // Set as label for q-select
-//                    ];
-//                });
-//
-//            // Get exams for the selected department
-//            $exams = Exam::query()
-//                ->whereIn('job_details_id', $jobs->pluck('value')) // Filter exams for the selected jobs
-//                ->get()
-//                ->map(function ($exams) {
-//                    return [
-//                        'value' => $exams->id, // Set as value for q-select
-//                        'label' => $exams->exam_name, // Set as label for q-select
-//                    ];
-//                });
-//        }
-//
-//        return inertia('Reports/WrittenReport', [
-//            'departments' => Departments::query()->get(['name as label','id as value']),
-//            'jobs' => $jobs,
-//            'exams' => $exams,
-//        ]);
-//
-//    }
 
     public function writtenExam(Request $request)
     {
@@ -205,7 +166,54 @@ class ReportController extends Controller
 
         return inertia('Reports/ExamCenterReport', [
             'departments' => Departments::query()->get(['name as label','id as value']),
+            'exam_center' => ExamCenter::query()->get(['center_name as label', 'id as value']),
             'jobs' => $jobs,
         ]);
+    }
+
+    public function generateExamCenterReport(Request $request){
+
+
+        // Retrieve the posts and exam center from the request
+        $posts = $request->get('posts')['value'];
+        $exam_center = $request->get('exam_center')['value'];
+
+        // Retrieve the department, if provided
+        $department = $request->get('department')['value'];
+
+        $center = ExamCenter::where('id', $exam_center)->first();
+
+        $job_details = JobDetail::where('id', $posts)->first();
+
+
+        // Query applicants with the necessary filters and relationships
+        $applicants = Applicants::query()
+            ->with([
+                'applications' => function ($query) use ($posts) {
+                    // First filter by job_detail_id (or job_id if it's named differently in applications table)
+                    $query->where('job_details_id', $posts);
+                },
+                'applications.jobDetail.department',
+                'applications.examCenter',
+            ])
+            ->when($department, function ($q, $departmentId) {
+                $q->whereHas('applications.jobDetail.department', function ($q) use ($departmentId) {
+                    $q->where('id', $departmentId);
+                });
+            })
+            ->when($exam_center, function ($q, $examCenter) {
+                $q->whereHas('applications.examCenter', function ($q) use ($examCenter) {
+                    $q->where('id', $examCenter);
+                });
+            })
+            ->whereHas('applications', function ($query) {
+                // Filter applications where applicant_id matches the applicant's id
+                $query->whereColumn('applicant_id', 'applicants.id');
+            })
+            ->get();
+
+
+        // Return the Excel file as a download
+        return Excel::download(new ExamCenterExport($applicants,  $center, $job_details), 'exam_center_report.xlsx');
     }
 }

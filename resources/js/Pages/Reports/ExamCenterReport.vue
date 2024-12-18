@@ -82,26 +82,24 @@
                 </template>
             </div>
 
-            <div v-if="jobs.length > 0" class="col-xs-12 col-sm-6">
+            <div v-if="selectedJob" class="col-xs-12 col-sm-6">
                 <template v-if="!selectedJob">
-                    <p>Please select a job to see exams.</p>
+                    <p>Please select a job to see exams center.</p>
                 </template>
 
-                <template v-else-if="exams.length > 0">
+                <template v-else-if="exam_center.length > 0">
                     <q-select
-                        v-model="form.exam"
+                        v-model="form.exam_center"
                         outlined
                         dense
                         clearable
-                        :options="exams"
-                        label="Select Exam"
-                        :rules="[val => !!val || 'Exam is required']"
+                        :options="exam_center"
+                        label="Select Exam Center"
+                        :rules="[val => !!val || 'Exam Center is required']"
                     />
                 </template>
 
-                <template v-else>
-                    <p>No exams available for the selected job.</p>
-                </template>
+
             </div>
 
             <div class="col-xs-12 col-sm-6"/>
@@ -164,7 +162,7 @@ import {useQuasar} from "quasar";
 // Declare the reactive `tab` variable
 const tab = ref('mails');
 
-const props = defineProps(['departments', 'jobs', 'exams']);
+const props = defineProps(['departments', 'jobs', 'exams', 'exam_center']);
 
 defineOptions({
     layout:AdminLayout
@@ -178,7 +176,7 @@ const form = useForm({
     state:'',
     district:'',
     gender:'',
-    exam:null,
+    exam_center:null,
     posts:'',
     department: '',
 
@@ -277,7 +275,7 @@ const onFilter = () => {
 
 
     // Generate the URL using Inertia's route helper
-    const url = route('report.written.download');
+    const url = route('report.exam_center.download');
 
     // Make a GET request to the URL with responseType as 'blob'
     axios.post(url, form, { responseType: 'blob' })

@@ -224,6 +224,7 @@ Route::group(['prefix' => 'report'], function () {
     Route::get('written', [ReportController::class, 'writtenExam'])->name('report.writtenExam');
     Route::post('written/download', [ReportController::class, 'generateExamReport'])->name('report.written.download');
     Route::get('exam_center', [ReportController::class, 'examCenter'])->name('report.exam_center');
+    Route::post('exam_center/download', [ReportController::class, 'generateExamCenterReport'])->name('report.exam_center.download');
 });
 
 // Privacy Page
