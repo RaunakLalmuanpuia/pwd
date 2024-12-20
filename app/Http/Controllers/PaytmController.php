@@ -63,9 +63,11 @@ class PaytmController extends Controller
             "requestTimestamp" => Carbon::now()->timestamp,
             "channelId" => 'WEB'
         );
-        $url = env('APP_DEBUG')? "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID')
-            . "&orderId=" . $orderId
-            :"https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
+//        $url = env('APP_DEBUG')? "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID')
+//            . "&orderId=" . $orderId
+//            :"https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
+        $url =   "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
+//
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])->post($url, $paytmParams);
