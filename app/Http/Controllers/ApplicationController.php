@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ApplicationController extends Controller
@@ -62,20 +63,24 @@ class ApplicationController extends Controller
     // Citizen View Application
     public function show(JobDetail $jobDetail)
     {
+        $optionalDocuments = $jobDetail->documents()->where('is_mandatory', false)->with('documentAttachments')->get();
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->get();
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         return inertia('Applicant/JobApplication', [
             'jobDetail' => $jobDetail,
             'mandatoryDocuments' => $mandatoryDocuments,
+            'optionalDocuments' => $optionalDocuments,
             'applicant' => $applicant
         ]);
     }
     public function viewApplication(JobDetail $jobDetail)
     {
 //        dd($jobDetail);
-        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->with('documentAttachments')->get();
-//        dd($mandatoryDocuments);
+
+//        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->with('documentAttachments')->get();
+//        $optionalDocuments = $jobDetail->documents()->where('is_mandatory', false)->with('documentAttachments')->get();
+        //        dd($mandatoryDocuments);
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         $application = Applications::where('applicant_id', $applicant->id)
@@ -83,9 +88,19 @@ class ApplicationController extends Controller
             ->with(['applicationDocuments', 'transaction']) // Load documents associated with the application
             ->first();
 
+        $optionalDocuments = $jobDetail->documents()->where('is_mandatory', false) ->with(['documentAttachments' => function ($query) use ($application) {
+            // Ensure the condition is applied while eager loading 'documentAttachments'
+            $query->where('application_id', $application->id);
+        }])->get();
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true) ->with(['documentAttachments' => function ($query) use ($application) {
+            // Ensure the condition is applied while eager loading 'documentAttachments'
+            $query->where('application_id', $application->id);
+        }])->get();
+
         return inertia('Applicant/ViewApplication', [
             'jobDetail' => $jobDetail,
             'mandatoryDocuments' => $mandatoryDocuments,
+            'optionalDocuments' => $optionalDocuments,
             'applicant' => $applicant,
             'application' => $application,
         ]);
@@ -93,7 +108,6 @@ class ApplicationController extends Controller
     public function viewApplicationDraft(JobDetail $jobDetail)
     {
 
-        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->with('documentAttachments')->get();
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         $application = Applications::where('applicant_id', $applicant->id)
@@ -102,10 +116,20 @@ class ApplicationController extends Controller
             ->with(['applicationDocuments']) // Load documents associated with the application
             ->first();
 
+        $optionalDocuments = $jobDetail->documents()->where('is_mandatory', false) ->with(['documentAttachments' => function ($query) use ($application) {
+            // Ensure the condition is applied while eager loading 'documentAttachments'
+            $query->where('application_id', $application->id);
+        }])->get();
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true) ->with(['documentAttachments' => function ($query) use ($application) {
+            // Ensure the condition is applied while eager loading 'documentAttachments'
+            $query->where('application_id', $application->id);
+        }])->get();
+
         return inertia('Applicant/SubmitApplication', [
             'jobDetail' => $jobDetail,
             'mandatoryDocuments' => $mandatoryDocuments,
             'applicant' => $applicant,
+            'optionalDocuments' => $optionalDocuments,
             'application' => $application,
         ]);
     }
@@ -165,6 +189,8 @@ class ApplicationController extends Controller
         $missingDocuments = array_diff($mandatoryDocuments, $uploadedDocuments);
 
         if (!empty($missingDocuments)) {
+
+
             return redirect()->back()->with('error', 'Please upload all mandatory documents before applying.');
         }
 
@@ -190,11 +216,39 @@ class ApplicationController extends Controller
             }
         }
 
-        return redirect()->route('dashboard.citizen')->with('success', 'Application Saved to Draft successfully.');
+        return redirect()->route('application.viewApplicationDraft', [$jobDetail])->with('success', 'Application Saved to Draft successfully.');
     }
+//    public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
+//    {
+//
+//        $validatedData = $request->validate([
+//            'document_id' => 'required|exists:documents,id',
+//            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048', // File validation
+//            'application_id' => 'required|exists:applications,id', // Ensure application exists
+//        ]);
+//
+//        // Find the corresponding ApplicationDocument by application_id and document_id
+//        $applicationDocument = ApplicationDocument::where('application_id', $validatedData['application_id'])
+//            ->where('document_id', $validatedData['document_id'])
+//            ->first();
+//
+//        // Check if the document is valid
+//        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+//            // Store the file in public/documents with the original file name
+//            $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
+//
+//            // Update the ApplicationDocument record with the new document path
+//            $applicationDocument->update([
+//                'document_path' => 'documents/' . $request->file('file')->getClientOriginalName(),
+//            ]);
+//        }
+//
+//        return back()->with('success', 'Document updated successfully.');
+//
+//
+//    }
     public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
     {
-
         $validatedData = $request->validate([
             'document_id' => 'required|exists:documents,id',
             'file' => 'required|file|mimes:pdf,jpeg,png|max:2048', // File validation
@@ -208,7 +262,13 @@ class ApplicationController extends Controller
 
         // Check if the document is valid
         if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            // Store the file in public/documents with the original file name
+            // Check if there is an existing document and delete it
+            if ($applicationDocument && $applicationDocument->document_path) {
+                // Delete the old file from storage
+                Storage::delete('public/' . $applicationDocument->document_path);
+            }
+
+            // Store the new file in public/documents with the original file name
             $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
 
             // Update the ApplicationDocument record with the new document path
@@ -218,9 +278,8 @@ class ApplicationController extends Controller
         }
 
         return back()->with('success', 'Document updated successfully.');
-
-
     }
+
 
     public function deleteDraft(Request $request, JobDetail $jobDetail)
     {

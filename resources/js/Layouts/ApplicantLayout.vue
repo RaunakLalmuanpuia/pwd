@@ -85,7 +85,6 @@
                         </q-item-section>
                     </q-item>
 
-
                     <q-item clickable v-ripple active-class="active-menu"
                             :active="route().current()==='profile.edit'"
                             @click="$inertia.get(route('profile.edit'))">

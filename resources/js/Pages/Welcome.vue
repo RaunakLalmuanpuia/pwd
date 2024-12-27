@@ -23,6 +23,12 @@ defineProps({
     }
 });
 
+const formatDate = (date) => {
+    if (!date) return '';
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+    return new Intl.DateTimeFormat('en-GB', options).format(new Date(date));
+};
+
 function handleImageError() {
     document.getElementById("screenshot-container")?.classList.add("!hidden");
     document.getElementById("docs-card")?.classList.add("!row-span-1");
@@ -132,19 +138,7 @@ function handleImageError() {
             class="bg-cover bg-center py-24"
             style="background-image: url('/images/pwd_logo.png')"
         >
-<!--            <div class="container mx-auto text-center text-white">-->
 
-<!--                <p class="mt-4 text-lg md:text-xl text-white">-->
-<!--                    Explore government job opportunities and make a difference.-->
-<!--                </p>-->
-
-
-<!--                <button-->
-<!--                    class="mt-6 px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"-->
-<!--                >-->
-<!--                    Apply Now-->
-<!--                </button>-->
-<!--            </div>-->
             <div class="container mx-auto text-center text-white">
                 <div class="col-xs-12 row q-col-gutter-md">
                     <div class="col-xs-12 col-sm-6">
@@ -155,13 +149,11 @@ function handleImageError() {
 
                         <div class="zcard row q-col-gutter-sm q-pa-md">
                             <div class="col-12 q-pa-none q-ma-none" v-for="item in jobs" :key="item.id">
-
                                 <p style="color: #484848" class="q-pa-none q-ma-none text-weight-medium text-start">{{item.post_name}}</p>
-
                                 <div class="flex justify-between items-center">
-                                    <p style="color:#484848;" class=" q-ma-none">Last Date: {{item.application_deadline}}</p>
+                                    <p style="color:#484848;" class=" q-ma-none">Last Date: {{formatDate(item.application_deadline)}}</p>
                                     <p style="color:#484848;" class=" q-ma-none">{{item.no_of_post}} Posts</p>
-<!--<p style="color:#484848;">{{item}}</p>-->
+
                                 </div>
                                 <q-separator/>
 

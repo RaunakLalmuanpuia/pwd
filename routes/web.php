@@ -18,7 +18,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\AdminApplicationController;
 use App\Http\Controllers\ReportController;
 
-
+use App\Models\JobDetail;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ Route::get('/', function () {
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
-        'jobs' => \App\Models\JobDetail::all()
+        'jobs' => JobDetail::latest()->take(5)->get()
     ]);
 })->name('welcome');
 
@@ -47,6 +47,7 @@ Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::
 Route::get('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])
     ->name('register');
 
+Route::put('password', [\App\Http\Controllers\Auth\PasswordController::class, 'update'])->middleware(['auth'])->name('password.update');
 //Dashboard Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'dashboard'], function () {
     Route::get('',[DashboardController::class,'index'])->name('dashboard');
@@ -63,20 +64,18 @@ Route::middleware('auth')->group(function () {
 });
 
 
-//BIO Controller
-Route::group(['middleware' => 'auth', 'prefix' => 'applicant/bio'], function () {
+//BIO and Address Controller
+Route::group(['middleware' => 'auth', 'prefix' => 'applicant'], function () {
     Route::get('bio',[ApplicantController::class,'bio'])->name('applicant.bio');
-    Route::post('',[ApplicantController::class,'store_bio'])->name('applicant.bio_store');
-    Route::post('{applicant}', [ApplicantController::class, 'update_bio'])->name('applicant.bio_update');
+    Route::post('bio/store',[ApplicantController::class,'store_bio'])->name('applicant.bio_store');
+    Route::post('bio/{applicant}', [ApplicantController::class, 'update_bio'])->name('applicant.bio_update');
 
-});
-
-//Address
-Route::group(['middleware' => 'auth', 'prefix' => 'applicant/address'], function () {
     Route::get('address',[ApplicantController::class,'address'])->name('applicant.address');
-    Route::post('',[ApplicantController::class,'store_address'])->name('applicant.address_store');
-    Route::post('{address}', [ApplicantController::class, 'update_address'])->name('applicant.address_update');
+    Route::post('address/store',[ApplicantController::class,'store_address'])->name('applicant.address_store');
+    Route::post('address/{address}', [ApplicantController::class, 'update_address'])->name('applicant.address_update');
+
 });
+
 
 // JobDetail Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
@@ -88,6 +87,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
     Route::delete('{model}', [JobDetailsController::class, 'destroy'])->middleware('role:Admin')->name('job.destroy');
 
 });
+
 // Citizen Application Controller
 Route::group(['middleware' => 'auth', 'prefix' => 'application'], function () {
     // Citizen View application
@@ -195,6 +195,8 @@ Route::middleware(['auth'])->group(function () {
 Route::group(['prefix' => 'paytm'], function () {
     Route::post('initiate', [PaytmController::class, 'initiate'])->name('initiate_payment');
     Route::post('response', [PaytmController::class, 'handlePaymentResponse']);
+    Route::get('success/{orderId}', [PaytmController::class, 'success'])->name('payment-success');
+
 });
 
 //PAYMENTS

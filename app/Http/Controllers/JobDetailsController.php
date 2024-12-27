@@ -24,7 +24,7 @@ class JobDetailsController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search');
-        $jobs = JobDetail::query()->when($search,fn($q)=>$q->where('post_name','LIKE',"$search%"))->simplepaginate(2);
+        $jobs = JobDetail::query()->when($search,fn($q)=>$q->where('post_name','LIKE',"$search%"))->simplepaginate(5);
         return Inertia::render('Jobs/Index',[
             'jobs' => $jobs,
             'search' => $search,
@@ -36,7 +36,6 @@ class JobDetailsController extends Controller
      */
     public function create()
     {
-
         return Inertia::render('Jobs/Create',[
             'departments' => Departments::query()->get(['name as label','id as value']),
         ]);

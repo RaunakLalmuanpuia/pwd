@@ -55,6 +55,7 @@ class ApplicantController extends Controller
             ]));
 
             DB::commit();
+
             return to_route('applicant.bio')->with('success', 'Bio saved successfully!');
         } catch (\Exception $e) {
             DB::rollBack();

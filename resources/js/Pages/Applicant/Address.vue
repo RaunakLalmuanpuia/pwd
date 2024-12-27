@@ -1,280 +1,276 @@
 <template>
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="container mx-auto p-4">
-                        <q-form @submit.prevent="submit"  class="row q-col-gutter-sm">
-                            <div class="col-xs-12 primary-title">Applicant Address</div>
-                            <div class="col-xs-12">
-                                Permanent Address
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_house_no"
-                                    outlined
-                                    label="House No"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-
-                                    :error="!!form.errors?.permanent_house_no"
-                                    :error-message="form.errors?.permanent_house_no?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_street"
-                                    outlined
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    label="Street"
-                                    :error="!!form.errors?.permanent_street"
-                                    :error-message="form.errors?.permanent_street?.toString()"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_locality"
-                                    outlined
-                                    label="Locality"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.permanent_locality"
-                                    :error-message="form.errors?.permanent_locality?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_landmark"
-                                    outlined
-                                    label="Landmark"
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.permanent_landmark"
-                                    :error-message="form.errors?.permanent_landmark?.toString()"
-                                />
-
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_city"
-                                    outlined
-                                    label="City"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.permanent_city"
-                                    :error-message="form.errors?.permanent_city?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_district"
-                                    outlined
-                                    label="District"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.permanent_district"
-                                    :error-message="form.errors?.permanent_district?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_state"
-                                    outlined
-                                    label="State"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.permanent_state"
-                                    :error-message="form.errors?.permanent_state?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.permanent_pin_code"
-                                    outlined
-                                    label="Pin Code"
-                                    lazy-rules
-                                    type="number"
-                                    maxlength="6"
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.permanent_pin_code"
-                                    :error-message="form.errors?.permanent_pin_code?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-
-                            </div>
-                            <!-- Checkbox for Copying Address -->
-
-                            <div class="col-xs-12 col-sm-6">
-                                <q-checkbox
-                                    class="my-input p-5"
-                                    dense
-
-                                    v-model="sameAsPermanent"
-                                    label="Same as Permanent Address"
-                                />
-                            </div>
-
-                            <div class="col-xs-12">
-                                <q-separator/>
-                            </div>
-
-                            <div class="col-xs-12">
-                                Communication Address
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_house_no"
-                                    outlined
-                                    label="House No"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_house_no"
-                                    :error-message="form.errors?.communication_house_no?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_street"
-                                    outlined
-                                    label="Street"
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_street"
-                                    :error-message="form.errors?.communication_street?.toString()"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_locality"
-                                    outlined
-                                    label="Locality"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_locality"
-                                    :error-message="form.errors?.communication_locality?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_landmark"
-                                    outlined
-                                    label="Landmark"
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_landmark"
-                                    :error-message="form.errors?.communication_landmark?.toString()"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_city"
-                                    outlined
-                                    label="City"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_city"
-                                    :error-message="form.errors?.communication_city?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_district"
-                                    outlined
-                                    label="District"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_district"
-                                    :error-message="form.errors?.communication_district?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_state"
-                                    outlined
-                                    label="State"
-                                    lazy-rules
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_state"
-                                    :error-message="form.errors?.communication_state?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-                            <div class="col-xs-12 col-sm-6">
-                                <q-input
-                                    v-model="form.communication_pin_code"
-                                    outlined
-                                    label="Pin Code"
-                                    lazy-rules
-                                    type="number"
-                                    maxlength="6"
-                                    class="my-input"
-                                    dense
-                                    item-aligned
-                                    :error="!!form.errors?.communication_pin_code"
-                                    :error-message="form.errors?.communication_pin_code?.toString()"
-                                    :rules="[val => !!val || 'This field is required']"
-                                />
-                            </div>
-
-
-
-                            <div class="col-xs-12 flex justify-center q-mt-lg">
-                                <q-btn  class="q-px-xl" color="primary" :label="submitButtonLabel" rounded @click="submit" type="submit"/>
-                            </div>
-
-
-
-                        </q-form>
-
-
-                </div>
+    <Head title="Address"/>
+    <q-page padding>
+        <q-form @submit.prevent="submit"  class="row q-col-gutter-sm">
+            <div class="col-xs-12 primary-title">Applicant Address</div>
+            <div class="col-xs-12">
+                Permanent Address
             </div>
-        </div>
-    </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_house_no"
+                    outlined
+                    label="House No"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+
+                    :error="!!form.errors?.permanent_house_no"
+                    :error-message="form.errors?.permanent_house_no?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_street"
+                    outlined
+                    class="my-input"
+                    dense
+                    item-aligned
+                    label="Street"
+                    :error="!!form.errors?.permanent_street"
+                    :error-message="form.errors?.permanent_street?.toString()"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_locality"
+                    outlined
+                    label="Locality"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.permanent_locality"
+                    :error-message="form.errors?.permanent_locality?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_landmark"
+                    outlined
+                    label="Landmark"
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.permanent_landmark"
+                    :error-message="form.errors?.permanent_landmark?.toString()"
+                />
+
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_city"
+                    outlined
+                    label="City"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.permanent_city"
+                    :error-message="form.errors?.permanent_city?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_district"
+                    outlined
+                    label="District"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.permanent_district"
+                    :error-message="form.errors?.permanent_district?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_state"
+                    outlined
+                    label="State"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.permanent_state"
+                    :error-message="form.errors?.permanent_state?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.permanent_pin_code"
+                    outlined
+                    label="Pin Code"
+                    lazy-rules
+                    type="number"
+                    maxlength="6"
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.permanent_pin_code"
+                    :error-message="form.errors?.permanent_pin_code?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+
+            </div>
+            <!-- Checkbox for Copying Address -->
+
+            <div class="col-xs-12 col-sm-6">
+                <q-checkbox
+                    class="my-input p-5"
+                    dense
+
+                    v-model="sameAsPermanent"
+                    label="Same as Permanent Address"
+                />
+            </div>
+
+            <div class="col-xs-12">
+                <q-separator/>
+            </div>
+
+            <div class="col-xs-12">
+                Communication Address
+            </div>
+
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_house_no"
+                    outlined
+                    label="House No"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_house_no"
+                    :error-message="form.errors?.communication_house_no?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_street"
+                    outlined
+                    label="Street"
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_street"
+                    :error-message="form.errors?.communication_street?.toString()"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_locality"
+                    outlined
+                    label="Locality"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_locality"
+                    :error-message="form.errors?.communication_locality?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_landmark"
+                    outlined
+                    label="Landmark"
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_landmark"
+                    :error-message="form.errors?.communication_landmark?.toString()"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_city"
+                    outlined
+                    label="City"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_city"
+                    :error-message="form.errors?.communication_city?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_district"
+                    outlined
+                    label="District"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_district"
+                    :error-message="form.errors?.communication_district?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_state"
+                    outlined
+                    label="State"
+                    lazy-rules
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_state"
+                    :error-message="form.errors?.communication_state?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input
+                    v-model="form.communication_pin_code"
+                    outlined
+                    label="Pin Code"
+                    lazy-rules
+                    type="number"
+                    maxlength="6"
+                    class="my-input"
+                    dense
+                    item-aligned
+                    :error="!!form.errors?.communication_pin_code"
+                    :error-message="form.errors?.communication_pin_code?.toString()"
+                    :rules="[val => !!val || 'This field is required']"
+                />
+            </div>
+
+
+
+            <div class="col-xs-12 flex justify-center q-mt-lg">
+                <q-btn  class="q-px-xl" color="primary" :label="submitButtonLabel" rounded @click="submit" type="submit"/>
+            </div>
+
+
+
+        </q-form>
+    </q-page>
+
 
 </template>
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
-import { useForm, usePage } from "@inertiajs/vue3";
+import {Head, useForm, usePage} from "@inertiajs/vue3";
 import { ref, computed, watch } from "vue";
+import {useQuasar} from "quasar";
+
 
 defineOptions({
     layout: ApplicantLayout,
@@ -283,7 +279,7 @@ defineOptions({
 const props = defineProps({
     existingData: Object,
 });
-
+const q = useQuasar();
 const sameAsPermanent = ref(false);
 
 // Temporary storage for original communication address
@@ -347,21 +343,46 @@ const submitButtonLabel = computed(() => {
     return props.existingData ? "Update Address" : "Submit Address";
 });
 
+// const submit = () => {
+//     const routeName = props.existingData
+//         ? "applicant.address_update" // Update route
+//         : "applicant.address_store"; // Create route
+//
+//     form.post(route(routeName, props.existingData?.id), {
+//         onSuccess: () => {
+//             alert(
+//                 props.existingData
+//                     ? "Address updated successfully!"
+//                     : "Address saved successfully!"
+//             );
+//         },
+//         onError: (err) => {
+//             console.error(err);
+//         },
+//     });
+// };
 const submit = () => {
+
     const routeName = props.existingData
         ? "applicant.address_update" // Update route
         : "applicant.address_store"; // Create route
-
+    q.loading.show();
     form.post(route(routeName, props.existingData?.id), {
-        onSuccess: () => {
-            alert(
-                props.existingData
-                    ? "Address updated successfully!"
-                    : "Address saved successfully!"
-            );
+        onSuccess: (response) => {
+            q.notify({
+                type: 'positive',
+                message: response?.props?.flash?.success || 'Successfully submitted!',
+            });
+            form.reset();
         },
-        onError: (err) => {
-            console.error(err);
+        onError: (errors) => {
+            q.notify({
+                type: 'negative',
+                message: errors?.message || 'An error occurred!',
+            });
+        },
+        onFinish: () => {
+            q.loading.hide();
         },
     });
 };

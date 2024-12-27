@@ -30,7 +30,9 @@ class DashboardController extends Controller
     }
     public function citizen(Request $request)
     {
-        $jobDetail = JobDetail::select(['id','post_name', 'no_of_post', 'application_deadline'])->get();
+        $jobDetail = JobDetail::select(['id','post_name', 'no_of_post', 'application_deadline'])
+            ->orderBy('created_at', 'desc')
+            ->get();
         return inertia('Dashboard/Citizen',[
             'jobDetail' => $jobDetail,
         ]);

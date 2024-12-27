@@ -66,9 +66,10 @@ class TransactionController extends Controller
 
         $data= json_decode($response->body(),true);
 
+
         return [
             'body' => $data['body'],
-            'reference' => $order?->reference,
+            'reference' => $order?->reference->load(['applicant.user.address','jobDetail.department']),
         ];
     }
 

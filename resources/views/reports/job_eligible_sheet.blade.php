@@ -72,14 +72,10 @@
                     : {{ $application->application_id }}
                 </td>
                 <td rowspan="5" style="align-content: center; text-align: center; vertical-align:center; border:1px solid black">
-                    @if (blank($application->applicant->passport_photo))
-                        <span>No Image Available</span>
-                    @endif
+
                 </td>
                 <td rowspan="5" style="align-content: center; text-align: center; vertical-align:center; border:1px solid black">
-                    @if (blank($application->applicant->signature_photo))
-                        <span>No Signature Available</span>
-                    @endif
+
                 </td>
                 <td rowspan="5" style="border: 1px solid black"></td>
                 <td rowspan="5" style="border: 1px solid black"></td>

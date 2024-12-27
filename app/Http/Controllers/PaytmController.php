@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use paytm\paytmchecksum\PaytmChecksum;
 
 class PaytmController extends Controller
@@ -56,7 +57,7 @@ class PaytmController extends Controller
                 "lastName" => '',
             ],
         ];
-        $checksum = PaytmChecksum::generateSignature(json_encode($paytmParams['body']), env('MERCHANT_KEY',));
+        $checksum = PaytmChecksum::generateSignature(json_encode($paytmParams['body']), env('MERCHANT_KEY'));
 
         $paytmParams["head"] = array(
             "signature" => $checksum,
@@ -143,16 +144,30 @@ class PaytmController extends Controller
 //            $this->smsManager->sendMessage(SmsManager::SUBMIT_APPLICATION,mobile: $application->applicant?->mobile,regn_no:$application->regn_no );
 
 //            return redirect(env('APP_URL') . "/admin/payment/${paytmParams['ORDERID']}");
-            return redirect()->route('dashboard.citizen')->with('success', 'Application submitted successfully.');
+//            return redirect()->route('payment-success')->with(['success', 'Application submitted successfully.', 'order_id' => $paytmParams['ORDERID']]);
+            return redirect()->route('payment-success', [$paytmParams['ORDERID']])->with([
+                'success' => 'Application submitted successfully.',
+                'order_id' => $paytmParams['ORDERID'], // Ensure this key matches
+            ]);
+
         }
 
         $transaction->status = $paytmParams['STATUS'];
         $transaction->save();
 
 //        return redirect(env('APP_URL') . "/admin/payment/${paytmParams['ORDERID']}");
-        return redirect()->route('dashboard.citizen')->with('error', 'Error With payments.');
+        return redirect()->route('payment-success', [$paytmParams['ORDERID']])->with('error', 'Error With payments.');
 
     }
+
+    public function success($orderId)
+    {
+//        dd($orderId);
+        return Inertia::render('Applicant/Payment/Success', [
+            'order_id' => $orderId, // Pass order_id explicitly
+        ]);
+    }
+
 
     private function generateUniqueApplicationId()
     {

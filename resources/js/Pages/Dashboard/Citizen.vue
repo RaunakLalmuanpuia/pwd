@@ -1,9 +1,10 @@
 
 
 <template>
-    <Head title="Citizen Dashboard" />
+    <Head title="Dashboard" />
 
     <ApplicantLayout>
+
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -26,7 +27,7 @@
                                     <p class="text-muted-foreground" >{{ job.no_of_post }} Posts<span class="px-3"  :class="{'text-red-500': isDeadlinePassed(job.application_deadline)}">Last Date: {{ formatDate(job.application_deadline) }}</span></p>
 
                                 </div>
-                                <div class="flex space-x-2">
+                                <div class="flex space-x-2"  v-if="!isDeadlinePassed(job.application_deadline)" >
 
                                     <q-btn @click="$inertia.get(route('application.show', job.id))" label="Apply"/>
 <!--                                    <q-btn @click="$inertia.get(route('application.show', job.id))" label="View"/>-->

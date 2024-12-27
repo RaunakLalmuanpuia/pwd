@@ -209,7 +209,7 @@
                                     @else
                                         @foreach($amSubjects as $subject)
                                             {{ $subject->subject_name }}<br>
-                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time)->format('h:i A') }})<br>
+                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time)->format('h:i A') }}) -  ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->end_time)->format('h:i A') }})<br>
                                         @endforeach
                                     @endif
                                 </td>
@@ -219,7 +219,7 @@
                                     @else
                                         @foreach($pmSubjects as $subject)
                                             {{ $subject->subject_name }}<br>
-                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time)->format('h:i A') }})<br>
+                                            ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->start_time)->format('h:i A') }}) -  ({{ \Carbon\Carbon::createFromFormat('H:i:s', $subject->end_time)->format('h:i A') }})<br>
                                         @endforeach
                                     @endif
                                 </td>
