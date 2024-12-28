@@ -69,6 +69,18 @@
                             </q-item-section>
                         </q-item>
 
+
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='admin.applications.index_rejected'"
+                                @click="$inertia.get(route('admin.applications.index_rejected'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px"/>
+                            </q-item-section>
+                            <q-item-section>
+                                <q-item-label>Rejected</q-item-label>
+                            </q-item-section>
+                        </q-item>
+
                     </q-expansion-item>
 
                     <q-expansion-item label="Job Management" group="menu" icon="business_center">

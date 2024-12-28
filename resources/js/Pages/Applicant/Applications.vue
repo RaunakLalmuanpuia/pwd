@@ -22,7 +22,7 @@
                             </q-avatar>
                         </q-item-section>
                         <q-item-section>
-                            <q-item-label>Post Name: {{ item.job_detail?.post_name || "N/A" }} <br> Applied on: {{ formatDate(item?.created_at) }}
+                            <q-item-label>Post Name: {{ item.job_detail?.post_name || "N/A" }} <br> Applied on: {{ formatDate(item?.submitted_at) }}
                             </q-item-label>
                         </q-item-section>
                         <q-item-section side>

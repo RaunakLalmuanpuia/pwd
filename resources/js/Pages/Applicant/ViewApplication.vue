@@ -215,7 +215,7 @@
             <div class="mt-6 flex justify-between w-full">
                 <div>
                     <span class="text-red-500 font-semibold">Date :</span>
-                    <span class="text-red-500">{{ formatDate(application.created_at)}}</span>
+                    <span class="text-red-500">{{ formatDate(application.submitted_at)}}</span>
                 </div>
                 <!-- Right-aligned and smaller image container -->
                 <div class="flex items-center justify-end flex-col">

@@ -86,6 +86,40 @@
                     </q-item>
 
                     <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='applications.index_approved'"
+                            @click="$inertia.get(route('applications.index_approved'))">
+                        <q-item-section avatar>
+                            <q-icon name="check_circle" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Approved</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='applications.index_rejected'"
+                            @click="$inertia.get(route('applications.index_rejected'))">
+                        <q-item-section avatar>
+                            <q-icon name="cancel" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Rejected</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+                    <q-item clickable v-ripple active-class="active-menu"
+                            :active="route().current()==='applications.index_rejected'"
+                            @click="$inertia.get(route('applications.index_rejected'))">
+                        <q-item-section avatar>
+                            <q-icon name="badge" />
+                        </q-item-section>
+                        <q-item-section>
+                            <q-item-label>Admit Card</q-item-label>
+                        </q-item-section>
+                    </q-item>
+
+
+                    <q-item clickable v-ripple active-class="active-menu"
                             :active="route().current()==='profile.edit'"
                             @click="$inertia.get(route('profile.edit'))">
                         <q-item-section avatar>

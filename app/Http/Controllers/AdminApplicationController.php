@@ -95,6 +95,29 @@ class AdminApplicationController extends Controller
             'search' => $search,
         ]);
     }
+
+    // Admin all jobs page (Rejected)
+    public function adminIndexRejected(Request $request)
+    {
+        $search = $request->get('search');
+
+        $jobDetails = JobDetail::query()
+            ->withCount(['applications' => function ($query) {
+                $query->where('status', 'rejected');
+            }])
+            ->when($search, function (Builder $query) use ($search) {
+                $query->where('post_name', 'LIKE', "%$search%");
+            })
+            ->latest()
+            ->simplePaginate(10); // Adjust pagination as necessary
+
+
+        return Inertia::render('Applications/Rejected',[
+            'jobDetails' => $jobDetails,
+            'search' => $search,
+        ]);
+    }
+
     // Admin view All submitted application list
     public function adminShowSubmitted(Request $request, JobDetail $jobDetails)
     {
@@ -188,6 +211,33 @@ class AdminApplicationController extends Controller
             'perPage' => $perPage,
         ]);
     }
+    // Admin view All Rejected application list
+    public function adminShowRejected(Request $request, JobDetail $jobDetails)
+    {
+        $search = $request->get('search');
+        $perPage = $request->get('perPage', 5); // Default to 2 if not provided
+
+        // Load filtered and paginated applications
+        $applications = $jobDetails->applications()
+            ->where('status', 'rejected')
+            ->with(['applicant.user'])
+            ->whereHas('applicant.user', function ($query) use ($search) {
+                if ($search) {
+                    $query->where('name', 'like', '%' . $search . '%');
+                }
+            })
+            ->paginate($perPage);
+
+//        dd($applications);
+
+        return inertia('Applications/RejectedApplications', [
+            'jobDetails' => $jobDetails,
+            'applications' => $applications,
+            'search' => $search,
+            'perPage' => $perPage,
+        ]);
+    }
+
     // Admin change status of applicants
     public function bulkChangeStatus(Request $request)
     {
@@ -207,6 +257,28 @@ class AdminApplicationController extends Controller
         }
 
         return redirect()->back()->with('success', 'Application status updated.');
+
+    }
+
+    public function rejectApplication(Request $request){
+
+//        dd($request);
+        $request->validate([
+            'status' => 'required|in:rejected',
+            'rejection_note' => 'required|string',
+            'application_ids' => 'required|array',
+            'application_ids.*' => 'exists:applications,id',
+        ]);
+
+        $status = $request->status;
+        $rejection_note = $request->rejection_note;
+
+        foreach ($request->application_ids as $applicationId) {
+            $application = Applications::findOrFail($applicationId);
+            $application->status = $status;
+            $application->rejection_note = $rejection_note;
+            $application->save();
+        }
 
     }
 

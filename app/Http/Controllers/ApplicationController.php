@@ -32,12 +32,54 @@ class ApplicationController extends Controller
         $applications = Applications::with([
             'jobDetail.exams.subjects', // Eager load exams and their subjects
             'examCenter'               // Eager load the assigned exam center
-        ])->where('applicant_id', $applicant->id) ->where('status', '!=', 'draft') ->get();
+        ])->where('applicant_id', $applicant->id) ->where('status', '=', 'pending') ->get();
 
         return inertia('Applicant/Applications', [
             'applications' => $applications,
         ]);
     }
+    public function approved()
+    {
+        $applicant = Applicants::where('user_id', auth()->id())->first();
+
+        if (!$applicant) {
+            // Redirect back or return a view with an appropriate message
+            return inertia('Applicant/Applications', [
+                'applications' => [],
+            ])->with('success', 'No applicant record found.');
+        }
+
+        $applications = Applications::with([
+            'jobDetail.exams.subjects', // Eager load exams and their subjects
+            'examCenter'               // Eager load the assigned exam center
+        ])->where('applicant_id', $applicant->id) ->whereIn('status', ['approved', 'eligible'])->get();
+
+        return inertia('Applicant/ApprovedApplications', [
+            'applications' => $applications,
+        ]);
+    }
+
+    public function rejected()
+    {
+        $applicant = Applicants::where('user_id', auth()->id())->first();
+
+        if (!$applicant) {
+            // Redirect back or return a view with an appropriate message
+            return inertia('Applicant/Applications', [
+                'applications' => [],
+            ])->with('success', 'No applicant record found.');
+        }
+
+        $applications = Applications::with([
+            'jobDetail.exams.subjects', // Eager load exams and their subjects
+            'examCenter'               // Eager load the assigned exam center
+        ])->where('applicant_id', $applicant->id) ->where('status', '=', 'rejected') ->get();
+
+        return inertia('Applicant/RejectedApplications', [
+            'applications' => $applications,
+        ]);
+    }
+
     // Citizen Application Draft List
     public function draft()
     {

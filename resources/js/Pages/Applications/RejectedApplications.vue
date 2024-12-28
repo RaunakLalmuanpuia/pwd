@@ -1,6 +1,6 @@
 <template>
     <q-page padding>
-        <p class="page-title">SUBMITTED APPLICATIONS</p>
+        <p class="page-title">REJECTED APPLICATIONS</p>
         <div class="flex justify-between items-center zcard q-pa-md">
             <q-tabs
                 stretch
@@ -25,7 +25,6 @@
             </q-tabs>
             <div class="flex items-center q-gutter-md">
                 <q-btn @click="approveSelectedApplications" color="primary"  :disabled="selectedApplications.length === 0"  label="Mark as Qualified"/>
-                <q-btn @click="rejectApplicant" color="primary"  :disabled="selectedApplications.length === 0"  label="Mark as Rejected"/>
                 <q-separator vertical/>
                 <q-btn-dropdown class="q-ma-xs q-pa-xs" color="primary" flat dropdown-icon="sort">
                     <q-card class="q-pa-sm" style="min-width: 280px">
@@ -65,23 +64,18 @@
             </div>
         </div>
         <div class="row q-mt-sm">
-            <p class="page-title">{{ jobDetails?.post_name}} : APPLICATIONS</p>
+            <p class="page-title">APPLICATIONS: {{ jobDetails?.post_name}} </p>
             <div class="col-xs-12">
-                <table class="table-auto border-collapse border border-gray-300 w-full mt-6 text-sm">
+                <table class="border-collapse border border-gray-300 rounded-lg w-full mt-4">
                     <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-4 py-2 text-left text-gray-600">
-                            <input
-                                type="checkbox"
-                                @change="toggleSelectAll($event.target.checked)"
-                                :checked="allSelected"
-                            />
-                        </th>
+                        <th class="px-4 py-2 text-left text-gray-600"><input type="checkbox" @change="toggleSelectAll($event.target.checked)" :checked="allSelected" /></th>
                         <th class="px-4 py-2 text-left text-gray-600">Applicant Name</th>
-                        <th class="px-4 py-2 text-left text-gray-600">Roll No</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Application No.</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Parent Name</th>
                         <th class="px-4 py-2 text-left text-gray-600">Community</th>
-                        <th class="px-4 py-2 text-left text-gray-600">Disability</th>
                         <th class="px-4 py-2 text-left text-gray-600">Status</th>
+                        <th class="px-4 py-2 text-left text-gray-600">Reason</th>
                         <th class="px-4 py-2 text-left text-gray-600">Actions</th>
                     </tr>
                     </thead>
@@ -89,46 +83,33 @@
                     <tr
                         v-for="application in applications.data"
                         :key="application.id"
-                        class="hover:bg-gray-50 transition duration-150"
+                        class="hover:bg-gray-50"
                     >
-                        <td class="px-4 py-2">
-                            <input
-                                type="checkbox"
-                                v-model="selectedApplications"
-                                :value="application.id"
-                            />
-                        </td>
+                        <td class="px-4 py-2"><input type="checkbox" v-model="selectedApplications" :value="application.id" /></td>
                         <td class="px-4 py-2">{{ application.applicant.user?.name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.application_id || 'N/A' }}</td>
+                        <td class="px-4 py-2">{{ application.applicant?.parents_name || 'N/A' }}</td>
                         <td class="px-4 py-2">{{ application.applicant?.community || 'N/A' }}</td>
-                        <td class="px-4 py-2">{{ application.applicant?.disability ? 'Yes' : 'No' }}</td>
+
                         <td class="px-4 py-2">
-                <span
-                    :class="[
-                        'px-2 py-1 rounded-full text-xs font-semibold',
-                        application.status === 'approved'
-                            ? 'bg-green-100 text-green-800'
-                            : application.status === 'rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800',
-                    ]"
-                >
-                    {{ application.status || 'Pending' }}
-                </span>
+                            <span :class="statusClass(application.status)">
+                              {{ application.status || 'Pending' }}
+                            </span>
                         </td>
+                        <td class="px-4 py-2">{{ application.rejection_note || 'N/A' }}</td>
                         <td class="px-4 py-2">
-                            <button
-                                @click="$inertia.get(route('admin.application.show_applicant_detail', { jobDetails: jobDetails.id, application: application.id }))"
-                                class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-4 rounded mr-2 transition duration-150"
-                            >
-                                OPEN
+                            <button @click="$inertia.get(route('admin.application.show_applicant_detail', { jobDetails: jobDetails.id, application: application.id }))"
+                                    class="bg-blue-500 text-white py-1 px-4 rounded">
+                                Preview
                             </button>
                         </td>
+
                     </tr>
                     </tbody>
                 </table>
+
                 <div class="flex justify-between items-center mt-4">
-<!--                    {{applications.data}}-->
+                    <!--                    {{applications.data}}-->
                     <q-select
                         v-model="state.perPage"
                         dense
@@ -177,95 +158,49 @@
                     </div>
 
                 </div>
+
+
             </div>
         </div>
+
+
     </q-page>
-    <q-dialog v-model="rejectDialogOpen" persistent>
-        <q-card style="min-width: 450px;">
-            <q-card-section>
-                <div class="text-h6 q-mb-md">Assign Exam Center to Selected Applicants</div>
-                <q-input
-                    v-model="rejectForm.rejection_note"
-                    label="Rejection Note"
-                    dense
-                    outlined
-
-                />
-            </q-card-section>
-
-            <q-card-actions>
-                <q-btn flat label="Cancel" @click="rejectDialogOpen = false" color="primary" />
-                <q-btn flat :disable="!!!rejectForm.rejection_note" label="Assign" @click="rejectSelectedApplication" color="primary" />
-            </q-card-actions>
-        </q-card>
-    </q-dialog>
 </template>
 
 <script setup>
 
 import AdminLayout from "@/Layouts/Admin.vue";
-import {ref, computed, watch, reactive} from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import {useQuasar} from "quasar";
+
+
 defineOptions({
     layout:AdminLayout
 })
 
-
 const q = useQuasar();
 const props = defineProps(['jobDetails', 'applications','search', 'perPage']);
 
+const loading = ref(false);
 
 const approveRejectForm = useForm({
     application_ids: [],
     status: '',
 });
 
-const rejectForm = useForm({
-    status: '',
-    rejection_note: '', // Holds selected exam center ID
-    application_ids: []       // Holds the assignments
-});
 
-const rejectDialogOpen = ref(false);
-
-const rejectApplicant = () => {
-    rejectDialogOpen.value = true;
-};
-const rejectSelectedApplication = () => {
-
-
-    rejectForm.application_ids = selectedApplications.value;
-    rejectForm.status = 'rejected'; // Set the desired status
-    q.dialog({
-        title:'Confirmation',
-        message:'Do you want to proceed with ' +selectedApplications.value?.length + ' Applications',
-        ok:'Yes',
-        cancel:'No'
-    }).onOk(()=>{
-        rejectForm.put(route('admin.applications.reject_application'), {
-            onSuccess: () => {
-                const message = selectedApplications.value?.length + ' Applications marked as Rejected'
-                q.notify({type:'positive',message})
-                rejectForm.reset();
-                rejectDialogOpen.value = false;
-                selectedApplications.value = []; // Clear selection after success
-            },
-
-        });
-    })
-};
 const state=reactive({
     search:props?.search,
     tab: route().current(),
-    perPage: props?.perPage || 1, // Default perPage
+    perPage: props?.perPage || 3, // Default perPage
 })
 
 const search = ref('');
 
 
 const handleSearch=e=>{
-    router.get(route('admin.applications.show_submission', props.jobDetails.id), {
+    router.get(route('admin.applications.show_rejected', props.jobDetails.id), {
         search: state.search,
         perPage: state.perPage,
     });
@@ -286,6 +221,19 @@ const navigateToPage = (url) => {
     }
 };
 
+
+const statusClass = (status) => {
+    return {
+        "bg-green-100 text-green-800": status === "approved",
+        "bg-red-100 text-red-800": status === "rejected",
+        "bg-yellow-100 text-yellow-800": status === "pending",
+    };
+};
+
+const selectedApplicant = ref(null);
+
+
+// Open dialog and set selected application
 const selectedApplications = ref([]);
 
 const allSelected = computed({
@@ -300,7 +248,15 @@ function toggleSelectAll(checked) {
 }
 
 
+
+
+
+
 const approveSelectedApplications = () => {
+    if (selectedApplications.value.length === 0) {
+        alert('Please select at least one applicant.');
+        return;
+    }
 
     approveRejectForm.application_ids = selectedApplications.value;
     approveRejectForm.status = 'approved'; // Set the desired status
@@ -313,7 +269,7 @@ const approveSelectedApplications = () => {
     }).onOk(()=>{
         approveRejectForm.put(route('admin.applications.bulkChangeStatus'), {
             onSuccess: () => {
-                const message = selectedApplications.value?.length + ' Applications marked as Qualified'
+                const message = selectedApplications.value?.length + ' Applications marked as not eligible'
                 q.notify({type:'positive',message})
                 approveRejectForm.reset();
                 selectedApplications.value = []; // Clear selection after success
@@ -323,7 +279,6 @@ const approveSelectedApplications = () => {
     })
 
 };
-
 </script>
 <style scoped>
 /* Enhance button hover effects */
@@ -331,7 +286,6 @@ button:hover {
     transform: scale(1.05);
     transition: transform 0.2s ease-in-out;
 }
-
 
 .page-title {
     font-family: 'Poppins';
@@ -343,4 +297,13 @@ button:hover {
 
 }
 
+.page-title {
+    font-family: 'Poppins';
+    font-size: 21px;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: normal;
+    color: #333333;
+
+}
 </style>

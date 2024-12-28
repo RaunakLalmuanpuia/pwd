@@ -133,6 +133,7 @@ class PaytmController extends Controller
 
             DB::transaction(function () use ($application, $transaction) {
                 $application->status = 'Pending';
+                $application->submitted_at = Carbon::now();
                 $application->application_id = $this->generateUniqueApplicationId();
                 $application->save();
 

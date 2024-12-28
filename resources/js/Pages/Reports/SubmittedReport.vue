@@ -198,7 +198,8 @@ const statuses=[
     {value:['ELIGIBLE'],label:'Eligible'},
     {value:['SUBMITTED'],label:'Pending'},
     {value:['APPROVED'],label:'Approved'},
-    {value:['ELIGIBLE','SUBMITTED','APPROVED'],label:'All'},
+    {value:['REJECTED'],label:'Rejected'},
+    {value:['ELIGIBLE','SUBMITTED','APPROVED','REJECTED'],label:'All'},
 ]
 const genders=[
     {value:'Male',label:'Male'},
