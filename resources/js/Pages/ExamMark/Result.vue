@@ -6,7 +6,7 @@
             flat
             label="back"
             icon="arrow_left"
-            @click="$router.back()"
+            @click="goBack"
         />
 
         <div class="zcard flex items-center q-pa-md">
@@ -287,7 +287,9 @@ const handleSearch=e=>{
 }
 
 
-
+function goBack() {
+    window.history.back(); // Use browser's native back functionality
+}
 const handleNavigation=(value)=> {
     router.get(route(value))
 }

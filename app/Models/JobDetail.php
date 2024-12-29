@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class JobDetail extends Model
 {
@@ -57,5 +58,9 @@ class JobDetail extends Model
     public function exams(): HasMany
     {
         return $this->hasMany(Exam::class, 'job_details_id');
+    }
+    public function settings(): HasOne
+    {
+        return $this->hasOne(JobSetting::class, 'job_details_id');
     }
 }

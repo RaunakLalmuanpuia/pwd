@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\JobSettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -89,7 +90,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
 });
 
 // Citizen Application Controller
-Route::group(['middleware' => 'auth', 'prefix' => 'application'], function () {
+Route::group(['middleware' => 'auth', 'prefix' => 'applicant'], function () {
     // Citizen View application
     Route::get('{jobDetail}/show', [ApplicationController::class, 'show'])->name('application.show');
     // Citizen apply application
@@ -100,21 +101,24 @@ Route::group(['middleware' => 'auth', 'prefix' => 'application'], function () {
     Route::delete('{jobDetail}', [ApplicationController::class, 'deleteDraft'])->name('application.delete_draft');
 
     // Citizen Application Draft
-    Route::get('/applications/draft', [ApplicationController::class, 'draft'])->name('applications.draft');
+    Route::get('/draft', [ApplicationController::class, 'draft'])->name('applications.draft');
 
     // Citizen Application submission Index
-    Route::get('/applications/submission', [ApplicationController::class, 'index'])->name('applications.index');
+    Route::get('/submission', [ApplicationController::class, 'index'])->name('applications.index');
 
     // Citizen Application approved Index
-    Route::get('/applications/approved', [ApplicationController::class, 'approved'])->name('applications.index_approved');
+    Route::get('/approved', [ApplicationController::class, 'approved'])->name('applications.index_approved');
 
     // Citizen Application Rejected Index
-    Route::get('/applications/rejected', [ApplicationController::class, 'rejected'])->name('applications.index_rejected');
+    Route::get('/rejected', [ApplicationController::class, 'rejected'])->name('applications.index_rejected');
 
     // Citizen View applications detail Submission
     Route::get('{jobDetail}/detail', [ApplicationController::class, 'viewApplication'])->name('application.viewApplication');
     // Citizen View applications detail Draft
     Route::get('draft/{jobDetail}/detail', [ApplicationController::class, 'viewApplicationDraft'])->name('application.viewApplicationDraft');
+
+    // Admit Card List
+   Route::get('admit-card', [ApplicationController::class, 'admitCard'])->name('applications.admitCard');
     //Citizen Download Admit Card
     Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
 
@@ -156,7 +160,7 @@ Route::middleware(['auth'])->group(function () {
 
 //Admin Exam Controller
 Route::middleware(['auth'])->group(function () {
-    Route::get('/jobs', [ExamController::class, 'index'])->middleware('role:Admin')->name('exams.index');
+    Route::get('/exams', [ExamController::class, 'index'])->middleware('role:Admin')->name('exams.index');
     Route::get('/jobs/{jobDetail}/show', [ExamController::class, 'show'])->middleware('role:Admin')->name('exams.show');
     Route::get('/jobs/{jobDetail}/exams/create', [ExamController::class, 'create'])->middleware('role:Admin')->name('exams.create');
     Route::post('/jobs/{jobDetail}/exams', [ExamController::class, 'store'])->middleware('role:Admin')->name('exams.store');
@@ -196,6 +200,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/export-job-eligible/{job_detail_id}', [ExportController::class, 'exportEligibleJobDetails'])->name('export.job.eligible.details');
     // Download Job Submitted List
     Route::get('/export-job-submitted/{job_detail_id}', [ExportController::class, 'exportSubmittedJobDetails'])->name('export.job.submitted.details');
+});
+
+// Job Settings
+Route::middleware(['auth'])->group(function () {
+    Route::get('/settings', [JobSettingsController::class, 'index'])->middleware('role:Admin')->name('settings.index');
+    Route::get('/settings/{jobDetail}', [JobSettingsController::class, 'settings'])->middleware('role:Admin')->name('settings.show');
+    Route::post('/settings/store/{jobDetail}', [JobSettingsController::class, 'jobSettings'])->middleware('role:Admin')->name('settings.save');
 });
 
 // Exam Center

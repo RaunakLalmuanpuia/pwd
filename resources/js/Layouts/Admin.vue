@@ -107,6 +107,17 @@
                         </q-item>
 
                         <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='settings.index'"
+                                @click="$inertia.get(route('settings.index'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 6px"/>
+                            </q-item-section>
+                            <q-item-section>
+                                Job Settings
+                            </q-item-section>
+                        </q-item>
+
+                        <q-item clickable v-ripple active-class="active-menu"
                                 :active="route().current()==='exams.marks.index'"
                                 @click="$inertia.get(route('exams.marks.index'))">
                             <q-item-section avatar>

@@ -6,11 +6,11 @@
         <p class="page-title">Approved Applications</p>
         <div class="row q-gutter-md">
 
-            <div v-if="applications.length === 0" class="text-center bg-gray-100 p-8 rounded-lg shadow-md">
+            <div v-if="applications.length === 0" class="col-12 zcard q-pa-md">
                 <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M9 4a3 3 0 016 0v9a3 3 0 11-6 0V4zM5 6a3 3 0 016 0v7a3 3 0 11-6 0V6z" clip-rule="evenodd"/>
                 </svg>
-                <p class="text-gray-600 text-lg">You have not submitted any applications yet.</p>
+                <p class="text-gray-600 text-lg text-center">You have not submitted any applications yet.</p>
             </div>
 
             <div v-else class="col-12 zcard q-pa-md">
@@ -29,7 +29,11 @@
                             <div class="flex items-center">
                                 <q-chip clickable
                                         @click="$inertia.get(route('application.viewApplication', item.job_detail.id))"
-                                        text-color="white" square color="primary" label="View Application" />
+                                        text-color="white" square color="primary" label="Print" />
+                                <q-chip clickable
+                                        @click="$inertia.get(route('application.viewApplication', item.job_detail.id))"
+                                        text-color="white" square color="primary" label="View" />
+
                                 <!--                                <q-btn @click="$inertia.get(route('application.viewApplication', item.job_detail.id))" rounded flat class="q-pa-sm" color="primary" square label="View Application"/>-->
 
                             </div>
@@ -90,26 +94,22 @@
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 
-import {Head, Link} from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 const props = defineProps(["applications"]);
 
 defineOptions({
     layout: ApplicantLayout,
 });
 
-// Define the function to open the admit card
-const openAdmitCard = (jobDetailId) => {
-    const url = route('admit-card-job', jobDetailId);
-    window.open(url, '_blank'); // Opens the link in a new tab
-};
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, '0'); // Ensure 2 digits
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-based)
     const year = date.getFullYear(); // Get the full year
-
     return `${day}/${month}/${year}`;
 };
+
+
 
 </script>

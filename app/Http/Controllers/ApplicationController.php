@@ -348,6 +348,17 @@ class ApplicationController extends Controller
         return redirect()->route('dashboard.citizen')->with('success', 'Draft application deleted successfully.');
     }
 
+
+    public function admitCard()
+    {
+        $jobs = JobDetail::whereHas('settings')->with('settings')->get();
+
+        return Inertia::render('Applicant/AdmitCard', [
+            'jobs' => $jobs,
+        ]);
+
+    }
+
     // Generate Admit card (Applicant)
     public function generateAdmitCardByJob(JobDetail $jobDetail)
     {

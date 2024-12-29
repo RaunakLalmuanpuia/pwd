@@ -108,8 +108,8 @@
                     </q-item>
 
                     <q-item clickable v-ripple active-class="active-menu"
-                            :active="route().current()==='applications.index_rejected'"
-                            @click="$inertia.get(route('applications.index_rejected'))">
+                            :active="route().current()==='applications.admitCard'"
+                            @click="$inertia.get(route('applications.admitCard'))">
                         <q-item-section avatar>
                             <q-icon name="badge" />
                         </q-item-section>
