@@ -183,7 +183,7 @@
     <q-dialog v-model="rejectDialogOpen" persistent>
         <q-card style="min-width: 450px;">
             <q-card-section>
-                <div class="text-h6 q-mb-md">Assign Exam Center to Selected Applicants</div>
+                <div class="text-h6 q-mb-md">Rejection Reason for Selected Applicants</div>
                 <q-input
                     v-model="rejectForm.rejection_note"
                     label="Rejection Note"
