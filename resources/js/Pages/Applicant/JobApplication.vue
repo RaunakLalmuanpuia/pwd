@@ -151,8 +151,9 @@
         <div class="mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-6 flex flex-col items-center">
             <h2 class="text-red-500 text-2xl font-bold text-center tracking-widest">D E C L A R A T I O N</h2>
             <p class="text-red-500 mt-4">
-                I hereby declare that all the statements made in this application are true and complete to the best of my knowledge and belief. I understand that action can be taken against me by the Commission,
-                if I am declared by them to be guilty of any type of misconduct mentioned herein.
+                I hereby declare that the information given above and in the enclosed documents is true to the best of my knowledge
+                and belief and nothing has been concealed therein. I understand that if the information given by me is proved false / not true,
+                I will have to face the punishment as per the law. Also, all the benefits availed by me shall be summarily withdrawn.
             </p>
             <div class="mt-6 flex justify-between w-full">
                 <div>

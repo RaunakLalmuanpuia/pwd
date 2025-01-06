@@ -84,51 +84,7 @@
 
 
 
-        <!--    <div v-if="mandatoryDocuments.length !== 0" class="p-4 bg-background rounded-lg shadow-md">-->
-        <!--        <h2 class="text-lg font-bold mb-3">Required Documents</h2>-->
-        <!--        <div class="grid grid-cols-2 gap-4">-->
-        <!--            <div-->
-        <!--                v-for="document in mandatoryDocuments" :key="document.id"-->
-        <!--                class="row col-xs-12 col-sm-6 print-hide"-->
-        <!--            >-->
-        <!--                <div class="col-xs-8 flex items-center text-grey-6">-->
-        <!--                    <label class="block text-sm font-medium text-bold">{{ document.document_name }}</label>-->
-        <!--                </div>-->
 
-        <!--                <div class="col-xs-4">-->
-        <!--                    <q-btn-->
-        <!--                        :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"-->
-        <!--                        color="primary"-->
-        <!--                        flat-->
-        <!--                        @click="handleOpen(document.document_attachments)"-->
-        <!--                    />-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
-        <!--    </div>-->
-
-        <!--    <div v-if="optionalDocuments.length !== 0" class="p-4 bg-background rounded-lg shadow-md">-->
-        <!--        <h2 class="text-lg font-bold mb-3">Optional Documents</h2>-->
-        <!--        <div class="grid grid-cols-2 gap-4">-->
-        <!--            <div-->
-        <!--                v-for="document in optionalDocuments" :key="document.id"-->
-        <!--                class="row col-xs-12 col-sm-6 print-hide"-->
-        <!--            >-->
-        <!--                <div class="col-xs-8 flex items-center text-grey-6">-->
-        <!--                    <label class="block text-sm font-medium text-bold">{{ document.document_name }}</label>-->
-        <!--                </div>-->
-
-        <!--                <div class="col-xs-4">-->
-        <!--                    <q-btn-->
-        <!--                        :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"-->
-        <!--                        color="primary"-->
-        <!--                        flat-->
-        <!--                        @click="handleOpen(document.document_attachments)"-->
-        <!--                    />-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </div>-->
-        <!--    </div>-->
 
         <div v-if="mandatoryDocuments.length !== 0" class="p-4 bg-background rounded-lg shadow-md">
             <h2 class="text-lg font-bold mb-3">Mandatory Documents</h2>
@@ -204,8 +160,9 @@
         <div class="mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-6 flex flex-col items-center mt-2">
             <h2 class="text-red-500 text-2xl font-bold text-center tracking-widest">D E C L A R A T I O N</h2>
             <p class="text-red-500 mt-4">
-                I hereby declare that all the statements made in this application are true and complete to the best of my knowledge and belief. I understand that action can be taken against me by the Commission,
-                if I am declared by them to be guilty of any type of misconduct mentioned herein.
+                I hereby declare that the information given above and in the enclosed documents is true to the best of my knowledge
+                and belief and nothing has been concealed therein. I understand that if the information given by me is proved false / not true,
+                I will have to face the punishment as per the law. Also, all the benefits availed by me shall be summarily withdrawn.
             </p>
             <div class="mt-6 flex justify-between w-full">
                 <div>
@@ -225,18 +182,7 @@
             </div>
         </div>
 
-<!--        <div class=" flex items-center gap-8 justify-center ">-->
-<!--            <button @click="$inertia.delete(route('application.delete_draft', jobDetail?.id))" clickable class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Delete Draft</button>-->
-<!--            <button @click="submitDocument" class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Update</button>-->
-<!--            &lt;!&ndash;        <button class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80">Submit Application</button>&ndash;&gt;-->
-<!--            <button-->
-<!--                class="bg-accent text-accent-foreground px-4 py-2 rounded-md hover:bg-accent/80"-->
-<!--                :disabled="processing"-->
-<!--                @click="pay"-->
-<!--            >-->
-<!--                {{ processing ? 'Submitting...' : 'Make Payment' }}-->
-<!--            </button>-->
-<!--        </div>-->
+
             <div class="flex items-center gap-8 justify-center mt-4">
                 <!-- Delete Button - Red for danger action -->
                 <button
@@ -416,9 +362,6 @@ const pay=()=>{
                 q.loading.hide();
             })
     })
-
-
-
 }
 
 </script>

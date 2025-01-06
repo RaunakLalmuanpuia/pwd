@@ -205,6 +205,18 @@ function handleImageError() {
             </div>
         </section>
 
+
+        <section id="about" class="py-16 px-4 md:px-0">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-6">About the Portal</h2>
+                <p class="text-lg max-w-2xl mx-auto">
+                    Our recruitment portal is dedicated to connecting qualified
+                    candidates with government job openings, ensuring a
+                    transparent and efficient hiring process.
+                </p>
+            </div>
+        </section>
+
         <!-- Services Section -->
         <section id="services" class="bg-gray-200 py-16 px-4 md:px-0">
             <div class="container mx-auto text-center">
