@@ -71,17 +71,7 @@ function handleImageError() {
                                 About Us
                             </PrimaryButton>
                         </Link>
-<!--                        <Link-->
-<!--                            v-if="canRegister"-->
-<!--                            :href="route('register')"-->
-<!--                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"-->
-<!--                        >-->
-<!--                            <PrimaryButton-->
-<!--                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"-->
-<!--                            >-->
-<!--                                Services-->
-<!--                            </PrimaryButton>-->
-<!--                        </Link>-->
+
                         <Link
                             v-if="canRegister"
                             :href="route('register')"
@@ -205,17 +195,60 @@ function handleImageError() {
             </div>
         </section>
 
-
         <section id="about" class="py-16 px-4 md:px-0">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6">About the Portal</h2>
-                <p class="text-lg max-w-2xl mx-auto">
-                    Our recruitment portal is dedicated to connecting qualified
-                    candidates with government job openings, ensuring a
-                    transparent and efficient hiring process.
-                </p>
+            <div class=" mx-auto text-center">
+                <img src="/images/howtoapply.svg" alt="apply" />
             </div>
+
         </section>
+
+
+<!--        <section id="apply" class="py-6 px-4 md:px-0" >-->
+<!--&lt;!&ndash;            <img src="/images/howtoapply.png" style="width: 1446px; height: 349px; background: #F9FBFF" />&ndash;&gt;-->
+<!--            <div class="container mx-auto text-center">-->
+<!--&lt;!&ndash;                <p style="color: #19191E;&ndash;&gt;-->
+<!--&lt;!&ndash;                        text-align: center;&ndash;&gt;-->
+<!--&lt;!&ndash;                        font-size: 30px;&ndash;&gt;-->
+<!--&lt;!&ndash;                        font-style: normal;&ndash;&gt;-->
+<!--&lt;!&ndash;                        font-weight: 600;&ndash;&gt;-->
+<!--&lt;!&ndash;                        line-height: 60px; /* 200% */">How to Apply</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="flex flex-wrap justify-between p-4" >&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="rounded-lg shadow-md flex flex-col items-center m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span style="color: #D1D1D1; font-family: Poppins; font-size: 8px; font-style: normal; font-weight: 600;&ndash;&gt;-->
+<!--&lt;!&ndash;                        line-height: normal;"> STEP 1</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <span style="color: #212121;&ndash;&gt;-->
+<!--&lt;!&ndash;                            font-size: 12px;&ndash;&gt;-->
+<!--&lt;!&ndash;                            font-style: normal;&ndash;&gt;-->
+<!--&lt;!&ndash;                            font-weight: 700;&ndash;&gt;-->
+<!--&lt;!&ndash;                            line-height: normal;">Login/Register</span>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div  class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--                <img src="/images/howtoapply.png" style="width: 1446px; height: 349px; background: #F9FBFF" />-->
+<!--            </div>-->
+<!--        </section>-->
 
         <!-- Services Section -->
         <section id="services" class="bg-gray-200 py-16 px-4 md:px-0">
