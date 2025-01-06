@@ -214,7 +214,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/examCenter', [ExamCenterController::class, 'index'])->middleware('role:Admin')->name('exam_center.index');
     Route::get('/examCenter/create', [ExamCenterController::class, 'create_exam_center'])->middleware('role:Admin')->name('exam_center.create');
     Route::post('/examCenter/store', [ExamCenterController::class, 'store_exam_center'])->middleware('role:Admin')->name('exam_center.store');
-    Route::get('{model}', [ExamCenterController::class, 'edit_exam_center'])->middleware('role:Admin')->name('exam_center.edit');
+    Route::get('/examCenter/{model}', [ExamCenterController::class, 'edit_exam_center'])->middleware('role:Admin')->name('exam_center.edit');
     Route::put('{model}', [ExamCenterController::class, 'update_exam_center'])->middleware('role:Admin')->name('exam_center.update');
     Route::delete('{model}', [ExamCenterController::class, 'destroy_exam_center'])->middleware('role:Admin')->name('exam_center.destroy');
 });
