@@ -343,24 +343,7 @@ const submitButtonLabel = computed(() => {
     return props.existingData ? "Update Address" : "Submit Address";
 });
 
-// const submit = () => {
-//     const routeName = props.existingData
-//         ? "applicant.address_update" // Update route
-//         : "applicant.address_store"; // Create route
-//
-//     form.post(route(routeName, props.existingData?.id), {
-//         onSuccess: () => {
-//             alert(
-//                 props.existingData
-//                     ? "Address updated successfully!"
-//                     : "Address saved successfully!"
-//             );
-//         },
-//         onError: (err) => {
-//             console.error(err);
-//         },
-//     });
-// };
+
 const submit = () => {
 
     const routeName = props.existingData

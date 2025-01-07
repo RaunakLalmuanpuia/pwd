@@ -616,13 +616,29 @@ const submit = () => {
             disability: disabilityBoolean, // Ensure boolean is sent
         },
 
-        onSuccess: () => {
-            alert(props.existingData
-                ? "Applicant created successfully!"
-                : "Applicant updated successfully!");
+        // onSuccess: () => {
+        //     alert(props.existingData
+        //         ? "Applicant created successfully!"
+        //         : "Applicant updated successfully!");
+        // },
+        // onError: (err) => {
+        //     console.error(err);
+        // },
+        onSuccess: (response) => {
+            q.notify({
+                type: 'positive',
+                message: response?.props?.flash?.success || 'Successfully submitted!',
+            });
+            form.reset();
         },
-        onError: (err) => {
-            console.error(err);
+        onError: (errors) => {
+            q.notify({
+                type: 'negative',
+                message: errors?.message || 'An error occurred!',
+            });
+        },
+        onFinish: () => {
+            q.loading.hide();
         },
     });
 };

@@ -195,13 +195,6 @@ function handleImageError() {
             </div>
         </section>
 
-<!--        <section id="about" class="py-16 px-4 md:px-0">-->
-<!--            <div class=" mx-auto text-center">-->
-<!--                <img src="/images/howtoapply.svg" alt="apply" />-->
-<!--            </div>-->
-
-<!--        </section>-->
-
 
         <section id="apply" class="py-6 px-4 md:px-0" style="background:#F9FBFF " >
             <div class="container mx-auto text-center">
@@ -236,9 +229,7 @@ function handleImageError() {
                     <div class="flex flex-col items-center m-2">
                         <img src="/images/Group45.png" style="height: 120px; width: 126px"/>
                     </div>
-
                 </div>
-
             </div>
         </section>
 
