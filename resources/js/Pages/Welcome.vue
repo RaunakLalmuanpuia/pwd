@@ -195,60 +195,52 @@ function handleImageError() {
             </div>
         </section>
 
-        <section id="about" class="py-16 px-4 md:px-0">
-            <div class=" mx-auto text-center">
-                <img src="/images/howtoapply.svg" alt="apply" />
-            </div>
-
-        </section>
-
-
-<!--        <section id="apply" class="py-6 px-4 md:px-0" >-->
-<!--&lt;!&ndash;            <img src="/images/howtoapply.png" style="width: 1446px; height: 349px; background: #F9FBFF" />&ndash;&gt;-->
-<!--            <div class="container mx-auto text-center">-->
-<!--&lt;!&ndash;                <p style="color: #19191E;&ndash;&gt;-->
-<!--&lt;!&ndash;                        text-align: center;&ndash;&gt;-->
-<!--&lt;!&ndash;                        font-size: 30px;&ndash;&gt;-->
-<!--&lt;!&ndash;                        font-style: normal;&ndash;&gt;-->
-<!--&lt;!&ndash;                        font-weight: 600;&ndash;&gt;-->
-<!--&lt;!&ndash;                        line-height: 60px; /* 200% */">How to Apply</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="flex flex-wrap justify-between p-4" >&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="rounded-lg shadow-md flex flex-col items-center m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <span style="color: #D1D1D1; font-family: Poppins; font-size: 8px; font-style: normal; font-weight: 600;&ndash;&gt;-->
-<!--&lt;!&ndash;                        line-height: normal;"> STEP 1</span>&ndash;&gt;-->
-<!--&lt;!&ndash;                        <span style="color: #212121;&ndash;&gt;-->
-<!--&lt;!&ndash;                            font-size: 12px;&ndash;&gt;-->
-<!--&lt;!&ndash;                            font-style: normal;&ndash;&gt;-->
-<!--&lt;!&ndash;                            font-weight: 700;&ndash;&gt;-->
-<!--&lt;!&ndash;                            line-height: normal;">Login/Register</span>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div  class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                    <div class="m-2">&ndash;&gt;-->
-<!--&lt;!&ndash;                        <img src="/images/Rectangle14.png"/>&ndash;&gt;-->
-<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--                <img src="/images/howtoapply.png" style="width: 1446px; height: 349px; background: #F9FBFF" />-->
+<!--        <section id="about" class="py-16 px-4 md:px-0">-->
+<!--            <div class=" mx-auto text-center">-->
+<!--                <img src="/images/howtoapply.svg" alt="apply" />-->
 <!--            </div>-->
+
 <!--        </section>-->
+
+
+        <section id="apply" class="py-6 px-4 md:px-0" style="background:#F9FBFF " >
+            <div class="container mx-auto text-center">
+                <p style="color: #19191E;
+                        text-align: center;
+                        font-size: 30px;
+                        font-style: normal;
+                        font-weight: 600;
+                        line-height: 60px; /* 200% */">How to Apply</p>
+                <div class="flex flex-wrap justify-between p-4" >
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group37.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group38.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group39.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group40.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group41.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group42.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group43.png" style="height: 120px; width: 126px"/>
+                    </div>
+                    <div class="flex flex-col items-center m-2">
+                        <img src="/images/Group45.png" style="height: 120px; width: 126px"/>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
 
         <!-- Services Section -->
         <section id="services" class="bg-gray-200 py-16 px-4 md:px-0">
