@@ -133,7 +133,7 @@
     <div class="header">
         <img src="{{ public_path('images/pwd_logo.png') }}" alt="PWD Logo">
         <h1>PUBLIC WORKS DEPARTMENT MIZORAM</h1>
-        <p>Mizoram New Capital Complex, Khatla, Aizawl : Mizoram</p>
+        <p>PWD Complex, Tuikhuahtlang, Aizawl : Mizoram</p>
     </div>
 
     <div class="admit-card-title">ADMIT CARD</div>
@@ -157,11 +157,12 @@
 
         </div>
 
-        <p class="mt-4 text-zinc-600 dark:text-zinc-400">
-            For Competitive Examination for Recruitment to the post of {{ $jobDetail->post_name }} - {{ $jobDetail->description }}, Government of Mizoram, 2024. His/her attention is drawn to the
-            instructions given below.
+        <p class="mt-4 text-zinc-600 dark:text-zinc-400" style="text-indent: 2em;">
+            For Competitive Examination for Recruitment to the post of {{ $jobDetail->post_name }} - {{ $jobDetail->description }}, Government of Mizoram, 2024. His/her attention is drawn to the instructions given below.
         </p>
-
+{{--        <p class="text-zinc-600 dark:text-zinc-400" style="text-indent: 2em;">--}}
+{{--            His/her attention is drawn to the instructions given below.--}}
+{{--        </p>--}}
         <div class="exam-details">
             <h3>Examination Details</h3>
             @if($jobDetail->exams->count() > 0)
@@ -241,8 +242,7 @@
             </div>
             <div style="width: 48%; text-align: right;">
                 <div class="signature-text">
-
-                    <p><span>sd/-</span><br><span>(Signature of the Authorized Personnel)</span></p>
+                    <p><span>sd/-</span><br><span>(LALREMMAWIA)</span></p>
                 </div>
             </div>
         </div>

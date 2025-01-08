@@ -218,7 +218,7 @@
             </div>
             <div class="col-xs-12 col-sm-6">
                 <q-select v-model="form.qualification"
-                          :options="['Non Graduate', 'Graduate', 'Post Graduate', 'Doctorate']"
+                          :options="['Class 8', 'HSLC', 'HSSLC',  'Graduate', 'Post Graduate', 'Doctorate']"
                           :rules="[
                                          val=>!!val || 'Qualification is required'
                                        ]"
