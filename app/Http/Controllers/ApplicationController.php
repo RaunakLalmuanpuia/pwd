@@ -388,4 +388,33 @@ class ApplicationController extends Controller
         // Return the generated PDF as a download
         return $pdf->download('admit_card_' . $jobDetail->post_name . '.pdf');
     }
+
+    public function printApplication(JobDetail $jobDetail)
+    {
+
+        $userId = Auth::id(); // Get the authenticated user ID
+
+        // Retrieve job details and filter applications for the authenticated user
+        $jobDetail = JobDetail::with([
+            'applications' => function ($query) use ($userId) {
+                $query->whereHas('applicant.user', function ($q) use ($userId) {
+                    $q->where('id', $userId);
+                });
+            },
+            'applications.applicant.user.address',
+            'applications.transaction'
+        ])->findOrFail($jobDetail->id);
+
+        // Check if the user has an application for this job
+        if ($jobDetail->applications->isEmpty()) {
+            return redirect()->back()->with('error', 'Cannot print application for this job.');
+        }
+
+//        dd($jobDetail);
+        // Generate the PDF from the view
+        $pdf = PDF\Pdf::loadView('my_application', compact('jobDetail'));
+
+        // Return the generated PDF as a download
+        return $pdf->download('my_application_' . $jobDetail->post_name . '.pdf');
+    }
 }

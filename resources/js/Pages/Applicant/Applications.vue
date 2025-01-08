@@ -28,6 +28,9 @@
                         <q-item-section side>
                             <div class="flex items-center">
                                 <q-chip clickable
+                                        @click="printApplication(item.job_detail.id)"
+                                        text-color="white" square color="primary" label="Print" />
+                                <q-chip clickable
                                         @click="$inertia.get(route('application.viewApplication', item.job_detail.id))"
                                         text-color="white" square color="primary" label="View Application" />
 <!--                                <q-btn @click="$inertia.get(route('application.viewApplication', item.job_detail.id))" rounded flat class="q-pa-sm" color="primary" square label="View Application"/>-->
@@ -91,18 +94,31 @@
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 
 import {Head, Link} from '@inertiajs/vue3';
+import axios from "axios";
 const props = defineProps(["applications"]);
 
 defineOptions({
     layout: ApplicantLayout,
 });
 
-// Define the function to open the admit card
-const openAdmitCard = (jobDetailId) => {
-    const url = route('admit-card-job', jobDetailId);
-    window.open(url, '_blank'); // Opens the link in a new tab
-};
 
+
+const printApplication = (jobId) => {
+    console.log();
+    const url = route('my-application', jobId);
+    axios.get(url, { responseType: 'blob' })
+        .then((res) => {
+            const blob = new Blob([res.data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.click();
+        })
+        .catch((err) => {
+            q.notify({ type: "negative", message: "Cannot Download Application" });
+        });
+};
 
 
 const formatDate = (dateString) => {

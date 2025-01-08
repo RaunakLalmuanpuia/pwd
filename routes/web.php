@@ -122,6 +122,9 @@ Route::group(['middleware' => 'auth', 'prefix' => 'applicant'], function () {
     //Citizen Download Admit Card
     Route::get('/admit-card/{jobDetail}', [ApplicationController::class, 'generateAdmitCardByJob'])->name('admit-card-job');
 
+    //Citizen Print Application
+    Route::get('/my-application/{jobDetail}', [ApplicationController::class, 'printApplication'])->name('my-application');
+
 });
 //
 //Admin Application Controller

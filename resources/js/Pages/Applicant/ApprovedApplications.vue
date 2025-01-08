@@ -28,9 +28,10 @@
                         <q-item-section side>
                             <div class="flex items-center">
                                 <q-chip clickable
-                                        @click="$inertia.get(route('application.viewApplication', item.job_detail.id))"
+                                        @click="printApplication(item.job_detail.id)"
                                         text-color="white" square color="primary" label="Print" />
                                 <q-chip clickable
+
                                         @click="$inertia.get(route('application.viewApplication', item.job_detail.id))"
                                         text-color="white" square color="primary" label="View" />
 
@@ -95,7 +96,11 @@
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 
 import {Head} from '@inertiajs/vue3';
+import axios from "axios";
 const props = defineProps(["applications"]);
+import {useQuasar} from "quasar";
+
+const q = useQuasar();
 
 defineOptions({
     layout: ApplicantLayout,
@@ -110,6 +115,22 @@ const formatDate = (dateString) => {
     return `${day}/${month}/${year}`;
 };
 
+const printApplication = (jobId) => {
+    console.log();
+    const url = route('my-application', jobId);
+    axios.get(url, { responseType: 'blob' })
+        .then((res) => {
+            const blob = new Blob([res.data], { type: "application/pdf" });
+            const url = window.URL.createObjectURL(blob);
+            let a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.click();
+        })
+        .catch((err) => {
+            q.notify({ type: "negative", message: "Cannot Download Application" });
+        });
+};
 
 
 </script>
