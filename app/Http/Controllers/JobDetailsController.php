@@ -53,7 +53,7 @@ class JobDetailsController extends Controller
             'department_id' => ['required',Rule::exists('departments','id')],
             'no_of_post' => 'required|integer|min:1|max:255',
             'category'=> 'required|string|max:255',
-            'salary' => 'required|numeric|min:0',
+            'salary' => 'required|string|max:255',
             'upper_age_limit' => 'required|string|max:255',
             'lower_age_limit' => 'required|string|max:255',
             'age_relaxation' => 'required|string|max:255',
@@ -75,7 +75,7 @@ class JobDetailsController extends Controller
             Documents::create([
                 'job_detail_id' => $jobDetails->id,
                 'document_name' => $document['name'],
-                'document_description'=> $document['description'],
+                'document_description'=> '',
                 'is_mandatory' => $document['is_mandatory'],
             ]);
         }
@@ -118,7 +118,7 @@ class JobDetailsController extends Controller
             'department_id' => ['required',Rule::exists('departments','id')],
             'no_of_post' => 'required|integer|min:1|max:255',
             'category'=> 'required|string|max:255',
-            'salary' => 'required|numeric|min:0',
+            'salary' => 'required|string|max:255',
             'upper_age_limit' => 'required|string|max:255',
             'lower_age_limit' => 'required|string|max:255',
             'age_relaxation' => 'required|string|max:255',

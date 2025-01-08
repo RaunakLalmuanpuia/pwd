@@ -18,15 +18,15 @@
                 />
             </div>
 
-            <div class="col-xs-12 col-sm-12 q-mb-md ">
-                <q-input v-model="form.description"
-                         type="textarea"
-                         dense
-                         outlined
-                         class="my-input"
-                         label="Description"
-                />
-            </div>
+<!--            <div class="col-xs-12 col-sm-12 q-mb-md ">-->
+<!--                <q-input v-model="form.description"-->
+<!--                         type="textarea"-->
+<!--                         dense-->
+<!--                         outlined-->
+<!--                         class="my-input"-->
+<!--                         label="Description"-->
+<!--                />-->
+<!--            </div>-->
             <div class="col-xs-12 col-sm-6  ">
                 <q-input v-model="form.pass_mark"
                          outlined
@@ -43,7 +43,7 @@
                          outlined
                          dense
                          class="my-input"
-                         label="Full mark mark"
+                         label="Full mark"
                          :rules="[
                    val=>!isNaN(val)  || 'Invalid format'
                  ]"

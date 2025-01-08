@@ -210,7 +210,7 @@
                     <div class="col-xs-12">
                         <q-select v-model="form.qualification"
                                   class="my-input"
-                                  :options="['HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
+                                  :options="['Class 8','HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
                                   dense
                                   label="Minimum Qualification"
                                   outlined
@@ -245,13 +245,13 @@
                                 class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                 required
                             />
-                            <input
-                                type="text"
-                                v-model="document.description"
-                                placeholder="Document Description"
-                                class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                required
-                            />
+<!--                            <input-->
+<!--                                type="text"-->
+<!--                                v-model="document.description"-->
+<!--                                placeholder="Document Description"-->
+<!--                                class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"-->
+<!--                                required-->
+<!--                            />-->
                             <select v-model="document.is_mandatory"  class="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                 <option value="1">Mandatory</option>
                                 <option value="0">Optional</option>

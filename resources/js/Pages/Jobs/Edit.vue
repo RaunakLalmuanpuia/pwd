@@ -52,6 +52,8 @@
                               label="Department"
                               no-error-icon
                               outlined
+                              option-value="value"
+                              option-label="label"
                     />
                 </div>
 
@@ -208,7 +210,7 @@
                 <div class="col-xs-12">
                     <q-select v-model="form.qualification"
                               class="my-input"
-                              :options="['HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
+                              :options="['Class 8','HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
                               dense
                               label="Minimum Qualification"
                               outlined
@@ -240,13 +242,13 @@
                             class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             required
                         />
-                        <input
-                            type="text"
-                            v-model="document.description"
-                            placeholder="Document Description"
-                            class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            required
-                        />
+<!--                        <input-->
+<!--                            type="text"-->
+<!--                            v-model="document.description"-->
+<!--                            placeholder="Document Description"-->
+<!--                            class="flex-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"-->
+<!--                            required-->
+<!--                        />-->
                         <select v-model="document.is_mandatory"  class="block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             <option value="1">Mandatory</option>
                             <option value="0">Optional</option>
@@ -310,7 +312,11 @@ const form = useForm({
     post_name: props.data?.post_name,
     code: props.data?.code,
     category: props.data?.category,
-    departments:props?.current_department?.name,
+    // departments: props?.current_department?.id || null,
+    departments: {
+        label: props?.current_department?.name,
+        value: props?.current_department?.id
+    } || null,
     no_of_post: props.data?.no_of_post,
     salary: props.data?.salary,
     upper_age_limit: props.data?.upper_age_limit,
@@ -346,17 +352,26 @@ const removeDocument = (index) => {
     form.documents.splice(index, 1);
 };
 
+// const submit = e => {
+//     form.transform(data => ({
+//         department_id: data?.departments?.value || null, // Directly use the value
+//         ...data
+//     }))
+//         .put(route('job.update',props.data?.id), {
+//             onStart: params => q.loading.show({message:'Updating...'}),
+//             onFinish: params => q.loading.hide()
+//         })
+// }
+
 const submit = e => {
     form.transform(data => ({
-        department_id: data?.departments?.value || null, // Directly use the value
+        department_id: data.departments?.value, // Extract the selected department ID
         ...data
     }))
-        .put(route('job.update',props.data?.id), {
-            onStart: params => q.loading.show({message:'Updating...'}),
+        .put(route('job.update', props.data?.id), {
+            onStart: params => q.loading.show({ message: 'Updating...' }),
             onFinish: params => q.loading.hide()
-        })
+        });
 }
-
-
 
 </script>
