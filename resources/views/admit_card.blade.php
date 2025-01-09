@@ -119,11 +119,14 @@
 
         .signature-section .signature-text {
             text-align: right;
-            font-weight: bold;
+            font-weight: lighter;
         }
 
         .signature-section .signature-text span {
+            display: inline;
             font-weight: lighter;
+            margin-right: 10px;
+            white-space: nowrap; /* Prevents line breaks within the span */
         }
     </style>
 </head>
@@ -242,9 +245,15 @@
             </div>
             <div style="width: 48%; text-align: right;">
                 <div class="signature-text">
-                    <p><span>sd/-</span><br><span>(LALREMMAWIA)</span></p>
+                    <p>
+                        <span>(LALREMMAWIA)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <span style="font-weight: lighter;">Deputy Director(Admin) &nbsp;&nbsp;&nbsp;</span>
+                        <span style="font-weight: lighter;">Engineer-in-Chief's Office, PWD</span>
+                        <span style="font-weight: lighter;">Mizoram : Aizawl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    </p>
                 </div>
             </div>
+
         </div>
 
         <div class="footer">
@@ -266,7 +275,7 @@
             <li>The candidates should not bring any articles such as books, notes, loose
                 sheets, mobile phones, pagers, digital diaries, calculators, etc. inside the
                 Examination Hall/Room.</li>
-            <li> [Deleted] </li>
+            <li><sup>21</sup> [Deleted] </li>
             <li> Answers must  be written/marked using Blue or Black Ball Point Pen and pencils should not be used unless drawing of maps, diagrams, etc is required. </li>
             <li>Particulars/Details to be filled up in the answer paper should be filled up completely and correctly, answer scripts of candidates failing to do so will not be evaluated.</li>
             <li>Candidates must attempt questions in accordance with the directions on each question paper. If questions are attempted in excess of the prescribed number, only the questions attempted first up to the prescribed number shall be evaluated and the remaining ignored.</li>
@@ -280,8 +289,8 @@
         </ol>
     </div>
 
-    <div class="footer">
-        <p>Deleted by the Mizoram Direct Recruitment (Conduct of Examination) (Amendment) Guidelines, 2019 notified in the Mizoram Gazette extra ordinary issue No.618 dated 19.09.2019</p>
+    <div style="position: absolute; bottom: 1px; width: 100%;border-top: 1px solid #d1d5db;">
+        <p style="font-size: 12px; color: #4b5563;"><sup>21</sup>Deleted by the Mizoram Direct Recruitment (Conduct of Examination) (Amendment) Guidelines, 2019 notified in the Mizoram Gazette extra ordinary issue No.618 dated 19.09.2019</p>
     </div>
 </div>
 

@@ -268,20 +268,20 @@ function handleImageError() {
         </section>
 
         <!-- Application Section -->
-        <section id="apply" class="py-16 px-4 md:px-0 bg-blue-600 text-white">
-            <div class="container mx-auto text-center">
-                <h2 class="text-3xl font-bold mb-6 text-white">Ready to Apply?</h2>
-                <p class="text-lg mb-6">
-                    Take the first step towards a rewarding career in the
-                    government sector.
-                </p>
-                <button
-                    class="px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"
-                >
-                    Start Application
-                </button>
-            </div>
-        </section>
+<!--        <section id="apply" class="py-16 px-4 md:px-0 bg-blue-600 text-white">-->
+<!--            <div class="container mx-auto text-center">-->
+<!--                <h2 class="text-3xl font-bold mb-6 text-white">Ready to Apply?</h2>-->
+<!--                <p class="text-lg mb-6">-->
+<!--                    Take the first step towards a rewarding career in the-->
+<!--                    government sector.-->
+<!--                </p>-->
+<!--                <button-->
+<!--                    class="px-8 py-3 bg-yellow-500 hover:bg-yellow-600 text-lg font-semibold rounded-md"-->
+<!--                >-->
+<!--                    Start Application-->
+<!--                </button>-->
+<!--            </div>-->
+<!--        </section>-->
 
         <!-- Contact Section -->
         <section id="contact" class="py-16 px-4 md:px-0">
@@ -295,7 +295,7 @@ function handleImageError() {
                     <a
                         href="mailto:support@gov-recruitment.gov"
                         class="text-blue-500 hover:underline"
-                    >support@gov-recruitment.gov</a
+                    >support-msegs@mizoram.gov.in</a
                     >
                 </div>
             </div>
