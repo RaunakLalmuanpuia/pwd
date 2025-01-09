@@ -8,7 +8,7 @@ use App\Models\JobDetail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
+use Barryvdh\DomPDF\Facade as PDF;
 class AdminApplicationController extends Controller
 {
 
@@ -280,6 +280,42 @@ class AdminApplicationController extends Controller
             $application->save();
         }
 
+    }
+
+    public function admitCard()
+    {
+        return Inertia::render('Applications/AdmitCard');
+    }
+
+    public function downloadAdmitCard(Request $request)
+    {
+
+        $search = $request->get('search');
+//        dd($search);
+        $application = Applications::with([
+            'jobDetail',  // Retrieve job details
+            'jobDetail.exams.subjects',  // Retrieve subjects related to the exams
+            'jobDetail.applications.applicant.user',  // Applicant user info
+            'jobDetail.applications.examCenter',  // Exam center info
+        ])
+            ->where('application_id', $search)  // Filter by applicant_id
+            ->firstOrFail();  // Retrieve the first matching application or fail if none found
+//        dd($application);
+        // Check if the application is valid
+        if (!$application || !$application->jobDetail) {
+            return redirect()->back()->with('error', 'You do not have an application for this job.');
+        }
+
+        $jobDetail = $application->jobDetail;
+
+//        dd($jobDetail);
+
+        // Generate the PDF from the view
+        $pdf = PDF\Pdf::loadView('admit_card', compact('jobDetail'));
+
+        // Return the generated PDF as a download
+        return $pdf->download('admit_card_' . $jobDetail->post_name . '.pdf');
+//        return Inertia::render('Applications/AdmitCard');
     }
 
 }

@@ -159,6 +159,15 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:Admin')
         ->name('admin.applications.reject_application');
 
+
+    Route::get('admin/admit_card', [AdminApplicationController::class,'admitCard'])
+        ->middleware('role:Admin')
+        ->name('admin.applications.admit_card');
+
+    Route::get('admin/download_admit_card', [AdminApplicationController::class,'downloadAdmitCard'])
+        ->middleware('role:Admin')
+        ->name('admin.applications.download_admit_card');
+
 });
 
 //Admin Exam Controller

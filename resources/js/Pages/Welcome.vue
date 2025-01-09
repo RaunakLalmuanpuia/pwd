@@ -126,7 +126,7 @@ function handleImageError() {
         <!-- Hero Section -->
         <section
             class="bg-cover bg-center py-24"
-            style="background-image: url('/images/pwd_logo.png')"
+            style="background-image: url('/images/pwd_logo.png'); background-size: 50% auto; background-position: center;"
         >
 
             <div class="container mx-auto text-center text-white">
