@@ -252,6 +252,37 @@
         </div>
 
     @endforeach
+
+    <div style="page-break-before: always;">
+        <h2 style="text-align: center; margin-top: 20px;">INSTRUCTIONS TO CANDIDATES</h2>
+        <ol style="padding: 20px; line-height: 1.8; color: #4b5563;  font-size: 12px;">
+            <li>Candidates will be admitted to the Examination Hall/Room on production of this Admit Card and original ID such as EPIC or Aadhaar with a view to establish the true identity of the candidate. </li>
+            <li> Admission will ordinarily be refused to a candidate who is late by 10 minutes from the start of the examination.</li>
+            <li>Loss of Admit Card must be reported to the Head of Department immediately
+                and duplicate copy of the same will be issued on payment of Rs 50/- (Rupees
+                Fifty) only.</li>
+            <li>No candidate shall be permitted to leave the Examination Hall/Room until the
+                time for the examination is over.</li>
+            <li>The candidates should not bring any articles such as books, notes, loose
+                sheets, mobile phones, pagers, digital diaries, calculators, etc. inside the
+                Examination Hall/Room.</li>
+            <li> [Deleted] </li>
+            <li> Answers must  be written/marked using Blue or Black Ball Point Pen and pencils should not be used unless drawing of maps, diagrams, etc is required. </li>
+            <li>Particulars/Details to be filled up in the answer paper should be filled up completely and correctly, answer scripts of candidates failing to do so will not be evaluated.</li>
+            <li>Candidates must attempt questions in accordance with the directions on each question paper. If questions are attempted in excess of the prescribed number, only the questions attempted first up to the prescribed number shall be evaluated and the remaining ignored.</li>
+            <li>Answer scripts of candidates who do not complete the examination will not be evaluated.</li>
+            <li>Wrongly numbered or un-numbered answers will not be evaluated.</li>
+            <li>Any candidate who applies for his/her marksheet should enclose original or attested copy of this Admit Card.</li>
+            <li>Candidates detected in using unfair means or communicating with one another or found in possession of unauthorized books, papers , mobile phones, pagers, digital diaries
+            calculators, etc. during the examination shall be expelled and their names stuck off the rolls. They will be liable to be debarred from applying for all future examinations
+            and selection to be conducted by the department.</li>
+            <li>No candidate shall leave the examination hall/ Room without prior permission of the Invigilator.</li>
+        </ol>
+    </div>
+
+    <div class="footer">
+        <p>Deleted by the Mizoram Direct Recruitment (Conduct of Examination) (Amendment) Guidelines, 2019 notified in the Mizoram Gazette extra ordinary issue No.618 dated 19.09.2019</p>
+    </div>
 </div>
 
 </body>
