@@ -75,6 +75,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'applicant'], function () {
     Route::post('address/store',[ApplicantController::class,'store_address'])->name('applicant.address_store');
     Route::post('address/{address}', [ApplicantController::class, 'update_address'])->name('applicant.address_update');
 
+    Route::post('bio_address', [ApplicantController::class, 'storeBioAndAddress'])->name('applicant.bio_address_store');
+
 });
 
 

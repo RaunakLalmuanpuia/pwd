@@ -180,6 +180,9 @@ class ApplicationController extends Controller
     public function apply(Request $request, JobDetail $jobDetail)
     {
 //        dd($request);
+        $request->validate([
+            'mizo_proficiency' => 'required',  // Make mizo_proficiency required
+        ]);
 //        dd($jobDetail);
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
 

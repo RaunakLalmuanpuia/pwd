@@ -52,16 +52,16 @@
                     </q-item>
 
 
-                    <q-item clickable v-ripple active-class="active-menu"
-                            :active="route().current()==='applicant.address'"
-                            @click="$inertia.get(route('applicant.address'))">
-                        <q-item-section avatar>
-                            <q-icon name="location_on" />
-                        </q-item-section>
-                        <q-item-section>
-                            <q-item-label>Address</q-item-label>
-                        </q-item-section>
-                    </q-item>
+<!--                    <q-item clickable v-ripple active-class="active-menu"-->
+<!--                            :active="route().current()==='applicant.address'"-->
+<!--                            @click="$inertia.get(route('applicant.address'))">-->
+<!--                        <q-item-section avatar>-->
+<!--                            <q-icon name="location_on" />-->
+<!--                        </q-item-section>-->
+<!--                        <q-item-section>-->
+<!--                            <q-item-label>Address</q-item-label>-->
+<!--                        </q-item-section>-->
+<!--                    </q-item>-->
 
                     <q-item clickable v-ripple active-class="active-menu"
                             :active="route().current()==='applications.draft'"

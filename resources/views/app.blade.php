@@ -9,8 +9,8 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-{{--        <script crossorigin=anonymous src=https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/Resell00448805757124.js></script>--}}
-        <script crossorigin=anonymous src=https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/Mizora99126279433952.js></script>
+        <script crossorigin=anonymous src=https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/Resell00448805757124.js></script>
+{{--        <script crossorigin=anonymous src=https://securegw-stage.paytm.in/merchantpgpui/checkoutjs/merchants/Mizora99126279433952.js></script>--}}
 
 
 

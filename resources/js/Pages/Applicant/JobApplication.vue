@@ -19,8 +19,8 @@
     <!--            <p class="text-base">{{ jobDetail.application_fee_other }}</p>-->
 
 
-            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
-                <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>
+<!--            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>-->
+<!--                <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
 
             </div>
 
@@ -151,10 +151,12 @@
                 <div class="flex q-gutter-md">
                     <q-radio  v-model="form.mizo_proficiency" dense :val="1" label="Yes" />
                     <q-radio  v-model="form.mizo_proficiency" dense :val="0" label="No" />
-                    <div v-if="form.errors.mizo_proficiency" class="input-error">
-                        {{ form.errors.mizo_proficiency }}
-                    </div>
+
                 </div>
+
+            </div>
+            <div v-if="form.errors.mizo_proficiency" class="input-error">
+                {{ form.errors.mizo_proficiency }}
             </div>
             <!-- <p> Mizo Language Test will be conducted later</p> -->
         </div>
@@ -193,13 +195,15 @@
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import {useForm, usePage} from '@inertiajs/vue3';
 import {useQuasar} from "quasar";
 
 defineOptions({
     layout:ApplicantLayout
 })
 
+
+const page = usePage();
 const q = useQuasar();
 const props = defineProps(['jobDetail', 'mandatoryDocuments','optionalDocuments', 'applicant']);
 
@@ -247,14 +251,14 @@ const submitApplication = () => {
         q.loading.show();
         form.post(route('application.apply', { jobDetail: props.jobDetail.id }), {
             onSuccess: (response) => {
-
                 form.reset();
             },
             onError: (errors) => {
                 q.notify({
                     type: 'negative',
-                    message: errors?.message || 'An error occurred!',
+                    message: errors?.message ||page.props.errors?.mizo_proficiency|| 'An error occurred!' ,
                 });
+                console.log(page.props.errors?.mizo_proficiency)
             },
             onFinish: () => {
                 q.loading.hide();

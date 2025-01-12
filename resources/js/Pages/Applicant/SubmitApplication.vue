@@ -15,8 +15,8 @@
             <h2 class="text-lg font-bold mt-4">Application Fee </h2>
             <p class="text-base">General -{{ jobDetail.application_fee_general }}. SC\ST\Others- {{ jobDetail.application_fee_other }}</p>
 
-            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
-            <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>
+<!--            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>-->
+<!--            <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
         </div>
 
         <div class="mt-6 flex justify-between w-full">
@@ -293,7 +293,6 @@ const submitDocument = () => {
     }).onOk(()=>{
         form.post(route('application.update', { jobDetail: props.jobDetail.id }), {
             onSuccess: () => {
-                form.reset();
                 q.notify({
                     type: 'info',
                     color:"primary",

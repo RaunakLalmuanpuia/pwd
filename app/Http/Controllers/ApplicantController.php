@@ -11,13 +11,24 @@ use Illuminate\Support\Facades\Storage;
 class ApplicantController extends Controller
 {
     //
-    public function bio(){
+//    public function bio(){
+//
+//        $existingData = Applicants::where('user_id', Auth::id())->first();
+//        return inertia("Applicant/Bio",[
+//            'existingData' => $existingData,
+//        ]);
+//
+//    }
 
-        $existingData = Applicants::where('user_id', Auth::id())->first();
-        return inertia("Applicant/Bio",[
-            'existingData' => $existingData,
+    public function bio()
+    {
+        $existingBio = Applicants::where('user_id', Auth::id())->first();
+        $existingAddress = Address::where('user_id', Auth::id())->first();
+
+        return inertia("Applicant/BioAddress", [
+            'existingBio' => $existingBio,
+            'existingAddress' => $existingAddress,
         ]);
-
     }
 
     /**
@@ -133,7 +144,7 @@ class ApplicantController extends Controller
             'postGraduateStream' => 'nullable|string|max:255',
             'doctorateDegree' => 'nullable|string|max:255',
             'doctorateStream' => 'nullable|string|max:255',
-            'mizo_proficiency' => 'required|boolean',
+            'mizo_proficiency' => 'boolean',
             'disability' => 'required|boolean',
             'disability_type' => 'nullable|string|max:255',
             'community_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
@@ -259,4 +270,63 @@ class ApplicantController extends Controller
             'country' => 'required|string|max:255',
         ]);
     }
+
+    public function storeBioAndAddress(Request $request)
+    {
+//        dd($request);
+        $validatedBio = $this->validateBio($request);
+        $validatedAddress = $this->validateAddress($request);
+
+        DB::beginTransaction();
+        try {
+            // Handle bio (create or update)
+            $existingApplicant = Applicants::where('user_id', Auth::id())->first();
+            $filePaths = $this->handleFileUploads($request, ['community_attachment', 'passport_attachment', 'signature_attachment']);
+
+            if ($existingApplicant) {
+                // Update existing applicant
+                $existingApplicant->update(array_merge($validatedBio, [
+                    'community' => $validatedBio['community']['value'],
+                    'religion' => $validatedBio['religion']['value'],
+                    'nationality' => $validatedBio['nationality']['value'],
+                    'community_attachment' => $filePaths['community_attachment'] ?? $existingApplicant->community_attachment,
+                    'passport_photo' => $filePaths['passport_attachment'] ?? $existingApplicant->passport_photo,
+                    'signature_photo' => $filePaths['signature_attachment'] ?? $existingApplicant->signature_photo,
+                ]));
+            } else {
+                // Create new applicant
+                Applicants::create(array_merge($validatedBio, [
+                    'user_id' => Auth::id(),
+                    'community' => $validatedBio['community']['value'],
+                    'religion' => $validatedBio['religion']['value'],
+                    'nationality' => $validatedBio['nationality']['value'],
+                    'community_attachment' => $filePaths['community_attachment'] ?? null,
+                    'passport_photo' => $filePaths['passport_attachment'] ?? null,
+                    'signature_photo' => $filePaths['signature_attachment'] ?? null,
+                ]));
+            }
+
+            // Handle address (create or update)
+            $existingAddress = Address::where('user_id', Auth::id())->first();
+            if ($existingAddress) {
+                $existingAddress->update($validatedAddress);
+            } else {
+                Address::create(array_merge($validatedAddress, [
+                    'user_id' => Auth::id(),
+                ]));
+            }
+
+            DB::commit();
+
+//            return redirect()->route('applicant.bio')->with('success', 'Bio and Address saved successfully!');
+
+            return to_route('applicant.bio')->with('success', 'Bio and Address saved successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->cleanupUploadedFiles($filePaths ?? []);
+            return to_route('applicant.bio')->with('error', $e->getMessage());
+        }
+    }
+
+
 }
