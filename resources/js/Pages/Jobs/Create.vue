@@ -222,6 +222,21 @@
                                    ]"
                         />
                     </div>
+                    <div class="col-xs-12">
+                        <q-select v-model="form.mizo_proficiency"
+                                  class="my-input"
+                                  :options="['Class VII','Class X']"
+                                  dense
+                                  label="Mizo Proficiency"
+                                  outlined
+                                  :error="form.errors.hasOwnProperty('mizo_proficiency')"
+                                  :error-message="form.errors?.mizo_proficiency?.toString()"
+                                  @blur="delete form.errors['mizo_proficiency']"
+                                  :rules="[
+                                     val=>!!val || 'Please select Mizo Proficiency'
+                                   ]"
+                        />
+                    </div>
 
 
 
@@ -317,6 +332,7 @@ const form = useForm({
     application_fee_other: "",
     application_fee_general: "",
     description: "",
+    mizo_proficiency:"",
     active: false,
     documents: [],
 });

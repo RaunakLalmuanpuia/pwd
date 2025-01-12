@@ -83,7 +83,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'job'], function () {
     Route::get('/index', [JobDetailsController::class, 'index'])->middleware('role:Admin')->name('job.index');
     Route::get('/create', [JobDetailsController::class, 'create'])->middleware('role:Admin')->name('job.create');
     Route::post('', [JobDetailsController::class, 'store'])->middleware('role:Admin')->name('job.store');
-    Route::get('{model}', [JobDetailsController::class, 'edit'])->middleware('role:Admin')->name('job.edit');
+    Route::get('{model}/edit', [JobDetailsController::class, 'edit'])->middleware('role:Admin')->name('job.edit');
     Route::put('{model}', [JobDetailsController::class, 'update'])->middleware('role:Admin')->name('job.update');
     Route::delete('{model}', [JobDetailsController::class, 'destroy'])->middleware('role:Admin')->name('job.destroy');
 

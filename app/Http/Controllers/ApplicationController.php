@@ -179,6 +179,7 @@ class ApplicationController extends Controller
     // Citizen Apply for application
     public function apply(Request $request, JobDetail $jobDetail)
     {
+//        dd($request);
 //        dd($jobDetail);
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
 
@@ -241,6 +242,7 @@ class ApplicationController extends Controller
             'applicant_id' => $applicant->id,
             'job_details_id' => $jobDetail->id,
             'status' => 'Draft',
+            'mizo_proficiency' => $request->mizo_proficiency,
         ]);
 
         if ($request->hasFile('documents') && is_array($request->file('documents'))) {
@@ -289,38 +291,56 @@ class ApplicationController extends Controller
 //
 //
 //    }
+//
+
     public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
     {
         $validatedData = $request->validate([
-            'document_id' => 'required|exists:documents,id',
-            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048', // File validation
+            'document_id' => 'nullable|exists:documents,id',
+            'file' => 'nullable|file|mimes:pdf,jpeg,png|max:2048', // File validation
             'application_id' => 'required|exists:applications,id', // Ensure application exists
+            'mizo_proficiency' => 'required|boolean',
         ]);
+
+        // Update the mizo_proficiency field in the Applications table
+        $application = Applications::findOrFail($validatedData['application_id']);
+        $application->update(['mizo_proficiency' => $validatedData['mizo_proficiency']]);
 
         // Find the corresponding ApplicationDocument by application_id and document_id
         $applicationDocument = ApplicationDocument::where('application_id', $validatedData['application_id'])
             ->where('document_id', $validatedData['document_id'])
             ->first();
 
-        // Check if the document is valid
+        // Check if the document is valid and if the document exists
         if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            // Check if there is an existing document and delete it
-            if ($applicationDocument && $applicationDocument->document_path) {
-                // Delete the old file from storage
-                Storage::delete('public/' . $applicationDocument->document_path);
+            if ($applicationDocument) {
+                // If the document exists, delete the old file from storage
+                if ($applicationDocument->document_path) {
+                    Storage::delete('public/' . $applicationDocument->document_path);
+                }
+
+                // Store the new file in public/documents with the original file name
+                $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
+
+                // Update the ApplicationDocument record with the new document path
+                $applicationDocument->update([
+                    'document_path' => 'documents/' . $request->file('file')->getClientOriginalName(),
+                ]);
+            } else {
+                // If the document does not exist, create a new one
+                $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
+
+                ApplicationDocument::create([
+                    'application_id' => $validatedData['application_id'],
+                    'document_id' => $validatedData['document_id'],
+                    'document_path' => 'documents/' . $request->file('file')->getClientOriginalName(),
+                ]);
             }
-
-            // Store the new file in public/documents with the original file name
-            $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
-
-            // Update the ApplicationDocument record with the new document path
-            $applicationDocument->update([
-                'document_path' => 'documents/' . $request->file('file')->getClientOriginalName(),
-            ]);
         }
 
-        return back()->with('success', 'Document updated successfully.');
+        return back()->with('success', 'Application updated successfully.');
     }
+
 
 
     public function deleteDraft(Request $request, JobDetail $jobDetail)

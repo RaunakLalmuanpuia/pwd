@@ -145,7 +145,19 @@
 
         </div>
 
-
+        <div class="p-4 bg-background rounded-lg shadow-md col-xs-12 col-sm-12">
+            <div class="flex justify-between items-center">
+                <div class="text-grey-6">Did you study MIZO language in {{ jobDetail.mizo_proficiency }}</div>
+                <div class="flex q-gutter-md">
+                    <q-radio  v-model="form.mizo_proficiency" dense :val="1" label="Yes" />
+                    <q-radio  v-model="form.mizo_proficiency" dense :val="0" label="No" />
+                    <div v-if="form.errors.mizo_proficiency" class="input-error">
+                        {{ form.errors.mizo_proficiency }}
+                    </div>
+                </div>
+            </div>
+            <!-- <p> Mizo Language Test will be conducted later</p> -->
+        </div>
 
         <q-separator/>
         <div class="mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-6 flex flex-col items-center">
@@ -198,6 +210,7 @@ const toggleDiv = () => {
 };
 
 const form = useForm({
+    mizo_proficiency: "",
     documents: {},
 });
 

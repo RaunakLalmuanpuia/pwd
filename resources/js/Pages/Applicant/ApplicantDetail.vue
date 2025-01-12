@@ -143,6 +143,16 @@
                 <q-separator class="q-my-md" />
             </div>
 
+            <div class="col-xs-12 col-sm-3 text-grey-6">Mizo Proficiency in {{jobDetails.mizo_proficiency}}</div>
+            <div class="col-xs-12 col-sm-3 text-weight-medium">
+                {{ jobDetails.applications[0]?.mizo_proficiency === '1' ? 'Yes' : 'No' }}
+
+            </div>
+
+            <div class="col-xs-12">
+                <q-separator class="q-my-md" />
+            </div>
+
             <div class="col-xs-12 text-grey-6">Education</div>
 
             <div class="col-xs-12 col-sm-3 text-grey-6">Qualification</div>

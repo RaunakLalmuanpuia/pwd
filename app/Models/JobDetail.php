@@ -28,6 +28,7 @@ class JobDetail extends Model
         'application_fee_general',
         'description',
         'active',
+        'mizo_proficiency'
     ];
 
 //    public function departments(): BelongsTo

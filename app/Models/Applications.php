@@ -19,6 +19,7 @@ class Applications extends Model
         'rejection_note',
         'roll_no',
         'exam_center_id',
+        'mizo_proficiency'
     ];
 
     public function applicant()

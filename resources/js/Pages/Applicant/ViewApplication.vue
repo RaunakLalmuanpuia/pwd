@@ -204,6 +204,30 @@
                 </div>
             </div>
 
+        <div class="p-4 bg-background rounded-lg shadow-md col-xs-12 col-sm-12">
+            <div class="flex justify-between items-center">
+                <div >
+                    Did you study MIZO language in {{ jobDetail.mizo_proficiency }}
+                </div>
+                <div class="flex q-gutter-md">
+                    <q-radio
+                        v-model="mizoProficiency"
+                        dense
+                        :val="1"
+                        label="Yes"
+                    />
+                    <q-radio
+                        v-model="mizoProficiency"
+                        dense
+                        :val="0"
+                        label="No"
+                    />
+
+                </div>
+            </div>
+            <!-- <p> Mizo Language Test will be conducted later</p> -->
+        </div>
+
 
         <q-separator/>
         <div class="mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-6 flex flex-col items-center">
@@ -239,13 +263,19 @@
 
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import {Head, useForm} from '@inertiajs/vue3';
 
 defineOptions({
     layout:ApplicantLayout
 })
 const props = defineProps(['jobDetail', 'mandatoryDocuments', 'applicant','application', 'optionalDocuments']);
+
+
+
+const mizoProficiency = computed(() => {
+    return (props.application?.mizo_proficiency === '1') ? 1 : 0;
+});
 
 const isVisible = ref(false); // Tracks visibility of the div
 const isVisiblePayment = ref(false);

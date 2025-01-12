@@ -155,6 +155,32 @@
             </div>
         </div>
 
+        <div class="p-4 bg-background rounded-lg shadow-md col-xs-12 col-sm-12">
+            <div class="flex justify-between items-center">
+                <div >
+                    Did you study MIZO language in {{ jobDetail.mizo_proficiency }}
+                </div>
+                <div class="flex q-gutter-md">
+                    <q-radio
+                        v-model="form.mizo_proficiency"
+                        dense
+                        :val="1"
+                        label="Yes"
+                    />
+                    <q-radio
+                        v-model="form.mizo_proficiency"
+                        dense
+                        :val="0"
+                        label="No"
+                    />
+                    <div v-if="form.errors.mizo_proficiency" class="input-error">
+                        {{ form.errors.mizo_proficiency }}
+                    </div>
+                </div>
+            </div>
+            <!-- <p> Mizo Language Test will be conducted later</p> -->
+        </div>
+
 
 
         <div class="mx-auto bg-white dark:bg-card shadow-lg rounded-lg p-6 flex flex-col items-center mt-2">
@@ -223,7 +249,7 @@
 
 <script setup>
 import ApplicantLayout from "@/Layouts/ApplicantLayout.vue";
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import {useForm, router, Head} from '@inertiajs/vue3';
 import {useQuasar} from "quasar";
 import axios from 'axios';
@@ -241,7 +267,14 @@ const form = useForm({
     document_id: null,
     file: null,
     application_id: props.application.id,
+    // mizo_proficiency: props.application?.mizo_proficiency ?? null,
+    mizo_proficiency: props.application?.mizo_proficiency ? parseInt(props.application.mizo_proficiency) : null,
+
 });
+
+// onMounted(() => {
+//     form.mizo_proficiency = props.application?.mizo_proficiency ? parseInt(props.application.mizo_proficiency) : null;
+// });
 
 const processing = ref(false);
 
@@ -261,6 +294,11 @@ const submitDocument = () => {
         form.post(route('application.update', { jobDetail: props.jobDetail.id }), {
             onSuccess: () => {
                 form.reset();
+                q.notify({
+                    type: 'info',
+                    color:"primary",
+                    message: 'Application Updated Successfully.',
+                });
             },
         });
     })

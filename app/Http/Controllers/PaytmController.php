@@ -124,6 +124,7 @@ class PaytmController extends Controller
         $transaction->amount = $paytmParams['TXNAMOUNT'];
         $application = $transaction->reference()->first();
 
+        $jobDetail = JobDetail::find($request->get('jobs')[0]);
 
         if ($paytmParams['STATUS'] === 'TXN_SUCCESS') {
             $isValidChecksum = PaytmChecksum::verifySignature($paytmParams, env('MERCHANT_KEY', 'u5Sm%L7GKl9FL9EK'), $paytmChecksum);
@@ -131,10 +132,10 @@ class PaytmController extends Controller
                 abort(500, 'Something went wrong');
             }
 
-            DB::transaction(function () use ($application, $transaction) {
+            DB::transaction(function () use ($application, $transaction, $jobDetail) {
                 $application->status = 'Pending';
                 $application->submitted_at = Carbon::now();
-                $application->application_id = $this->generateUniqueApplicationId();
+                $application->application_id = $this->generateUniqueApplicationId($jobDetail);
                 $application->save();
 
 
@@ -170,14 +171,34 @@ class PaytmController extends Controller
     }
 
 
-    private function generateUniqueApplicationId()
+//    private function generateUniqueApplicationId()
+//    {
+//        do {
+//            // Generate a random unique string (you can customize the format)
+//            $uniqueId = 'APP-' . strtoupper(uniqid());
+//        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
+//
+//        return $uniqueId;
+//    }
+    private function generateUniqueApplicationId($jobDetail)
     {
-        do {
-            // Generate a random unique string (you can customize the format)
-            $uniqueId = 'APP-' . strtoupper(uniqid());
-        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
+        // Get the latest application record for the specific jobDetail
+        $latestApplication = Applications::query()
+            ->where('job_id', $jobDetail->id) // Assuming job_id is linked to the JobDetail
+            ->orderBy('created_at', 'desc')
+            ->first();
 
-        return $uniqueId;
+        // Get the current highest sequence number or set to 1 if none exists
+        $sequenceNumber = $latestApplication ? (int) substr($latestApplication->application_id, -5) + 1 : 1;
+
+        // Determine the padding length based on the sequence number
+        $paddingLength = $sequenceNumber > 9999 ? 5 : 4;
+
+        // Format the application ID as job code + padded sequence number (4 or 5 digits)
+        $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+
+        return $applicationId;
     }
+
 
 }

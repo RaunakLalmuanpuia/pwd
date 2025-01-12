@@ -11,7 +11,7 @@
         </div>
         <q-form class="zcard q-pa-md"  @reset="resetForm" @submit="submit">
             <div class="row q-col-gutter-sm">
-                <div class="col-xs-12 primary-title q-my-md">Job  profile</div>
+                <div class="col-xs-12 primary-title q-my-md">Job  Profile</div>
                 <div class="col-xs-12">
                     <q-input v-model="form.code"
                              class="my-input"
@@ -223,6 +223,22 @@
                     />
                 </div>
 
+                <div class="col-xs-12">
+                    <q-select v-model="form.mizo_proficiency"
+                              class="my-input"
+                              :options="['Class VII','Class X']"
+                              dense
+                              label="Mizo Proficiency"
+                              outlined
+                              :error="form.errors.hasOwnProperty('mizo_proficiency')"
+                              :error-message="form.errors?.mizo_proficiency?.toString()"
+                              @blur="delete form.errors['mizo_proficiency']"
+                              :rules="[
+                                     val=>!!val || 'Please select Mizo Proficiency'
+                                   ]"
+                    />
+                </div>
+
                 <div class=col-xs-12>
                     <q-separator class="q-my-md"/>
                 </div>
@@ -328,6 +344,7 @@ const form = useForm({
     application_deadline: props.data?.application_deadline,
     active: props.data?.active,
     description: props.data?.description,
+    mizo_proficiency:props.data?.mizo_proficiency,
     documents: props.data?.documents.map(doc => ({
         id: doc.id,
         job_detail_id: doc.job_detail_id,

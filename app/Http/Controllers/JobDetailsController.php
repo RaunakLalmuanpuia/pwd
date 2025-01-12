@@ -109,6 +109,7 @@ class JobDetailsController extends Controller
      */
     public function update(Request $request, JobDetail $model)
     {
+//        dd($request);
         $jobDetails = $model;
 
         // Validate the incoming data
@@ -127,6 +128,7 @@ class JobDetailsController extends Controller
             'application_deadline' => 'required|date|after:today',
             'application_fee_other' => 'required|numeric|min:0',
             'application_fee_general' => 'required|numeric|min:0',
+            'mizo_proficiency' => 'required|string',
             'documents' => 'nullable|array',
             'documents.*.name' => 'required|string|max:255',
             'documents.*.description' => 'nullable|string|max:255',
