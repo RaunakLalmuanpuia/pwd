@@ -33,10 +33,10 @@ class RegisteredUserController extends Controller
     {
 //        dd($request);
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|regex:/^[a-zA-Z\s]+$/|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'phone' =>'required|string|lowercase|string|max:12|unique:'.User::class,
+            'phone' => 'required|digits:10|unique:'.User::class,
         ]);
 
         $user = User::create([

@@ -103,8 +103,9 @@ const form = useForm({
             </div>
 
             <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
 
+<!--                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>-->
+                <q-btn  class="q-px-xl" :disabled="form.processing" color="primary" label="Save" rounded type="submit"/>
                 <Transition
                     enter-active-class="transition ease-in-out"
                     enter-from-class="opacity-0"

@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('doctorateDegree')->nullable();
             $table->string('doctorateStream')->nullable();
 
-            $table->boolean('mizo_proficiency');
+            $table->boolean('mizo_proficiency')->nullable();
             $table->boolean('disability')->default(false);
             $table->string('disability_type')->nullable();
             $table->string('passport_photo');
