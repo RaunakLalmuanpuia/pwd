@@ -372,14 +372,26 @@ class ApplicationController extends Controller
     }
 
 
+//    public function admitCard()
+//    {
+//        $jobs = JobDetail::whereHas('settings')->with('settings')->get();
+//
+//        return Inertia::render('Applicant/AdmitCard', [
+//            'jobs' => $jobs,
+//        ]);
+//
+//    }
     public function admitCard()
     {
-        $jobs = JobDetail::whereHas('settings')->with('settings')->get();
+        $applicantId = auth()->user()->applicants->id; // Assuming each user has one applicant profile
+//        dd(auth()->user()->applicants);
+        $jobs = JobDetail::whereHas('applications', function ($query) use ($applicantId) {
+            $query->where('applicant_id', $applicantId);
+        })->with('settings')->get();
 
         return Inertia::render('Applicant/AdmitCard', [
             'jobs' => $jobs,
         ]);
-
     }
 
     // Generate Admit card (Applicant)

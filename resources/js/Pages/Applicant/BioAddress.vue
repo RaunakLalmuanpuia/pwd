@@ -21,6 +21,7 @@
                          outlined
                          @blur="delete form.errors['name']"
                 />
+                <span class="text-caption px-5  q-mt-sm">As provided during Account creation. Goto Profile to Edit</span>
             </div>
             <!--Email-->
             <div class="col-xs-12 col-sm-6">
@@ -38,6 +39,7 @@
                          outlined
                          @blur="delete form.errors['email']"
                 />
+                <span class="text-caption px-5  q-mt-sm">As provided during Account creation. Goto Profile to Edit</span>
             </div>
             <!--phone-->
             <div class="col-xs-12 col-sm-6">
@@ -56,6 +58,7 @@
                          :error="!!form.errors?.phone"
                          :error-message="form.errors?.phone?.toString()"
                 />
+                <span class="text-caption px-5  q-mt-sm">As provided during Account creation. Goto Profile to Edit</span>
             </div>
             <!--parent name-->
             <div class="col-xs-12 col-sm-6">
@@ -218,7 +221,7 @@
             </div>
             <div class="col-xs-12 col-sm-6">
                 <q-select v-model="form.qualification"
-                          :options="['Class 8', 'HSLC', 'HSSLC',  'Graduate', 'Post Graduate', 'Doctorate']"
+                          :options="['Class VII', 'HSLC', 'HSSLC',  'Graduate', 'Post Graduate', 'Doctorate']"
                           :rules="[
                                          val=>!!val || 'Qualification is required'
                                        ]"
@@ -868,82 +871,93 @@ watch(sameAsPermanent, (newValue) => {
         form.communication_pin_code = "";
     }
 });
-
-
 const submit = () => {
     form.mizo_proficiency = !!form.mizo_proficiency; // Ensure boolean
-    // form.disability = !!form.disability; // Ensure boolean
-    // form.disability = form.disability === 1;
-    // console.log(form.disability);
 
-    const disabilityBoolean = form.disability === 1; // 1 => true, 0 => false
-    console.log('Disability (boolean):', disabilityBoolean); // Should log true or false
+    const disabilityBoolean = form.disability === 1; // Convert to boolean
+    console.log('Disability (boolean):', disabilityBoolean);
 
     const routeName = props.existingData
         ? 'applicant.bio_update' // Update route
         : 'applicant.bio_store'; // Create route
 
-    form.post(route('applicant.bio_address_store'), {
-        data: {
-            ...form,
-            disability: disabilityBoolean, // Ensure boolean is sent
+    q.dialog({
+        title: 'Confirm Submission',
+        message: 'Are you sure you want to submit this form?',
+        ok: {
+            label: 'Yes',
+            color: 'positive',
         },
-        onSuccess: (response) => {
-            q.notify({
-                type: 'positive',
-                message: response?.props?.flash?.success || 'Successfully submitted!',
-            });
-            // form.setData({
-            //     name: response.props.existingBio.name,
-            //     phone: response.props.existingBio.phone,
-            //     email: response.props.existingBio.email,
-            //     parents_name: response.props.existingBio.parents_name,
-            //     sex: response.props.existingBio.sex,
-            //     date_of_birth: response.props.existingBio.date_of_birth,
-            //     community: response.props.existingBio.community ? { label: response.props.existingBio.community, value: response.props.existingBio.community } : null,
-            //     religion: response.props.existingBio.religion ? { label: response.props.existingBio.religion, value: response.props.existingBio.religion } : null,
-            //     marital_status: response.props.existingBio.marital_status,
-            //     nationality: response.props.existingBio.nationality ? { label: response.props.existingBio.nationality, value: response.props.existingBio.nationality } : null,
-            //     qualification: response.props.existingBio.qualification,
-            //     graduateDegree: response.props.existingBio.graduateDegree,
-            //     graduateStream: response.props.existingBio.graduateStream,
-            //     postGraduateDegree: response.props.existingBio.postGraduateDegree,
-            //     postGraduateStream: response.props.existingBio.postGraduateStream,
-            //     doctorateDegree: response.props.existingBio.doctorateDegree,
-            //     doctorateStream: response.props.existingBio.doctorateStream,
-            //     disability: response.props.existingBio.disability ? 1 : 0, // Ensure it is a number
-            //     disability_type: response.props.existingBio.disability_type,
-            //     permanent_house_no: response.props.existingAddress?.permanent_house_no || "",
-            //     permanent_street: response.props.existingAddress?.permanent_street || "",
-            //     permanent_locality: response.props.existingAddress?.permanent_locality || "",
-            //     permanent_landmark: response.props.existingAddress?.permanent_landmark || "",
-            //     permanent_city: response.props.existingAddress?.permanent_city || "",
-            //     permanent_district: response.props.existingAddress?.permanent_district || "",
-            //     permanent_state: response.props.existingAddress?.permanent_state || "",
-            //     permanent_pin_code: response.props.existingAddress?.permanent_pin_code || "",
-            //     communication_house_no: response.props.existingAddress?.communication_house_no || "",
-            //     communication_street: response.props.existingAddress?.communication_street || "",
-            //     communication_locality: response.props.existingAddress?.communication_locality || "",
-            //     communication_landmark: response.props.existingAddress?.communication_landmark || "",
-            //     communication_city: response.props.existingAddress?.communication_city || "",
-            //     communication_district: response.props.existingAddress?.communication_district || "",
-            //     communication_state: response.props.existingAddress?.communication_state || "",
-            //     communication_pin_code: response.props.existingAddress?.communication_pin_code || "",
-            //     country: response.props.existingData?.country || "India",
-            // });
-            // form.reset();
+        cancel: {
+            label: 'No',
+            color: 'negative',
         },
-        onError: (errors) => {
-            q.notify({
-                type: 'negative',
-                message: errors?.message || 'An error occurred!',
-            });
-        },
-        onFinish: () => {
-            q.loading.hide();
-        },
+    }).onOk(() => {
+        // Proceed with form submission if confirmed
+        form.post(route('applicant.bio_address_store'), {
+            data: {
+                ...form,
+                disability: disabilityBoolean, // Ensure boolean is sent
+            },
+            onSuccess: (response) => {
+                q.notify({
+                    type: 'positive',
+                    message: response?.props?.flash?.success || 'Successfully submitted!',
+                });
+            },
+            onError: (errors) => {
+                q.notify({
+                    type: 'negative',
+                    message: errors?.message || 'An error occurred!',
+                });
+            },
+            onFinish: () => {
+                q.loading.hide();
+            },
+        });
+    }).onCancel(() => {
+        q.notify({
+            type: 'info',
+            message: 'Submission cancelled.',
+        });
     });
 };
+
+// const submit = () => {
+//     form.mizo_proficiency = !!form.mizo_proficiency; // Ensure boolean
+//     // form.disability = !!form.disability; // Ensure boolean
+//     // form.disability = form.disability === 1;
+//     // console.log(form.disability);
+//
+//     const disabilityBoolean = form.disability === 1; // 1 => true, 0 => false
+//     console.log('Disability (boolean):', disabilityBoolean); // Should log true or false
+//
+//     const routeName = props.existingData
+//         ? 'applicant.bio_update' // Update route
+//         : 'applicant.bio_store'; // Create route
+//
+//     form.post(route('applicant.bio_address_store'), {
+//         data: {
+//             ...form,
+//             disability: disabilityBoolean, // Ensure boolean is sent
+//         },
+//         onSuccess: (response) => {
+//             q.notify({
+//                 type: 'positive',
+//                 message: response?.props?.flash?.success || 'Successfully submitted!',
+//             });
+//         },
+//         onError: (errors) => {
+//             q.notify({
+//                 type: 'negative',
+//                 message: errors?.message || 'An error occurred!',
+//             });
+//         },
+//         onFinish: () => {
+//             q.loading.hide();
+//         },
+//     });
+// };
 
 </script>
 <style scoped>

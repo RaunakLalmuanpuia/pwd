@@ -66,6 +66,7 @@ const submit = () => {
                     class="mt-1 block w-full"
                     v-model="form.phone"
                     required
+                    maxlength="10"
                     autocomplete="phone"
                 />
 

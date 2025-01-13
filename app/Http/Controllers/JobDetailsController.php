@@ -125,7 +125,7 @@ class JobDetailsController extends Controller
             'age_relaxation' => 'required|string|max:255',
             'qualification' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'application_deadline' => 'required|date|after:today',
+            'application_deadline' => 'required|date',
             'application_fee_other' => 'required|numeric|min:0',
             'application_fee_general' => 'required|numeric|min:0',
             'mizo_proficiency' => 'required|string',
