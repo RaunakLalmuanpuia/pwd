@@ -147,7 +147,7 @@
 
         <div class="p-4 bg-background rounded-lg shadow-md col-xs-12 col-sm-12">
             <div class="flex justify-between items-center">
-                <div class="text-grey-6">Did you study MIZO language in {{ jobDetail.mizo_proficiency }}</div>
+                <div>Did you study MIZO language in {{ jobDetail.mizo_proficiency }}</div>
                 <div class="flex q-gutter-md">
                     <q-radio  v-model="form.mizo_proficiency" dense :val="1" label="Yes" />
                     <q-radio  v-model="form.mizo_proficiency" dense :val="0" label="No" />

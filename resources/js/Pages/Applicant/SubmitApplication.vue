@@ -157,7 +157,7 @@
 
         <div class="p-4 bg-background rounded-lg shadow-md col-xs-12 col-sm-12">
             <div class="flex justify-between items-center">
-                <div >
+                <div>
                     Did you study MIZO language in {{ jobDetail.mizo_proficiency }}
                 </div>
                 <div class="flex q-gutter-md">
