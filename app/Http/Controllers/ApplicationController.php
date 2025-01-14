@@ -44,7 +44,7 @@ class ApplicationController extends Controller
 
         if (!$applicant) {
             // Redirect back or return a view with an appropriate message
-            return inertia('Applicant/Applications', [
+            return inertia('Applicant/ApprovedApplications', [
                 'applications' => [],
             ])->with('success', 'No applicant record found.');
         }
@@ -65,7 +65,7 @@ class ApplicationController extends Controller
 
         if (!$applicant) {
             // Redirect back or return a view with an appropriate message
-            return inertia('Applicant/Applications', [
+            return inertia('Applicant/RejectedApplications', [
                 'applications' => [],
             ])->with('success', 'No applicant record found.');
         }
@@ -87,7 +87,7 @@ class ApplicationController extends Controller
 
         if (!$applicant) {
             // Redirect back or return a view with an appropriate message
-            return inertia('Applicant/Applications', [
+            return inertia('Applicant/DraftSubmission', [
                 'applications' => [],
             ])->with('success', 'No applicant record found.');
         }
@@ -381,10 +381,38 @@ class ApplicationController extends Controller
 //        ]);
 //
 //    }
+//    public function admitCard()
+//    {
+//        $applicantId = auth()->user()->applicants->id; // Assuming each user has one applicant profile
+////        dd(auth()->user()->applicants);
+//
+//        if (!$applicantId) {
+//            // Redirect back or return a view with an appropriate message
+//            return inertia('Applicant/AdmitCard', [
+//                'jobs' => [],
+//            ])->with('success', 'No applicant record found.');
+//        }
+//        $jobs = JobDetail::whereHas('applications', function ($query) use ($applicantId) {
+//            $query->where('applicant_id', $applicantId);
+//        })->with('settings')->get();
+//
+//        return Inertia::render('Applicant/AdmitCard', [
+//            'jobs' => $jobs,
+//        ]);
+//    }
     public function admitCard()
     {
-        $applicantId = auth()->user()->applicants->id; // Assuming each user has one applicant profile
-//        dd(auth()->user()->applicants);
+        $applicant = auth()->user()->applicants; // Get the applicant record
+
+        if (!$applicant) {
+            // Redirect back or return a view with an appropriate message
+            return inertia('Applicant/AdmitCard', [
+                'jobs' => [],
+            ])->with('success', 'No applicant record found.');
+        }
+
+        $applicantId = $applicant->id;
+
         $jobs = JobDetail::whereHas('applications', function ($query) use ($applicantId) {
             $query->where('applicant_id', $applicantId);
         })->with('settings')->get();
@@ -393,7 +421,6 @@ class ApplicationController extends Controller
             'jobs' => $jobs,
         ]);
     }
-
     // Generate Admit card (Applicant)
     public function generateAdmitCardByJob(JobDetail $jobDetail)
     {

@@ -8,7 +8,7 @@
                 <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M9 4a3 3 0 016 0v9a3 3 0 11-6 0V4zM5 6a3 3 0 016 0v7a3 3 0 11-6 0V6z" clip-rule="evenodd" />
                 </svg>
-                <p class="text-gray-600 text-lg">Admit card not available yet</p>
+                <p class="text-gray-600 text-lg text-center">Admit card not available yet</p>
             </div>
 
             <div v-else class="col-12 zcard q-pa-md">

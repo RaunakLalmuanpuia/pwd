@@ -124,7 +124,8 @@ class PaytmController extends Controller
         $transaction->amount = $paytmParams['TXNAMOUNT'];
         $application = $transaction->reference()->first();
 
-        $jobDetail = JobDetail::find($request->get('jobs')[0]);
+//        dd($application);
+        $jobDetail = JobDetail::find($application->job_details_id);
 
         if ($paytmParams['STATUS'] === 'TXN_SUCCESS') {
             $isValidChecksum = PaytmChecksum::verifySignature($paytmParams, env('MERCHANT_KEY', 'u5Sm%L7GKl9FL9EK'), $paytmChecksum);
@@ -184,7 +185,7 @@ class PaytmController extends Controller
     {
         // Get the latest application record for the specific jobDetail
         $latestApplication = Applications::query()
-            ->where('job_id', $jobDetail->id) // Assuming job_id is linked to the JobDetail
+            ->where('job_details_id', $jobDetail->id) // Assuming job_id is linked to the JobDetail
             ->orderBy('created_at', 'desc')
             ->first();
 

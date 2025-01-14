@@ -3,7 +3,7 @@
 
     <q-page padding>
         <Head title="Submissions" />
-        <p class="page-title">Draft Applications</p>
+        <p class="page-title">Submitted Applications</p>
         <div class="row q-gutter-md">
 
             <div v-if="applications.length === 0" class="col-12 zcard q-pa-md">

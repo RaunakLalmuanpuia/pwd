@@ -360,7 +360,6 @@
                     class="my-input"
                     dense
                     item-aligned
-
                     :error="!!form.errors?.permanent_house_no"
                     :error-message="form.errors?.permanent_house_no?.toString()"
                     :rules="[val => !!val || 'This field is required']"
@@ -421,13 +420,14 @@
 
             </div>
             <div class="col-xs-12 col-sm-6">
-                <q-input
+                <q-select
                     v-model="form.permanent_district"
                     outlined
                     label="District"
                     lazy-rules
                     class="my-input"
                     dense
+                    :options="district"
                     item-aligned
                     :error="!!form.errors?.permanent_district"
                     :error-message="form.errors?.permanent_district?.toString()"
@@ -435,9 +435,10 @@
                 />
             </div>
             <div class="col-xs-12 col-sm-6">
-                <q-input
+                <q-select
                     v-model="form.permanent_state"
                     outlined
+                    :options="state"
                     label="State"
                     lazy-rules
                     class="my-input"
@@ -552,12 +553,13 @@
                 />
             </div>
             <div class="col-xs-12 col-sm-6">
-                <q-input
+                <q-select
                     v-model="form.communication_district"
                     outlined
                     label="District"
                     lazy-rules
                     class="my-input"
+                    :options="district"
                     dense
                     item-aligned
                     :error="!!form.errors?.communication_district"
@@ -567,13 +569,14 @@
 
             </div>
             <div class="col-xs-12 col-sm-6">
-                <q-input
+                <q-select
                     v-model="form.communication_state"
                     outlined
                     label="State"
                     lazy-rules
                     class="my-input"
                     dense
+                    :options="state"
                     item-aligned
                     :error="!!form.errors?.communication_state"
                     :error-message="form.errors?.communication_state?.toString()"
@@ -626,7 +629,6 @@
                     :error-message="form.errors?.passport_attachment?.toString()"
                     accept=".jpg, .jpeg, .png"
                     class="col-xs-12"
-                    color="grey"
                     hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 3:4"
                 >
                     <template v-slot:prepend>
@@ -644,7 +646,6 @@
                     :error-message="form.errors?.signature_attachment?.toString()"
                     accept=".jpg, .jpeg, .png"
                     class="col-xs-12"
-                    color="grey"
                     hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 16:9"
                 >
                     <template v-slot:prepend>
@@ -687,6 +688,7 @@
                         :error="!!form.errors?.passport_attachment"
                         :error-message="form.errors?.passport_attachment?.toString()"
                         @added="handleFileChange($event, 'passport_attachment')"
+                        hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 3:4"
 
                     />
 
@@ -729,6 +731,7 @@
                         :error-message="form.errors?.signature_attachment?.toString()"
                         @added="handleFileChange($event, 'signature_attachment')"
                         class="q-mb-md"
+                        hint="Max file size: 512KB / only .jpeg, .png, .jpg/ Aspect Ratio 16:9"
                     />
                 </div>
             </div>
@@ -848,6 +851,61 @@ const religions =  [
     {value: 'Buddhist',label: 'Buddhist' },
     {value: 'Others', label: 'Others' },
 ]
+
+const district = [
+    {value:'Aizawl',label:'Aizawl'},
+    {value:'Lunglei',label:'Lunglei'},
+    {value:'Siaha',label:'Siaha'},
+    {value:'Champhai',label:'Champhai'},
+    {value: 'Kolasib',label: 'Kolasib' },
+    {value: 'Serchhip', label: 'Serchhip' },
+    {value:'Lawngtlai',label:'Lawngtlai'},
+    {value:'Mamit',label:'Mamit'},
+    {value:'Khawzawl',label:'Khawzawl'},
+    {value:'Saitual',label:'Saitual'},
+    {value: 'Hnahthial',label: 'Hnahthial' },
+    {value: 'Other', label: 'Other' },
+]
+
+const state = [
+    { value: 'Andaman and Nicobar Islands', label: 'Andaman and Nicobar Islands' },
+    { value: 'Andhra Pradesh', label: 'Andhra Pradesh' },
+    { value: 'Arunachal Pradesh', label: 'Arunachal Pradesh' },
+    { value: 'Assam', label: 'Assam' },
+    { value: 'Bihar', label: 'Bihar' },
+    { value: 'Chandigarh', label: 'Chandigarh' },
+    { value: 'Chhattisgarh', label: 'Chhattisgarh' },
+    { value: 'Dadra and Nagar Haveli and Daman and Diu', label: 'Dadra and Nagar Haveli and Daman and Diu' },
+    { value: 'Delhi', label: 'Delhi' },
+    { value: 'Goa', label: 'Goa' },
+    { value: 'Gujarat', label: 'Gujarat' },
+    { value: 'Haryana', label: 'Haryana' },
+    { value: 'Himachal Pradesh', label: 'Himachal Pradesh' },
+    { value: 'Jammu and Kashmir', label: 'Jammu and Kashmir' },
+    { value: 'Jharkhand', label: 'Jharkhand' },
+    { value: 'Karnataka', label: 'Karnataka' },
+    { value: 'Kerala', label: 'Kerala' },
+    { value: 'Ladakh', label: 'Ladakh' },
+    { value: 'Lakshadweep', label: 'Lakshadweep' },
+    { value: 'Madhya Pradesh', label: 'Madhya Pradesh' },
+    { value: 'Maharashtra', label: 'Maharashtra' },
+    { value: 'Manipur', label: 'Manipur' },
+    { value: 'Meghalaya', label: 'Meghalaya' },
+    { value: 'Mizoram', label: 'Mizoram' },
+    { value: 'Nagaland', label: 'Nagaland' },
+    { value: 'Odisha', label: 'Odisha' },
+    { value: 'Puducherry', label: 'Puducherry' },
+    { value: 'Punjab', label: 'Punjab' },
+    { value: 'Rajasthan', label: 'Rajasthan' },
+    { value: 'Sikkim', label: 'Sikkim' },
+    { value: 'Tamil Nadu', label: 'Tamil Nadu' },
+    { value: 'Telangana', label: 'Telangana' },
+    { value: 'Tripura', label: 'Tripura' },
+    { value: 'Uttar Pradesh', label: 'Uttar Pradesh' },
+    { value: 'Uttarakhand', label: 'Uttarakhand' },
+    { value: 'West Bengal', label: 'West Bengal' }
+];
+
 watch(sameAsPermanent, (newValue) => {
     if (newValue) {
         // Copy permanent address to communication address
@@ -922,42 +980,6 @@ const submit = () => {
         });
     });
 };
-
-// const submit = () => {
-//     form.mizo_proficiency = !!form.mizo_proficiency; // Ensure boolean
-//     // form.disability = !!form.disability; // Ensure boolean
-//     // form.disability = form.disability === 1;
-//     // console.log(form.disability);
-//
-//     const disabilityBoolean = form.disability === 1; // 1 => true, 0 => false
-//     console.log('Disability (boolean):', disabilityBoolean); // Should log true or false
-//
-//     const routeName = props.existingData
-//         ? 'applicant.bio_update' // Update route
-//         : 'applicant.bio_store'; // Create route
-//
-//     form.post(route('applicant.bio_address_store'), {
-//         data: {
-//             ...form,
-//             disability: disabilityBoolean, // Ensure boolean is sent
-//         },
-//         onSuccess: (response) => {
-//             q.notify({
-//                 type: 'positive',
-//                 message: response?.props?.flash?.success || 'Successfully submitted!',
-//             });
-//         },
-//         onError: (errors) => {
-//             q.notify({
-//                 type: 'negative',
-//                 message: errors?.message || 'An error occurred!',
-//             });
-//         },
-//         onFinish: () => {
-//             q.loading.hide();
-//         },
-//     });
-// };
 
 </script>
 <style scoped>

@@ -256,17 +256,17 @@ class ApplicantController extends Controller
             'permanent_locality' => 'required|string|max:255',
             'permanent_landmark' => 'nullable|string|max:255',
             'permanent_city' => 'required|string|max:255',
-            'permanent_district' => 'required|string|max:255',
-            'permanent_state' => 'required|string|max:255',
-            'permanent_pin_code' => 'required|string|max:10',
+            'permanent_district' => 'required',
+            'permanent_state' => 'required',
+            'permanent_pin_code' => 'required|numeric|digits:6',
             'communication_house_no' => 'required|string|max:255',
             'communication_street' => 'nullable|string|max:255',
             'communication_locality' => 'required|string|max:255',
             'communication_landmark' => 'nullable|string|max:255',
             'communication_city' => 'required|string|max:255',
-            'communication_district' => 'required|string|max:255',
-            'communication_state' => 'required|string|max:255',
-            'communication_pin_code' => 'required|string|max:10',
+            'communication_district' => 'required',
+            'communication_state' => 'required',
+            'communication_pin_code' => 'required|numeric|digits:6',
             'country' => 'required|string|max:255',
         ]);
     }
@@ -309,10 +309,21 @@ class ApplicantController extends Controller
             // Handle address (create or update)
             $existingAddress = Address::where('user_id', Auth::id())->first();
             if ($existingAddress) {
-                $existingAddress->update($validatedAddress);
+                $existingAddress->update(array_merge($validatedAddress, [
+                    'permanent_district' => $validatedAddress['permanent_district']['value'],
+                    'permanent_state' => $validatedAddress['permanent_state']['value'],
+                    'communication_district' => $validatedAddress['communication_district']['value'],
+                    'communication_state' => $validatedAddress['communication_state']['value'],
+
+                ]));
+//                $existingAddress->update($validatedAddress);
             } else {
                 Address::create(array_merge($validatedAddress, [
                     'user_id' => Auth::id(),
+                    'permanent_district' => $validatedAddress['permanent_district']['value'],
+                    'permanent_state' => $validatedAddress['permanent_state']['value'],
+                    'communication_district' => $validatedAddress['communication_district']['value'],
+                    'communication_state' => $validatedAddress['communication_state']['value'],
                 ]));
             }
 

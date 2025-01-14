@@ -1,6 +1,5 @@
 <template>
-
-
+    
     <q-page padding>
         <Head title="Rejected" />
         <p class="page-title">Rejected Applications</p>
