@@ -119,6 +119,41 @@
             </div>
         </div>
 
+<!--        <div v-if="optionalDocuments.length !== 0" class="p-4 bg-background rounded-lg shadow-md">-->
+<!--            <h2 class="text-lg font-bold mb-3">Optional Documents</h2>-->
+<!--            <div class="grid grid-cols-2 gap-4">-->
+<!--                <div-->
+<!--                    v-for="document in optionalDocuments"-->
+<!--                    :key="document.id"-->
+<!--                    class="row col-xs-12 col-sm-6 print-hide"-->
+<!--                >-->
+<!--                    &lt;!&ndash;                {{document.document_attachments.document_path}}&ndash;&gt;-->
+<!--                    <div class="col-xs-8 flex items-center text-grey-6">-->
+<!--                        <label class="block text-sm font-medium">{{ document.document_name }}</label>-->
+<!--                        <q-btn v-if="document.document_attachments.document_path"-->
+<!--                               :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"-->
+<!--                               color="primary"-->
+<!--                               flat-->
+<!--                               @click="handleOpen(document.document_attachments)"-->
+<!--                        />-->
+<!--                    </div>-->
+
+<!--                    <div class="col-xs-4">-->
+<!--                        &lt;!&ndash; File Input &ndash;&gt;-->
+
+
+<!--                        <input-->
+<!--                            type="file"-->
+<!--                            :id="'file-' + document.id"-->
+<!--                            @change="handleFileUpload($event, document.id)"-->
+<!--                            class="text-sm mt-2"-->
+<!--                        />-->
+
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
         <div v-if="optionalDocuments.length !== 0" class="p-4 bg-background rounded-lg shadow-md">
             <h2 class="text-lg font-bold mb-3">Optional Documents</h2>
             <div class="grid grid-cols-2 gap-4">
@@ -127,29 +162,24 @@
                     :key="document.id"
                     class="row col-xs-12 col-sm-6 print-hide"
                 >
-                    <!--                {{document.document_attachments.document_path}}-->
                     <div class="col-xs-8 flex items-center text-grey-6">
                         <label class="block text-sm font-medium">{{ document.document_name }}</label>
-                        <q-btn v-if="document.document_attachments.document_path"
-                               :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
-                               color="primary"
-                               flat
-                               @click="handleOpen(document.document_attachments)"
+                        <q-btn
+                            v-if="document.document_attachments && document.document_attachments.document_path"
+                            :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
+                            color="primary"
+                            flat
+                            @click="handleOpen(document.document_attachments)"
                         />
                     </div>
 
                     <div class="col-xs-4">
-                        <!-- File Input -->
-
-
                         <input
                             type="file"
                             :id="'file-' + document.id"
                             @change="handleFileUpload($event, document.id)"
                             class="text-sm mt-2"
                         />
-
-
                     </div>
                 </div>
             </div>
