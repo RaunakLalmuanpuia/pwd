@@ -147,7 +147,10 @@ class ApplicantController extends Controller
             'mizo_proficiency' => 'boolean',
             'disability' => 'required|boolean',
             'disability_type' => 'nullable|string|max:255',
+            'experience' => 'nullable|string|max:255',
+            'current_department' => 'nullable|string|max:255',
             'community_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
+            'disability_attachment' => 'nullable|file|mimes:png,jpg,jpeg,pdf|max:2048',
             'passport_attachment' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'signature_attachment' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -273,7 +276,7 @@ class ApplicantController extends Controller
 
     public function storeBioAndAddress(Request $request)
     {
-//        dd($request);
+//        dd($request->disability);
         $validatedBio = $this->validateBio($request);
         $validatedAddress = $this->validateAddress($request);
 
@@ -281,7 +284,7 @@ class ApplicantController extends Controller
         try {
             // Handle bio (create or update)
             $existingApplicant = Applicants::where('user_id', Auth::id())->first();
-            $filePaths = $this->handleFileUploads($request, ['community_attachment', 'passport_attachment', 'signature_attachment']);
+            $filePaths = $this->handleFileUploads($request, ['community_attachment', 'passport_attachment', 'signature_attachment','disability_attachment']);
 
             if ($existingApplicant) {
                 // Update existing applicant
@@ -290,8 +293,10 @@ class ApplicantController extends Controller
                     'religion' => $validatedBio['religion']['value'],
                     'nationality' => $validatedBio['nationality']['value'],
                     'community_attachment' => $filePaths['community_attachment'] ?? $existingApplicant->community_attachment,
+                    'disability_attachment' => $filePaths['disability_attachment'] ?? $existingApplicant->disability_attachment,
                     'passport_photo' => $filePaths['passport_attachment'] ?? $existingApplicant->passport_photo,
                     'signature_photo' => $filePaths['signature_attachment'] ?? $existingApplicant->signature_photo,
+
                 ]));
             } else {
                 // Create new applicant
@@ -301,6 +306,7 @@ class ApplicantController extends Controller
                     'religion' => $validatedBio['religion']['value'],
                     'nationality' => $validatedBio['nationality']['value'],
                     'community_attachment' => $filePaths['community_attachment'] ?? null,
+                    'disability_attachment' => $filePaths['disability_attachment'] ?? null,
                     'passport_photo' => $filePaths['passport_attachment'] ?? null,
                     'signature_photo' => $filePaths['signature_attachment'] ?? null,
                 ]));

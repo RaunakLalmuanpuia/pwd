@@ -66,12 +66,12 @@
                          :error="form.errors.hasOwnProperty('parents_name')"
                          :error-message="form.errors?.parents_name?.toString()"
                          :rules="[
-                                         val=>!!val || 'Parent name is required'
+                                         val=>!!val || 'Father/Mother name is required'
                                        ]"
                          class="my-input"
                          dense
                          item-aligned
-                         label="Parent Name"
+                         label="Father/Mother Name"
                          outlined
                          @blur="delete form.errors['parents_name']"
                 />
@@ -79,7 +79,7 @@
             <!--gender-->
             <div class="col-xs-12 col-sm-6">
                 <q-select v-model="form.sex"
-                          :options="['Male', 'Female', 'Others']"
+                          :options="['Male', 'Female', 'Transgender']"
                           :rules="[
                                          val=>!!val || 'Gender is required'
                                        ]"
@@ -123,6 +123,33 @@
                           outlined
                 />
             </div>
+<!--{{form.community}}-->
+            <!--Category Document-->
+            <div class="col-xs-12 col-sm-6" v-if="form.community && form.community.value && form.community.value !== 'General' && !existingBio?.community_attachment  " >
+
+                <q-file
+                    v-model="form.community_attachment"
+                    label="Category Supporting Document"
+                    filled
+                    :error="!!form.errors?.community_attachment"
+                    :error-message="form.errors?.community_attachment?.toString()"
+                    class="my-input"
+                    :rules="[
+                          val=>!!val || 'Supporting Document is required'
+                    ]"
+                    dense
+                    item-aligned
+                >
+                    <template v-slot:prepend>
+                        <q-icon name="attach_file" />
+                    </template>
+                </q-file>
+
+
+            </div>
+
+
+
             <!--Religion-->
             <div class="col-xs-12 col-sm-6">
                 <q-select v-model="form.religion"
@@ -169,17 +196,41 @@
                           outlined
                 />
             </div>
+
+            <div class="col-xs-12 col-sm-6">
+                <q-input v-model="form.experience"
+                         :error="form.errors.hasOwnProperty('experience')"
+                         :error-message="form.errors?.experience?.toString()"
+                         class="my-input"
+                         dense
+                         item-aligned
+                         label="Experience (If Any)"
+                         outlined
+
+                />
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <q-input v-model="form.current_department"
+                         :error="form.errors.hasOwnProperty('current_department')"
+                         :error-message="form.errors?.current_department?.toString()"
+                         class="my-input"
+                         dense
+                         item-aligned
+                         label="Present Post held with Department (If Any)"
+                         outlined
+
+                />
+            </div>
+
             <!--PWD-->
             <div class="col-xs-12 col-sm-6">
                 <q-select
                     v-model="form.disability"
                     :options="[
-                                    { label: 'Yes', value: 1 },
-                                    { label: 'No', value: 0 }
-                                  ]"
-                    :rules="[
-                                    val => val !== null || 'Please select an option'
-                                  ]"
+        { label: 'Yes', value: 1 },
+        { label: 'No', value: 0 }
+    ]"
+                    :rules="[val => val !== null || 'Please select an option']"
                     class="my-input"
                     dense
                     item-aligned
@@ -189,26 +240,144 @@
                     map-options
                 />
             </div>
+
             <!-- if pwd-->
-            <div class="col-xs-12 col-sm-6" v-if="form.disability.value === 1 || form.disability === 'Yes'">
-                <q-select v-model="form.disability_type"
-                          :options="[
-                                          'Hearing',
-                                          'Locomotor',
-                                          'Vision',
-                                          'Autism, Intellectual & Learning Disability, Mental Illness',
-                                          'Multiple Disability (Amongst Above)'
-                                        ]"
-                          :rules="[
-                                         val=>!!val || 'Please Select your disability type'
-                                       ]"
-                          class="my-input"
-                          dense
-                          item-aligned
-                          label="Disability Type"
-                          outlined
-                />
+            <div class="col-xs-12 col-sm-6" v-if="form.disability?.value === 1 || form.disability === 'Yes' || form.disability === 1 && !existingBio?.disability_attachment ">
+
+                <q-file
+                    v-model="form.disability_attachment"
+                    label="Disability Supporting Document"
+                    filled
+                    :error="!!form.errors?.disability_attachment"
+                    :error-message="form.errors?.disability_attachment?.toString()"
+                    class="my-input"
+                    :rules="[
+                          val=>!!val || 'Disability Supporting Document is required'
+                    ]"
+                    dense
+                    item-aligned
+                >
+                    <template v-slot:prepend>
+                        <q-icon name="attach_file" />
+                    </template>
+                </q-file>
+
             </div>
+
+<!--            <div class="col-xs-12 col-sm-6 row items-center q-gutter-sm" v-if="existingBio.disability_attachment && form.disability === 1">-->
+
+<!--                <q-btn-->
+<!--                    :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"-->
+<!--                    color="primary"-->
+<!--                    flat-->
+<!--                    @click="handleOpen(existingBio.disability_attachment)"-->
+<!--                />-->
+<!--                <q-btn-->
+<!--                    icon="edit"-->
+<!--                    color="primary"-->
+<!--                    class="mt-2"-->
+<!--                    @click="showEditDisabilityAttachment = !showEditDisabilityAttachment"-->
+<!--                />-->
+
+
+<!--                <q-file-->
+<!--                    v-if="showEditDisabilityAttachment"-->
+<!--                    v-model="form.disability_attachment"-->
+<!--                    label="Disability Supporting Document"-->
+<!--                    filled-->
+<!--                    :error="!!form.errors?.disability_attachment"-->
+<!--                    :error-message="form.errors?.disability_attachment?.toString()"-->
+<!--                    class="my-input"-->
+<!--                    :rules="[-->
+<!--          val => !!val || 'Disability Supporting Document is required'-->
+<!--    ]"-->
+<!--                    dense-->
+<!--                    item-aligned-->
+<!--                >-->
+<!--                    <template v-slot:prepend>-->
+<!--                        <q-icon name="attach_file" />-->
+<!--                    </template>-->
+<!--                </q-file>-->
+
+<!--            </div>-->
+            <div class="col-xs-12 col-sm-6" v-if="existingBio?.community_attachment "/>
+
+            <div class="col-xs-12 col-sm-6 row items-center q-gutter-sm px-10" v-if="existingBio?.community_attachment &&  form.community?.value !== 'General' ">
+
+                <q-btn
+                    :label="$q.screen.lt.sm ? 'Category Attachment' : 'Category Attachment'"
+                    color="primary"
+                    flat
+                    @click="handleOpen(existingBio.community_attachment)"
+                />
+                <q-btn
+                    icon="edit"
+                    color="primary"
+                    class="mt-2"
+                    @click="showEditCommunityAttachment = !showEditCommunityAttachment"
+                />
+
+
+                <q-file
+                    v-if="showEditCommunityAttachment"
+                    v-model="form.community_attachment"
+                    label="Category Supporting Document"
+                    filled
+                    :error="!!form.errors?.community_attachment"
+                    :error-message="form.errors?.community_attachment?.toString()"
+                    class="my-input col"
+
+                    dense
+                    item-aligned
+                >
+                    <template v-slot:prepend>
+                        <q-icon name="attach_file" />
+                    </template>
+                </q-file>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 row items-center q-gutter-sm " v-if="existingBio?.disability_attachment && form.disability === 1 || form.disability?.value === 'Yes'">
+
+                <!-- Button with right margin -->
+                <q-btn
+                    :label="$q.screen.lt.sm ? 'Disability Attachment' : 'Disability Attachment'"
+                    color="primary"
+                    flat
+                    @click="handleOpen(existingBio.disability_attachment)"
+                    outlined
+                />
+
+                <!-- Edit button with right margin -->
+                <q-btn
+                    icon="edit"
+                    color="primary"
+                    class="mt-2 q-mr-sm"
+                    @click="showEditDisabilityAttachment = !showEditDisabilityAttachment"
+                />
+
+                <!-- q-file occupying remaining space -->
+                <q-file
+                    v-if="showEditDisabilityAttachment"
+                    v-model="form.disability_attachment"
+                    label="Disability Supporting Document"
+                    filled
+                    class="my-input col"
+                    :rules="[
+          val => !!val || 'Disability Supporting Document is required'
+    ]"
+                    dense
+                    item-aligned
+
+                >
+                    <template v-slot:prepend>
+                        <q-icon name="attach_file" />
+                    </template>
+                </q-file>
+
+            </div>
+
+
+
 
             <div class="col-xs-12 col-sm-12"></div>
             <div class="col-xs-12">
@@ -221,7 +390,7 @@
             </div>
             <div class="col-xs-12 col-sm-6">
                 <q-select v-model="form.qualification"
-                          :options="['Class VII', 'HSLC', 'HSSLC',  'Graduate', 'Post Graduate', 'Doctorate']"
+                          :options="['Class VIII', 'HSLC', 'HSSLC',  'Graduate', 'Post Graduate', 'Doctorate']"
                           :rules="[
                                          val=>!!val || 'Qualification is required'
                                        ]"
@@ -301,10 +470,6 @@
                         />
                     </div>
                 </div>
-
-
-
-
             </div>
             <div class="col-xs-12 col-sm-6"></div>
             <div class="col-xs-12 col-sm-6" v-if="form.qualification === 'Doctorate'">
@@ -793,32 +958,55 @@ const form = useForm({
     postGraduateStream: props.existingBio?.postGraduateStream || "",
     doctorateDegree: props.existingBio?.doctorateDegree || "",
     doctorateStream: props.existingBio?.doctorateStream || "",
-    disability: props.existingBio?.disability ? 1 : 0, // Ensure it's a number
+
+    disability: props.existingBio?.disability !== undefined && props.existingBio?.disability !== null
+        ? props.existingBio.disability // Use 1 or 0 directly
+        : null,
+
+    // disability: props.existingBio?.disability ? 1 : 0 || "",
+
+    // disability: props.existingBio?.disability !== undefined && props.existingBio?.disability !== null
+    //     ? { label: props.existingBio.disability === 1 ? 'Yes' : 'No', value:props.existingBio.disability === 1 ? 'Yes' : 'No' }
+    //     : null,
+
+    // disability: props.existingBio?.disability ? { label: props.existingBio.disability === 1 ? 'Yes' : 'No', value: props.existingBio.disability } : null,
     disability_type: props.existingBio?.disability_type || "",
+    experience: props.existingBio?.experience || "",
+    current_department:props.existingBio?.current_department || "",
     community_attachment: null, // Files cannot be pre-filled
     passport_attachment: null,
     signature_attachment: null,
+    disability_attachment: null,
+
+
     permanent_house_no: props.existingAddress?.permanent_house_no || "",
     permanent_street: props.existingAddress?.permanent_street || "",
     permanent_locality: props.existingAddress?.permanent_locality || "",
     permanent_landmark: props.existingAddress?.permanent_landmark || "",
     permanent_city: props.existingAddress?.permanent_city || "",
-    permanent_district: props.existingAddress?.permanent_district || "",
-    permanent_state: props.existingAddress?.permanent_state || "",
+    permanent_district: props.existingAddress?.permanent_district ? { label: props.existingAddress.permanent_district, value: props.existingAddress.permanent_district } : null,
+    // permanent_district: props.existingAddress?.permanent_district || "",
+    permanent_state: props.existingAddress?.permanent_state ? { label: props.existingAddress.permanent_state, value: props.existingAddress.permanent_state } : null,
+    // permanent_state: props.existingAddress?.permanent_state || "",
     permanent_pin_code: props.existingAddress?.permanent_pin_code || "",
+
     communication_house_no: originalCommunicationAddress.value.communication_house_no,
     communication_street: originalCommunicationAddress.value.communication_street,
     communication_locality: originalCommunicationAddress.value.communication_locality,
     communication_landmark: originalCommunicationAddress.value.communication_landmark,
     communication_city: originalCommunicationAddress.value.communication_city,
-    communication_district: originalCommunicationAddress.value.communication_district,
-    communication_state: originalCommunicationAddress.value.communication_state,
+    communication_district: props.existingAddress?.communication_district ? { label: props.existingAddress.communication_district, value: props.existingAddress.communication_district } : null,
+    // communication_district: originalCommunicationAddress.value.communication_district,
+    communication_state: props.existingAddress?.communication_state ? { label: props.existingAddress.communication_state, value: props.existingAddress.communication_state } : null,
+    // communication_state: originalCommunicationAddress.value.communication_state,
     communication_pin_code: originalCommunicationAddress.value.communication_pin_code,
     country: props.existingData?.country || "India",
 });
 
 const showEditPassport = ref(false);
 const showEditSignature =  ref(false);
+const showEditDisabilityAttachment = ref(false);
+const showEditCommunityAttachment = ref(false);
 // Methods
 const handleFileChange = (event, field) => {
     const file = event.target.files[0];
@@ -929,11 +1117,24 @@ watch(sameAsPermanent, (newValue) => {
         form.communication_pin_code = "";
     }
 });
+
+const handleOpen = (item) => {
+    let a = document.createElement("a");
+    a.target = "_blank";
+    // a.href = item?.document_path;
+    a.href = `/storage/${item}`;
+    a.click();
+};
+
 const submit = () => {
     form.mizo_proficiency = !!form.mizo_proficiency; // Ensure boolean
 
-    const disabilityBoolean = form.disability === 1; // Convert to boolean
+    // const disabilityBoolean = form.disability.value === 'Yes'; // Convert to boolean
+    const disabilityBoolean = form.disability?.value === 'Yes' ? 1 : 0;
+
     console.log('Disability (boolean):', disabilityBoolean);
+
+    console.log(form.disability.value)
 
     const routeName = props.existingData
         ? 'applicant.bio_update' // Update route
@@ -955,7 +1156,7 @@ const submit = () => {
         form.post(route('applicant.bio_address_store'), {
             data: {
                 ...form,
-                disability: disabilityBoolean, // Ensure boolean is sent
+                disability: disabilityBoolean, // Send only the boolean value
             },
             onSuccess: (response) => {
                 q.notify({

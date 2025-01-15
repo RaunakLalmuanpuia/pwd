@@ -19,7 +19,10 @@
             <p class="text-base">{{ jobDetail.application_fee }}</p>
 
             <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
-            <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>
+            <!--                <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
+            <q-btn outline color="red" icon="mail" label="Open Template" @click="handleOpenTemplate"/>
+
+
         </div>
         <div class="mt-6 flex justify-between w-full">
             <div class="p-4">
@@ -301,6 +304,14 @@ const handleOpen = (item) => {
     a.target = "_blank";
     // a.href = item?.document_path;
     a.href = `/storage/${item?.document_path}`;
+    a.click();
+};
+
+const handleOpenTemplate = () => {
+    let a = document.createElement("a");
+    a.target = "_blank";
+    // a.href = `DepartmentNOC.pdf`;
+    a.href = `${window.location.origin}/DepartmentNOC.pdf`;
     a.click();
 };
 

@@ -33,7 +33,10 @@ class Applicants extends Model
         'mizo_proficiency',
         'disability',
         'disability_type',
+        'experience',
+        'current_department',
         'community_attachment',
+        'disability_attachment',
         'passport_photo',
         'signature_photo',
     ];

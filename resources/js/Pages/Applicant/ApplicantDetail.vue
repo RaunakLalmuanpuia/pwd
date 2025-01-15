@@ -66,9 +66,19 @@
                 {{ jobDetails.applications[0]?.applicant?.date_of_birth || '--' }}
             </div>
 
-            <div class="col-xs-12 col-sm-3 text-grey-5">Disability</div>
+            <div class="col-xs-12 col-sm-3 text-grey-6">Disability</div>
             <div class="col-xs-12 col-sm-3 text-weight-medium">
                 {{ jobDetails.applications[0]?.applicant?.disability === 1 ? 'Yes' : 'No' }}
+            </div>
+
+            <div class="col-xs-12 col-sm-3 text-grey-6">Experience</div>
+            <div class="col-xs-12 col-sm-3 text-weight-medium">
+                {{ jobDetails.applications[0]?.applicant?.experience  || '--'}}
+            </div>
+
+            <div class="col-xs-12 col-sm-3 text-grey-6">Present Post Held</div>
+            <div class="col-xs-12 col-sm-3 text-weight-medium">
+                {{ jobDetails.applications[0]?.applicant?.experience  || '--'}}
             </div>
 
             <div class="col-xs-12">
@@ -260,6 +270,37 @@
             <div class="col-xs-12 text-grey-6 q-my-md text-weight-medium">
                 Documents
             </div>
+            <div v-if="jobDetails.applications[0]?.applicant?.community_attachment"
+                class="row col-xs-12 col-sm-6 print-hide"
+            >
+                <div class="col-xs-8 flex items-center text-grey-6">
+                    Category Attachment
+                </div>
+                <div class="col-xs-4">
+                    <q-btn
+                        :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
+                        color="primary"
+                        flat
+                        @click="handleOpenApplicant(jobDetails.applications[0]?.applicant?.community_attachment)"
+                    />
+                </div>
+            </div>
+
+            <div v-if="jobDetails.applications[0]?.applicant?.disability_attachment"
+                class="row col-xs-12 col-sm-6 print-hide"
+            >
+                <div class="col-xs-8 flex items-center text-grey-6">
+                    Disability Attachment
+                </div>
+                <div class="col-xs-4">
+                    <q-btn
+                        :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
+                        color="primary"
+                        flat
+                        @click="handleOpenApplicant(jobDetails.applications[0]?.applicant?.disability_attachment)"
+                    />
+                </div>
+            </div>
 
             <div
                 v-for="(item, i) in jobDetails.applications[0]?.application_documents"
@@ -347,6 +388,13 @@ const handleOpen = (item) => {
     let a = document.createElement("a");
     a.target = "_blank";
     a.href = `/storage/${item?.document_path}`;
+    a.click();
+};
+
+const handleOpenApplicant = (item) => {
+    let a = document.createElement("a");
+    a.target = "_blank";
+    a.href = `/storage/${item}`;
     a.click();
 };
 

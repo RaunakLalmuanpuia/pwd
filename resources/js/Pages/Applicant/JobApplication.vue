@@ -19,9 +19,9 @@
     <!--            <p class="text-base">{{ jobDetail.application_fee_other }}</p>-->
 
 
-<!--            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>-->
+            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
 <!--                <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
-
+            <q-btn outline color="red" icon="mail" label="Open Template" @click="handleOpen" />
             </div>
 
 
@@ -212,6 +212,15 @@ const isVisible = ref(false); // Tracks visibility of the div
 const toggleDiv = () => {
     isVisible.value = !isVisible.value; // Toggle the value of isVisible
 };
+
+const handleOpen = () => {
+    let a = document.createElement("a");
+    a.target = "_blank";
+    // a.href = `DepartmentNOC.pdf`;
+    a.href = `${window.location.origin}/DepartmentNOC.pdf`;
+    a.click();
+};
+
 
 const form = useForm({
     mizo_proficiency: "",
