@@ -166,11 +166,12 @@
                     v-for="document in mandatoryDocuments" :key="document.id"
                     class="row col-xs-12 col-sm-6 print-hide"
                 >
-    <!--                {{document.document_attachments}}-->
+
                     <div class="col-xs-8 flex items-center text-grey-6">
                         <label class="block text-sm font-medium text-bold">{{ document.document_name }}</label>
                     </div>
 
+<!--                    {{document.document_attachments}}-->
                     <div class="col-xs-4">
                         <q-btn
                             :label="$q.screen.lt.sm ? 'OPEN' : 'OPEN'"
