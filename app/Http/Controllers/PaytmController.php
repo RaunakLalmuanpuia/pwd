@@ -34,7 +34,7 @@ class PaytmController extends Controller
         $applicant = $application->applicant()->first();
 
         $appliedJobs = JobDetail::query()->findMany($selectedJobIds);
-        $amount = ($applicant?->category==='General') ? 200:150;
+        $amount = ($applicant?->category==='General') ? 2:1;
 
         $orderId =  'REC' . now()->timestamp;
 
@@ -66,9 +66,10 @@ class PaytmController extends Controller
         );
 //        $url = env('APP_DEBUG')? "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID')
 //            . "&orderId=" . $orderId
-//            :"https://securegw.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
-        $url =   "https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
-//
+//            :"https://securestage.paytmpayments.com/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
+
+        $url =  "https://secure.paytmpayments.com/theia/api/v1/initiateTransaction?mid=" . env('MERCHANT_ID') . "&orderId=" . $orderId;
+
         $response = Http::withHeaders([
             'Content-Type' => 'application/json'
         ])->post($url, $paytmParams);

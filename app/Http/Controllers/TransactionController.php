@@ -41,6 +41,7 @@ class TransactionController extends Controller
     }
     public function checkStatus(Request $request,string $order_id)
     {
+//        dd($order_id);
         $paytmParams = array();
         /* body parameters */
         $paytmParams["body"] = array(
@@ -56,10 +57,17 @@ class TransactionController extends Controller
         /* prepare JSON string for request */
         $post_data = json_encode($paytmParams, JSON_UNESCAPED_SLASHES);
 
+//        /* for Staging */
+//        $testUrl = "https://securegw-stage.paytm.in/v3/order/status";
+//        /* for Production */
+//        $url = "https://securegw.paytm.in/v3/order/status";
+
         /* for Staging */
-        $testUrl = "https://securegw-stage.paytm.in/v3/order/status";
+        $testUrl = "https://securestage.paytmpayments.com/v3/order/status";
+
         /* for Production */
-        $url = "https://securegw.paytm.in/v3/order/status";
+         $url = "https://secure.paytmpayments.com/v3/order/status";
+
 
         $response=Http::timeout(20)->post(env('APP_ENV')=='local'?$testUrl:$url, $paytmParams);
         $order=Transaction::query()->where('order_id', $order_id)->first();
