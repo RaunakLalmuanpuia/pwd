@@ -99,10 +99,16 @@ class TransactionController extends Controller
         /* prepare JSON string for request */
         $post_data = json_encode($paytmParams, JSON_UNESCAPED_SLASHES);
 
+//        /* for Staging */
+//        $testUrl = "https://securegw-stage.paytm.in/v3/order/status";
+//        /* for Production */
+//        $url = "https://securegw.paytm.in/v3/order/status";
+
         /* for Staging */
-        $testUrl = "https://securegw-stage.paytm.in/v3/order/status";
+        $testUrl = "https://securestage.paytmpayments.com/v3/order/status";
+
         /* for Production */
-        $url = "https://securegw.paytm.in/v3/order/status";
+        $url = "https://secure.paytmpayments.com/v3/order/status";
 
         $order=Transaction::query()->where('order_id', $order_id)->first();
 
