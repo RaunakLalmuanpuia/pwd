@@ -1,7 +1,7 @@
 
 
 <template>
-    <Head title="Draft Application" />
+    <Head title="Update Application" />
     <q-page padding>
         <div class="p-4 bg-background rounded-lg shadow-md">
             <h2 class="text-lg font-bold">Name of Post</h2>
@@ -15,8 +15,8 @@
             <h2 class="text-lg font-bold mt-4">Application Fee </h2>
             <p class="text-base">General -{{ jobDetail.application_fee_general }}. SC\ST\Others- {{ jobDetail.application_fee_other }}</p>
 
-<!--            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>-->
-<!--            <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
+            <!--            <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>-->
+            <!--            <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
             <h2 class="text-lg font-bold mt-4">Certification by Head of Department / Cadre Authority (PDF)</h2>
             <!--                <a href="#" class="inline-block mt-2 bg-destructive text-destructive-foreground py-2 px-4 rounded-lg hover:bg-destructive/80"> DOWNLOAD TEMPLATE </a>-->
             <q-btn outline color="red" icon="mail" label="Open Template" @click="handleOpenTemplate"/>
@@ -24,8 +24,7 @@
         </div>
 
         <div class="mt-6 flex justify-between w-full">
-
-            <div class="p-4" v-if="applicant">
+            <div class="p-4">
                 <button
                     @click="toggleDiv"
                     class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -33,6 +32,74 @@
                     {{ isVisible ? "Hide Profile" : "Show Profile" }}
                 </button>
             </div>
+            <!-- Right-aligned and smaller image container -->
+            <div class="p-4">
+                <button
+                    @click="toggleDivPayment"
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    {{ isVisiblePayment ? "Hide Payment" : "Show Payment" }}
+                </button>
+            </div>
+        </div>
+
+        <div v-if="isVisiblePayment" class="max-w-sm mx-auto bg-card p-6 rounded-lg shadow-lg">
+            <div class="flex items-center justify-center mb-4">
+                <template v-if="application.transaction.status === 'TXN_SUCCESS'">
+                    <q-icon name="check_circle"  />
+                </template>
+                <template v-else-if="application.transaction.status === 'TXN_FAILURE'">
+                    <q-icon name="cancel"/>
+                </template>
+                <template v-else>
+                    <q-icon name="hourglass_empty"  />
+                </template>
+            </div>
+            <h2 class="text-lg font-semibold text-center text-primary">FEE PAYMENT RECEIPT</h2>
+            <table class="w-full mt-4">
+                <tbody>
+                <tr>
+                    <td class="border-b border-muted">
+                        <span class="text-muted-foreground">Txn. ID</span>
+                    </td>
+                    <td class="border-b border-muted text-right">
+                        <span class="text-muted-foreground">{{ application.transaction.transaction_id }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-b border-muted">
+                        <span class="text-muted-foreground">Order ID</span>
+                    </td>
+                    <td class="border-b border-muted text-right">
+                        <span class="text-muted-foreground">{{ application.transaction.order_id }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-b border-muted">
+                        <span class="text-muted-foreground">Amount</span>
+                    </td>
+                    <td class="border-b border-muted text-right">
+                        <span class="text-muted-foreground">{{ application.transaction.amount }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-b border-muted">
+                        <span class="text-muted-foreground">Date</span>
+                    </td>
+                    <td class="border-b border-muted text-right">
+                        <span class="text-muted-foreground">{{ application.transaction.created_at }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="border-b border-muted">
+                        <span class="text-muted-foreground">Status</span>
+                    </td>
+                    <td class="border-b border-muted text-right">
+                        <span class="text-green-600 font-semibold">{{ application.transaction.status }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
 
@@ -209,34 +276,30 @@
         </div>
 
 
-            <div class="flex items-center gap-8 justify-center mt-4">
-                <!-- Delete Button - Red for danger action -->
-                <button
-                    @click="deleteApplication(jobDetail.id)"
-                    class="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
-                    :disabled="processing"
-                >
-                    Delete Draft
-                </button>
+        <div class="flex items-center gap-8 justify-center mt-4">
+            <!-- Delete Button - Red for danger action -->
 
-                <!-- Update Button - Yellow for update action -->
-                <button
-                    @click="submitDocument"
-                    class="bg-yellow-500 text-white px-6 py-3 rounded-md hover:bg-yellow-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
-                    :disabled="processing"
-                >
-                    Update
-                </button>
 
-                <!-- Payment Button - Disabled when processing -->
-                <button
-                    class="bg-accent text-accent-foreground text-white px-6 py-3 rounded-md hover:bg-accent/80 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
-                    :disabled="processing"
-                    @click="pay"
-                >
-                    {{ processing ? 'Submitting...' : 'Make Payment' }}
-                </button>
-            </div>
+            <!-- Update Button - Yellow for update action -->
+            <button
+                @click="submitDocument"
+                class="bg-yellow-500 text-white px-6 py-3 rounded-md hover:bg-yellow-600 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-yellow-400 disabled:opacity-50"
+                :disabled="processing"
+            >
+                Update
+            </button>
+
+            <button
+                @click="updateApplication(jobDetail.id)"
+                class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
+                :disabled="processing"
+            >
+                Re-Submit
+            </button>
+
+            <!-- Payment Button - Disabled when processing -->
+
+        </div>
     </q-page>
 
 
@@ -307,10 +370,15 @@ const submitDocument = () => {
 };
 
 const isVisible = ref(false); // Tracks visibility of the div
-
+const isVisiblePayment = ref(false);
 const toggleDiv = () => {
     isVisible.value = !isVisible.value; // Toggle the value of isVisible
 };
+
+const toggleDivPayment = () => {
+    isVisiblePayment.value = !isVisiblePayment.value;
+}
+
 
 // Function to format the date
 const formatDate = (dateString) => {
@@ -319,14 +387,14 @@ const formatDate = (dateString) => {
     return date.toLocaleDateString('en-IN', options);
 };
 
-const deleteApplication = (item) => {
+const updateApplication = (item) => {
     q.dialog({
         title:'Confirmation',
-        message:'Do you want to delete the Application?',
+        message:'Do you want to Re-Submit the Application?',
         ok:'Proceed',
         cancel: 'Back'
     }).onOk(()=>{
-       router.delete(route('application.delete_draft', item))
+        router.post(route('application.resubmit_application', item))
     })
 
 }
@@ -351,63 +419,6 @@ const handleOpenTemplate = () => {
     a.click();
 };
 
-const pay=()=>{
-    q.dialog({
-        title:'Confirmation',
-        message:'Application is draft by default and you can pay later. Do you want to proceed with payment',
-        ok:'Proceed',
-        cancel: 'Back'
-    }).onOk(()=>{
-        q.loading.show()
-        // .finally(()=>q.loading.hide())
-        axios.post('/paytm/initiate',{
-            job_ids:props.jobDetail.id,
-            application_id:props.application.id,
-        })
-            .then(res=>{
-                const {token, order_id, amount} = res.data;
 
-
-                var config = {
-                    "root": "",
-                    "flow": "DEFAULT",
-                    "data": {
-                        "orderId": order_id, /* update order id */
-                        "token": token, /* update token value */
-                        "tokenType": "TXN_TOKEN",
-                        "amount": amount /* update amount */
-                    },
-                    "handler": {
-                        "notifyMerchant": function(eventName,data){
-                            console.log("notifyMerchant handler function called");
-                            console.log("eventName => ",eventName);
-                            console.log("data => ",data);
-                        }
-                    }
-                };
-
-                if(window.Paytm && window.Paytm.CheckoutJS){
-                    window.Paytm.CheckoutJS.init(config)
-                        .then(function onSuccess() {
-                            // after successfully updating configuration, invoke JS Checkout
-                            window.Paytm.CheckoutJS.invoke();
-                        }).catch(function onError(error){
-                        console.log("error => ",error);
-                    });
-
-                }else{
-                    console.log("Error Paytm")
-                    q.notify({type:'warning',message:'Unable to load Checkout Page: Please Reload to try again'})
-                }
-            })
-            .catch(err=>{
-                console.log(err)
-                q.notify({type:'negative',message:err?.response?.data?.message||err.toString()})
-            })
-            .finally(()=>{
-                q.loading.hide();
-            })
-    })
-}
 
 </script>

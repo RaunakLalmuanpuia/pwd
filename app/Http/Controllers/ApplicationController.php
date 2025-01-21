@@ -371,6 +371,60 @@ class ApplicationController extends Controller
         return redirect()->route('dashboard.citizen')->with('success', 'Draft application deleted successfully.');
     }
 
+    public function viewRejectedApplication(JobDetail $jobDetail)
+    {
+//        dd($jobDetail);
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        $application = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->with(['applicationDocuments', 'transaction']) // Load documents associated with the application
+            ->first();
+
+        $optionalDocuments = $jobDetail->documents()->where('is_mandatory', false) ->with(['documentAttachments' => function ($query) use ($application) {
+            // Ensure the condition is applied while eager loading 'documentAttachments'
+            $query->where('application_id', $application->id);
+        }])->get();
+        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true) ->with(['documentAttachments' => function ($query) use ($application) {
+            // Ensure the condition is applied while eager loading 'documentAttachments'
+            $query->where('application_id', $application->id);
+        }])->get();
+
+        return inertia('Applicant/UpdateApplication', [
+            'jobDetail' => $jobDetail,
+            'mandatoryDocuments' => $mandatoryDocuments,
+            'optionalDocuments' => $optionalDocuments,
+            'applicant' => $applicant,
+            'application' => $application,
+        ]);
+    }
+
+    public function reSubmitApplication(Request $request, JobDetail $jobDetail)
+    {
+//        dd($request);
+        $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
+
+        if (!$applicant) {
+            return redirect()->route('dashboard.citizen')->with('error', 'Applicant not found.');
+        }
+
+        // Retrieve the draft application for the given job
+        $application = Applications::where('applicant_id', $applicant->id)
+            ->where('job_details_id', $jobDetail->id)
+            ->where('status', 'rejected')
+            ->first();
+
+//        dd($application);
+
+        if (!$application) {
+            return redirect()->route('dashboard.citizen')->with('error', 'No draft application found for this job.');
+        }
+
+        $application->update(['status' => 'pending']);
+
+        return redirect()->route('dashboard.citizen')->with('success', 'Application Re-Submitted successfully.');
+    }
+
 
 //    public function admitCard()
 //    {

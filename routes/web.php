@@ -119,6 +119,13 @@ Route::group(['middleware' => 'auth', 'prefix' => 'applicant'], function () {
     // Citizen View applications detail Draft
     Route::get('draft/{jobDetail}/detail', [ApplicationController::class, 'viewApplicationDraft'])->name('application.viewApplicationDraft');
 
+    // Citizen View Rejected Application
+    Route::get('rejected/{jobDetail}/detail', [ApplicationController::class, 'viewRejectedApplication'])->name('application.viewDeletedApplication');
+
+    // Citizen Re-Submit Application
+    Route::post('{jobDetail}', [ApplicationController::class, 'reSubmitApplication'])->name('application.resubmit_application');
+
+
     // Admit Card List
    Route::get('admit-card', [ApplicationController::class, 'admitCard'])->name('applications.admitCard');
     //Citizen Download Admit Card
