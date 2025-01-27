@@ -303,6 +303,12 @@ Route::get('page/about', function () {
     ]);
 })->name('about');
 
+// About us Page
+Route::get('page/maps', function () {
+    return Inertia::render('Maps', [
+    ]);
+})->name('maps');
+
 require __DIR__.'/auth.php';
 
 

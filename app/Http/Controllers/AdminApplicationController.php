@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SmsJob;
+use App\Models\Applicant;
+use App\Models\Applicants;
 use App\Models\Applications;
 use App\Models\ExamCenter;
 use App\Models\JobDetail;
+use App\Models\JobProfile;
+use App\Utils\SmsManager;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -241,6 +246,8 @@ class AdminApplicationController extends Controller
     // Admin change status of applicants
     public function bulkChangeStatus(Request $request)
     {
+
+
         $request->validate([
             'status' => 'required|in:approved,pending,eligible',
             'application_ids' => 'required|array',
@@ -254,7 +261,47 @@ class AdminApplicationController extends Controller
             $application->status = $status;
 
             $application->save();
+
+//            dd($application->jobDetail);
+            $applicant=Applicants::query()
+                ->whereHas('applications', fn(Builder $builder) => $builder
+                    ->where('applications.id',$applicationId))->first();
+//            dd($applicant->jobDetails);
+
+            if ($applicant && $request->status == 'approved') {
+
+//                dd($applicant->applications->application_id);
+                $smsManager=new SmsManager();
+                $smsManager->setData(SmsManager::APPROVED_APPLICATION,
+                    $applicant->user->phone,
+                    $application->application_id,
+                    $applicant->user->name,
+                    'The Job of '.$application->jobDetail->post_name
+
+                );
+
+                dispatch(new SmsJob($smsManager));
+            }
+
+//            if ($applicant && $request->status == 'rejected') {
+//
+//                $smsManager=new SmsManager();
+//                $smsManager->setData(SmsManager::REJECTED_APPLICATION,
+//                    $applicant->user->phone,
+//                    $application->application_id,
+//                    $applicant->user->name,
+//                    'The Job of '.$application->jobDetail->post_name
+//
+//                );
+//                dispatch(new SmsJob($smsManager));
+//            }
         }
+
+//        $applicant=Applicant::query()
+//            ->whereHas('applications', fn(Builder $builder) => $builder
+//                ->where('applications.id',$applicationId))->first();
+
+
 
         return redirect()->back()->with('success', 'Application status updated.');
 
@@ -278,6 +325,23 @@ class AdminApplicationController extends Controller
             $application->status = $status;
             $application->rejection_note = $rejection_note;
             $application->save();
+
+            $applicant=Applicants::query()
+                ->whereHas('applications', fn(Builder $builder) => $builder
+                    ->where('applications.id',$applicationId))->first();
+
+            if ($applicant) {
+
+                $smsManager=new SmsManager();
+                $smsManager->setData(SmsManager::REJECTED_APPLICATION,
+                    $applicant->user->phone,
+                    $application->application_id,
+                    $applicant->user->name,
+                    'The Job of '.$application->jobDetail->post_name
+
+                );
+                dispatch(new SmsJob($smsManager));
+            }
         }
 
     }

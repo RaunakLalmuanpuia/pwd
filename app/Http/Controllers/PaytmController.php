@@ -22,7 +22,11 @@ class PaytmController extends Controller
     //
     const TEST_URL = 'https://securegw-stage.paytm.in/theia/api/v1';
     const BASE_URL = 'https://securegw-stage.paytm.in/theia/api/v1';
-
+    private SmsManager $smsManager;
+    public function __construct()
+    {
+        $this->smsManager = new SmsManager();
+    }
     public function initiate(Request $request){
 
         $this->validate($request, [
@@ -149,7 +153,7 @@ class PaytmController extends Controller
                 $transaction->save();
             });
 
-//            $this->smsManager->sendMessage(SmsManager::SUBMIT_APPLICATION,mobile: $application->applicant?->mobile,regn_no:$application->regn_no );
+            $this->smsManager->sendMessage(SmsManager::SUBMIT_APPLICATION,mobile: $application->applicant?->user?->phone,regn_no:$application->application_id );
 
 //            return redirect(env('APP_URL') . "/admin/payment/${paytmParams['ORDERID']}");
 //            return redirect()->route('payment-success')->with(['success', 'Application submitted successfully.', 'order_id' => $paytmParams['ORDERID']]);
