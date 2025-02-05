@@ -18,6 +18,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\AdminApplicationController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\NoticeController;
+
 
 use App\Models\JobDetail;
 
@@ -278,6 +280,19 @@ Route::group(['prefix' => 'report'], function () {
     Route::post('written/download', [ReportController::class, 'generateExamReport'])->name('report.written.download');
     Route::get('exam_center', [ReportController::class, 'examCenter'])->name('report.exam_center');
     Route::post('exam_center/download', [ReportController::class, 'generateExamCenterReport'])->name('report.exam_center.download');
+});
+
+// Notice Controller
+Route::group(['middleware' => 'auth', 'prefix' => 'notice'], function () {
+    Route::get('/index', [NoticeController::class, 'index'])->middleware('role:Admin')->name('notice.index');
+    Route::get('/create', [NoticeController::class, 'create'])->middleware('role:Admin')->name('notice.create');
+    Route::get('published', [NoticeController::class, 'published']);
+    Route::post('', [NoticeController::class, 'store'])->middleware('role:Admin')->name('notice.store');
+    Route::put('{notice}/publish', [NoticeController::class, 'publish'])->middleware('role:Admin');
+    Route::put('{notice}/unpublish', [NoticeController::class, 'unpublish'])->middleware('role:Admin');
+    Route::get('{model}', [NoticeController::class, 'edit'])->middleware('role:Admin')->name('notice.edit');
+    Route::put('{model}', [NoticeController::class, 'update'])->middleware('role:Admin')->name('notice.update');
+    Route::delete('{model}', [NoticeController::class, 'destroy'])->middleware('role:Admin')->name('notice.destroy');
 });
 
 // Privacy Page

@@ -29,11 +29,18 @@
       <br/>
 
       <div v-if="state.url" class="col-xs-12 zcard q-mt-md q-pa-md">
-        <div class="q-pa-md q-gutter-sm" style="height: 750px;">
-          <q-pdfviewer
-              type="html5"
-              :src="state.url"
-          />
+        <div class="q-pa-md q-gutter-sm" style="height: 900px;">
+
+            <object :data="state.url"
+                    type='application/pdf'
+                    width='100%'
+                    height='100%'
+                    />
+
+<!--            <q-pdfviewer-->
+<!--              type="html5"-->
+<!--              :src="state.url"-->
+<!--          />-->
         </div>
       </div>
 
@@ -77,10 +84,6 @@ const openAdmitCard = e => {
       .then((res) => {
         const blob = new Blob([res.data], { type: "application/pdf" });
         state.url = window.URL.createObjectURL(blob);
-        // let a = document.createElement("a");
-        // a.href = url;
-        // a.target = "_blank";
-        // a.click();
       })
       .catch((err) => {
         q.notify({ type: "negative", message: "Cannot Download Admit Card" });
@@ -91,28 +94,7 @@ const openAdmitCard = e => {
 const search = ref('');
 
 
-// const handleSearch=e=>{
-//   // router.get(route('admin.applications.download_admit_card'), {
-//   //   search: state.search,
-//   //   url: state.url
-//   // });
-//   //
-//   // console.log(state.search);
-//   // console.log(state.url);
-//   const url = route('admin.applications.download_admit_card',{ search: state.search });
-//   axios.get(url, { responseType: 'blob' })
-//       .then((res) => {
-//         const blob = new Blob([res.data], { type: "application/pdf" });
-//         state.url = window.URL.createObjectURL(blob);
-//         // let a = document.createElement("a");
-//         // a.href = url;
-//         // a.target = "_blank";
-//         // a.click();
-//       })
-//       .catch((err) => {
-//         q.notify({ type: "negative", message: "Cannot Download Admit Card" });
-//       });
-// }
+
 const handleSearch = (e) => {
   // Check if Enter key (keyCode 13) is pressed
   if (e.keyCode === 13 && state.search.trim() !== '') {

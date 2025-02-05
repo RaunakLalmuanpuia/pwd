@@ -265,7 +265,7 @@ const submitApplication = () => {
             onError: (errors) => {
                 q.notify({
                     type: 'negative',
-                    message: errors?.message ||page.props.errors?.mizo_proficiency|| 'An error occurred!' ,
+                    message: errors?.message ||page.props.errors?.mizo_proficiency|| page.props.flash?.error ||'An error occurred!' ,
                 });
                 console.log(page.props.errors?.mizo_proficiency)
             },

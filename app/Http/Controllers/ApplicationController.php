@@ -118,11 +118,6 @@ class ApplicationController extends Controller
     }
     public function viewApplication(JobDetail $jobDetail)
     {
-//        dd($jobDetail);
-
-//        $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->with('documentAttachments')->get();
-//        $optionalDocuments = $jobDetail->documents()->where('is_mandatory', false)->with('documentAttachments')->get();
-        //        dd($mandatoryDocuments);
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
 
         $application = Applications::where('applicant_id', $applicant->id)
@@ -179,49 +174,37 @@ class ApplicationController extends Controller
     // Citizen Apply for application
     public function apply(Request $request, JobDetail $jobDetail)
     {
-//        dd($request);
         $request->validate([
             'mizo_proficiency' => 'required',  // Make mizo_proficiency required
         ]);
-//        dd($jobDetail);
         $mandatoryDocuments = $jobDetail->documents()->where('is_mandatory', true)->pluck('id')->toArray();
 
         $request->validate([
             'documents.*' => 'file',
         ]);
-
         $applicant = Applicants::where('user_id', auth()->id())->with(['user.address'])->first();
-
         if (!$applicant) {
             return redirect()->back()->with('error', 'Please Update your Bio and Address.');
         }
-
         // Calculate applicant's age
         $dob = $applicant->date_of_birth; // Ensure `dob` is a field in the `Applicants` table
         if (!$dob) {
             return redirect()->back()->with('error', 'Date of Birth is required to apply for this job.');
         }
         $age = now()->diffInYears(Carbon::parse($dob));
-
         // Apply age relaxation for certain categories
         $ageRelaxation = 0;
         if (in_array($applicant->community, ['Schedule Tribe', 'Schedule Caste', 'OBC'])) {
             $ageRelaxation = (int) $jobDetail->age_relaxation;
         }
-
         $upperAgeLimit = $jobDetail->upper_age_limit + $ageRelaxation;
-
         $lowerAgeLimit = $jobDetail->lower_age_limit;
-
         if ($age > $upperAgeLimit) {
             return redirect()->back()->with('error', 'You are above the upper age limit for this job.');
         }
-
         if ($age < $lowerAgeLimit) {
             return redirect()->back()->with('error', 'You are below the lower age limit for this job.');
         }
-
-
         // Check if the applicant has already applied for this job
         $existingApplication = Applications::where('applicant_id', $applicant->id)
             ->where('job_details_id', $jobDetail->id)
@@ -265,36 +248,7 @@ class ApplicationController extends Controller
 
         return redirect()->route('application.viewApplicationDraft', [$jobDetail])->with('success', 'Application Saved to Draft successfully.');
     }
-//    public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
-//    {
-//
-//        $validatedData = $request->validate([
-//            'document_id' => 'required|exists:documents,id',
-//            'file' => 'required|file|mimes:pdf,jpeg,png|max:2048', // File validation
-//            'application_id' => 'required|exists:applications,id', // Ensure application exists
-//        ]);
-//
-//        // Find the corresponding ApplicationDocument by application_id and document_id
-//        $applicationDocument = ApplicationDocument::where('application_id', $validatedData['application_id'])
-//            ->where('document_id', $validatedData['document_id'])
-//            ->first();
-//
-//        // Check if the document is valid
-//        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-//            // Store the file in public/documents with the original file name
-//            $filePath = $request->file('file')->storeAs('public/documents', $request->file('file')->getClientOriginalName());
-//
-//            // Update the ApplicationDocument record with the new document path
-//            $applicationDocument->update([
-//                'document_path' => 'documents/' . $request->file('file')->getClientOriginalName(),
-//            ]);
-//        }
-//
-//        return back()->with('success', 'Document updated successfully.');
-//
-//
-//    }
-//
+
 
     public function updateMandatoryDocument(Request $request, JobDetail $jobDetail)
     {
@@ -398,7 +352,6 @@ class ApplicationController extends Controller
             'application' => $application,
         ]);
     }
-
     public function reSubmitApplication(Request $request, JobDetail $jobDetail)
     {
 //        dd($request);
@@ -414,8 +367,6 @@ class ApplicationController extends Controller
             ->where('status', 'rejected')
             ->first();
 
-//        dd($application);
-
         if (!$application) {
             return redirect()->route('dashboard.citizen')->with('error', 'No draft application found for this job.');
         }
@@ -424,36 +375,6 @@ class ApplicationController extends Controller
 
         return redirect()->route('dashboard.citizen')->with('success', 'Application Re-Submitted successfully.');
     }
-
-
-//    public function admitCard()
-//    {
-//        $jobs = JobDetail::whereHas('settings')->with('settings')->get();
-//
-//        return Inertia::render('Applicant/AdmitCard', [
-//            'jobs' => $jobs,
-//        ]);
-//
-//    }
-//    public function admitCard()
-//    {
-//        $applicantId = auth()->user()->applicants->id; // Assuming each user has one applicant profile
-////        dd(auth()->user()->applicants);
-//
-//        if (!$applicantId) {
-//            // Redirect back or return a view with an appropriate message
-//            return inertia('Applicant/AdmitCard', [
-//                'jobs' => [],
-//            ])->with('success', 'No applicant record found.');
-//        }
-//        $jobs = JobDetail::whereHas('applications', function ($query) use ($applicantId) {
-//            $query->where('applicant_id', $applicantId);
-//        })->with('settings')->get();
-//
-//        return Inertia::render('Applicant/AdmitCard', [
-//            'jobs' => $jobs,
-//        ]);
-//    }
     public function admitCard()
     {
         $applicant = auth()->user()->applicants; // Get the applicant record

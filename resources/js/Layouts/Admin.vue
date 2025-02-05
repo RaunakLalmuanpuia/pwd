@@ -128,14 +128,7 @@
                             </q-item-section>
                         </q-item>
 
-<!--                        <q-item clickable v-ripple>-->
-<!--                            <q-item-section avatar>-->
-<!--                                <q-icon name="circle" />-->
-<!--                            </q-item-section>-->
-<!--                            <q-item-section>-->
-<!--                                Exam Center-->
-<!--                            </q-item-section>-->
-<!--                        </q-item>-->
+
 
                     </q-expansion-item>
 
@@ -173,6 +166,8 @@
                             </q-item-section>
                         </q-item>
 
+
+
                         <q-item clickable v-ripple active-class="active-menu"
                                 :active="['report.submitted', 'report.writtenExam', 'report.exam_center'].includes(route().current())"
                                 @click="$inertia.get(route('report.submitted'))">
@@ -181,6 +176,18 @@
                             </q-item-section>
                             <q-item-section>
                                Report
+                            </q-item-section>
+                        </q-item>
+
+
+                        <q-item clickable v-ripple active-class="active-menu"
+                                :active="route().current()==='notice.index'"
+                                @click="$inertia.get(route('notice.index'))">
+                            <q-item-section avatar>
+                                <q-icon name="circle" style="font-size: 8px; padding-left: 8px" />
+                            </q-item-section>
+                            <q-item-section>
+                                Notices
                             </q-item-section>
                         </q-item>
 
