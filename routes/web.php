@@ -223,7 +223,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/export-job-eligible/{job_detail_id}', [ExportController::class, 'exportEligibleJobDetails'])->name('export.job.eligible.details');
     // Download Job Submitted List
     Route::get('/export-job-submitted/{job_detail_id}', [ExportController::class, 'exportSubmittedJobDetails'])->name('export.job.submitted.details');
+
+    // Download Job Rejected List
+    Route::get('/export-job-rejected/{job_detail_id}', [ExportController::class, 'exportRejectedJobDetails'])->name('export.job.rejected.details');
 });
+
 
 // Job Settings
 Route::middleware(['auth'])->group(function () {

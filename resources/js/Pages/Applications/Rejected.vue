@@ -122,7 +122,7 @@ const exportJobDetails = (jobId) => {
     q.loading.show(); // Show loading indicator (assuming you're using Quasar's loading plugin)
 
     // Generate the URL using Inertia's route helper
-    const url = route('export.job.submitted.details', jobId);
+    const url = route('export.job.rejected.details', jobId);
 
     // Make a GET request to the URL with responseType as 'blob'
     axios.get(url, { responseType: 'blob' })

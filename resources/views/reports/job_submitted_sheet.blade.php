@@ -22,20 +22,10 @@
             </td>
         </tr>
         <tr>
-            <td colspan="4" style="border-top:1px solid black; border-left:1px solid black; border-bottom:1px solid black">
-                Centre for Physical Measurement &amp; Endurance Test
-            </td>
-            <td colspan="3" style="border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black">
-                : Center
-            </td>
+
         </tr>
         <tr>
-            <td colspan="4" style="border-top:1px solid black; border-left:1px solid black; border-bottom:1px solid black">
-                Date &amp; Time of Physical Measurement &amp; Endurance Test
-            </td>
-            <td colspan="3" style="border-top:1px solid black; border-bottom:1px solid black; border-right:1px solid black">
-                :
-            </td>
+
         </tr>
         <tr>
             <td style="border:1px solid black">
