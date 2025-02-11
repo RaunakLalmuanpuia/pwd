@@ -1,4 +1,6 @@
 <template>
+    <p>District -
+        Job Wise Applications</p>
     <Line :data="data" :options="optionConfig" />
 </template>
 

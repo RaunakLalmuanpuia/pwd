@@ -210,7 +210,7 @@
                     <div class="col-xs-12">
                         <q-select v-model="form.qualification"
                                   class="my-input"
-                                  :options="['Class 8','HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
+                                  :options="['Class VIII','HSLC', 'HSSLC', 'Graduate', 'Post Graduate', 'PhD']"
                                   dense
                                   label="Minimum Qualification"
                                   outlined
@@ -225,7 +225,7 @@
                     <div class="col-xs-12">
                         <q-select v-model="form.mizo_proficiency"
                                   class="my-input"
-                                  :options="['Class VII','Class X']"
+                                  :options="['Class VIII','Class X']"
                                   dense
                                   label="Mizo Proficiency"
                                   outlined
