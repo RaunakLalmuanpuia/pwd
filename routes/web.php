@@ -20,6 +20,8 @@ use App\Http\Controllers\AdminApplicationController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\NoticeController;
 
+use App\Http\Controllers\StatisticController;
+
 
 use App\Models\JobDetail;
 
@@ -298,6 +300,14 @@ Route::group(['middleware' => 'auth', 'prefix' => 'notice'], function () {
     Route::put('{model}', [NoticeController::class, 'update'])->middleware('role:Admin')->name('notice.update');
     Route::delete('{model}', [NoticeController::class, 'destroy'])->middleware('role:Admin')->name('notice.destroy');
 });
+
+//Statistics
+Route::group(['prefix' => 'statistic'], function () {
+    Route::get('district-wise', [StatisticController::class, 'districtWise'])->name('statistics.districtWise');
+    Route::get('job-wise', [StatisticController::class, 'jobWise'])->name('statistics.jobWise');
+    Route::get('district-job', [StatisticController::class, 'districtJobWise'])->name('statistics.districtJobWise');
+});
+
 
 // Privacy Page
 Route::get('page/privacy', function () {

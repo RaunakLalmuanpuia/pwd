@@ -11,6 +11,7 @@ use App\Utils\PaymentStatus;
 use App\Utils\SmsManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
@@ -190,25 +191,70 @@ class PaytmController extends Controller
 //
 //        return $uniqueId;
 //    }
+//    private function generateUniqueApplicationId($jobDetail)
+//    {
+//        // Get the latest application record for the specific jobDetail
+//        $latestApplication = Applications::query()
+//            ->where('job_details_id', $jobDetail->id) // Assuming job_id is linked to the JobDetail
+//            ->orderBy('created_at', 'desc')
+//            ->first();
+//
+//        // Get the current highest sequence number or set to 1 if none exists
+//        $sequenceNumber = $latestApplication ? (int) substr($latestApplication->application_id, -5) + 1 : 1;
+//
+//        // Determine the padding length based on the sequence number
+//        $paddingLength = $sequenceNumber > 9999 ? 5 : 4;
+//
+//        // Format the application ID as job code + padded sequence number (4 or 5 digits)
+//        $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+//
+//        return $applicationId;
+//    }
+
+
     private function generateUniqueApplicationId($jobDetail)
     {
-        // Get the latest application record for the specific jobDetail
-        $latestApplication = Applications::query()
-            ->where('job_details_id', $jobDetail->id) // Assuming job_id is linked to the JobDetail
-            ->orderBy('created_at', 'desc')
-            ->first();
+        $maxRetries = 5;
+        $retryCount = 0;
 
-        // Get the current highest sequence number or set to 1 if none exists
-        $sequenceNumber = $latestApplication ? (int) substr($latestApplication->application_id, -5) + 1 : 1;
+        do {
+            try {
+                // Start a transaction to prevent race conditions
+                return DB::transaction(function () use ($jobDetail) {
+                    // Lock the table to prevent simultaneous writes
+                    $latestApplication = Applications::query()
+                        ->where('job_details_id', $jobDetail->id)
+                        ->orderBy('created_at', 'desc')
+                        ->lockForUpdate() // Prevents other transactions from modifying it
+                        ->first();
 
-        // Determine the padding length based on the sequence number
-        $paddingLength = $sequenceNumber > 9999 ? 5 : 4;
+                    // Get the current highest sequence number or set to 1 if none exists
+                    $sequenceNumber = $latestApplication ? (int) substr($latestApplication->application_id, -5) + 1 : 1;
 
-        // Format the application ID as job code + padded sequence number (4 or 5 digits)
-        $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+                    // Determine the padding length
+                    $paddingLength = $sequenceNumber > 9999 ? 5 : 4;
 
-        return $applicationId;
+                    // Generate application ID
+                    $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+
+                    // Ensure application_id is unique
+                    while (Applications::where('application_id', $applicationId)->exists()) {
+                        $sequenceNumber++;
+                        $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+                    }
+
+                    return $applicationId;
+                });
+            } catch (\Exception $e) {
+                Log::error("Failed to generate unique application ID: " . $e->getMessage());
+                $retryCount++;
+                usleep(100000); // Wait 100ms before retrying
+            }
+        } while ($retryCount < $maxRetries);
+
+        throw new \Exception("Failed to generate a unique application ID after $maxRetries retries.");
     }
+
 
 
 }

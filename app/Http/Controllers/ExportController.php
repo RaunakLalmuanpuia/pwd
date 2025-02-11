@@ -67,7 +67,7 @@ class ExportController extends Controller
     {
         // Fetch the job detail and related data based on the ID
         $jobDetails = JobDetail::with(['applications' => function($query) {
-            // Filter applications to get only those with 'approved' status
+            // Filter applications to get only those with 'rejected' status
             $query->where('status', 'rejected')
                 ->with('applicant.user');  // Also eager load related user data for applicants
         }])->where('id', $job_detail_id)->first();

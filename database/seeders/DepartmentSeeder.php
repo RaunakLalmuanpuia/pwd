@@ -25,7 +25,7 @@ class DepartmentSeeder extends Seeder
             ['name' => 'General Administration Department'],
             ['name' => 'Secretariat Administration Department'],
             ['name' => 'Vigilance Department'],
-            ['name' => 'Public Work Department'],
+            ['name' => 'Public Works Department'],
             ['name' => 'Horticulture Department'],
             ['name' => 'Public Health Engineering Department'],
             ['name' => 'Urban Development & Poverty Alleviation Department'],
