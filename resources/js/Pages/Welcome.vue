@@ -72,17 +72,17 @@ function handleImageError() {
                             </PrimaryButton>
                         </Link>
 
-                        <Link
+<!--                        <Link-->
 
-                            :href="route('maps')"
-                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
-                        >
-                            <PrimaryButton
-                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"
-                            >
-                                Maps
-                            </PrimaryButton>
-                        </Link>
+<!--                            :href="route('maps')"-->
+<!--                            class="rounded-md px-3 py-2 ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"-->
+<!--                        >-->
+<!--                            <PrimaryButton-->
+<!--                                class="bg-primary hover:bg-primaryDark text-white font-semibold px-6 py-2 rounded-lg hover:shadow-md transition-opacity"-->
+<!--                            >-->
+<!--                                Maps-->
+<!--                            </PrimaryButton>-->
+<!--                        </Link>-->
 
                         <Link
                             v-if="canRegister"
@@ -174,17 +174,25 @@ function handleImageError() {
                     <div class="col-xs-12 col-sm-2"></div>
 
                     <div class="col-xs-12 col-sm-4">
-                        <div style="font-size: 32px" class="navy-panel text-white q-col-gutter-sm q-pa-md"> Notifications </div>
+                        <div style="font-size: 32px" class="navy-panel text-gray q-col-gutter-sm q-pa-md"> Video Tutorial </div>
                         <br/>
                         <div class="zcard row q-col-gutter-sm q-pa-md">
                             <div class="col-12 q-pa-none q-ma-none">
 
-                                <p style="color: #484848" class="q-pa-none q-ma-none text-weight-medium">Title</p>
-                                <div class="flex justify-between items-center">
-                                    <q-btn class="q-pa-xs" @click="handleReadmore(item)" color="primary" flat label="VIEW NOTICE"/>
-                                    <p style="color:#484848;" class=" q-ma-none">Date</p>
-                                </div>
-                                <q-separator/>
+<!--                                <p style="color: #484848" class="q-pa-none q-ma-none text-weight-medium">Title</p>-->
+<!--                                <div class="flex justify-between items-center">-->
+<!--                                    <q-btn class="q-pa-xs" @click="handleReadmore(item)" color="primary" flat label="VIEW NOTICE"/>-->
+<!--                                    <p style="color:#484848;" class=" q-ma-none">Date</p>-->
+<!--                                </div>-->
+
+                                <iframe
+                                    width="100%"
+                                    height="243"
+                                    src="https://www.youtube.com/embed/qJ2ABIA1A4E" title="Recruitment Tutorial"
+                                    allowfullscreen
+                                ></iframe>
+
+<!--                                <iframe width="966" height="543" src="https://www.youtube.com/embed/qJ2ABIA1A4E" title="Recruitment Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>-->
 
                             </div>
 

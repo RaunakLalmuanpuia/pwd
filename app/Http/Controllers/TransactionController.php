@@ -8,6 +8,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use paytm\paytmchecksum\PaytmChecksum;
 
@@ -63,8 +64,8 @@ class TransactionController extends Controller
 //        $url = "https://securegw.paytm.in/v3/order/status";
 
         /* for Staging */
-        $testUrl = "https://securestage.paytmpayments.com/v3/order/status";
-
+//        $testUrl = "https://securestage.paytmpayments.com/v3/order/status";
+        $testUrl="https://secure.paytmpayments.com/v3/order/status";
         /* for Production */
          $url = "https://secure.paytmpayments.com/v3/order/status";
 
@@ -105,8 +106,8 @@ class TransactionController extends Controller
 //        $url = "https://securegw.paytm.in/v3/order/status";
 
         /* for Staging */
-        $testUrl = "https://securestage.paytmpayments.com/v3/order/status";
-
+//        $testUrl = "https://securestage.paytmpayments.com/v3/order/status";
+        $testUrl = "https://secure.paytmpayments.com/v3/order/status";
         /* for Production */
         $url = "https://secure.paytmpayments.com/v3/order/status";
 
@@ -148,13 +149,55 @@ class TransactionController extends Controller
         ];
     }
 
-    private function generateUniqueApplicationId()
+//    private function generateUniqueApplicationId()
+//    {
+//        do {
+//            // Generate a random unique string (you can customize the format)
+//            $uniqueId = 'APP-' . strtoupper(uniqid());
+//        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
+//
+//        return $uniqueId;
+//    }
+    private function generateUniqueApplicationId($jobDetail)
     {
-        do {
-            // Generate a random unique string (you can customize the format)
-            $uniqueId = 'APP-' . strtoupper(uniqid());
-        } while (Applications::where('application_id', $uniqueId)->exists()); // Ensure it’s unique
+        $maxRetries = 5;
+        $retryCount = 0;
 
-        return $uniqueId;
+        do {
+            try {
+                // Start a transaction to prevent race conditions
+                return DB::transaction(function () use ($jobDetail) {
+                    // Lock the table to prevent simultaneous writes
+                    $latestApplication = Applications::query()
+                        ->where('job_details_id', $jobDetail->id)
+                        ->orderBy('created_at', 'desc')
+                        ->lockForUpdate() // Prevents other transactions from modifying it
+                        ->first();
+
+                    // Get the current highest sequence number or set to 1 if none exists
+                    $sequenceNumber = $latestApplication ? (int) substr($latestApplication->application_id, -5) + 1 : 1;
+
+                    // Determine the padding length
+                    $paddingLength = $sequenceNumber > 9999 ? 5 : 4;
+
+                    // Generate application ID
+                    $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+
+                    // Ensure application_id is unique
+                    while (Applications::where('application_id', $applicationId)->exists()) {
+                        $sequenceNumber++;
+                        $applicationId = $jobDetail->code . str_pad($sequenceNumber, $paddingLength, '0', STR_PAD_LEFT);
+                    }
+
+                    return $applicationId;
+                });
+            } catch (\Exception $e) {
+                Log::error("Failed to generate unique application ID: " . $e->getMessage());
+                $retryCount++;
+                usleep(100000); // Wait 100ms before retrying
+            }
+        } while ($retryCount < $maxRetries);
+
+        throw new \Exception("Failed to generate a unique application ID after $maxRetries retries.");
     }
 }

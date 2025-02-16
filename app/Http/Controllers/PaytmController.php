@@ -39,9 +39,9 @@ class PaytmController extends Controller
         $applicant = $application->applicant()->first();
 
         $appliedJobs = JobDetail::query()->findMany($selectedJobIds);
-//        $amount = ($applicant?->category==='General') ? 200:150;
+        $amount = ($applicant?->category==='General') ? 200:150;
 
-        $amount = ($applicant?->category==='General') ? 2:1;
+//        $amount = ($applicant?->category==='General') ? 2:1;
 
         $orderId =  'REC' . now()->timestamp;
 
